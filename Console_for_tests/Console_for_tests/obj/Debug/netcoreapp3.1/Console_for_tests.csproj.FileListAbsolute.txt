@@ -1,0 +1,13 @@
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.exe
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.deps.json
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.runtimeconfig.json
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.runtimeconfig.dev.json
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.dll
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\bin\Debug\netcoreapp3.1\Console_for_tests.pdb
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.csprojAssemblyReference.cache
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.AssemblyInfoInputs.cache
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.AssemblyInfo.cs
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.csproj.CoreCompileInputs.cache
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.dll
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.pdb
+C:\Users\swang\Desktop\Alignment Stage\C# Software\Console_for_tests\Console_for_tests\obj\Debug\netcoreapp3.1\Console_for_tests.genruntimeconfig.cache
