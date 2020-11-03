@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO.Ports;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Net.Http.Headers;
+using Console_for_tests;
+using System.Globalization;
 
 namespace Console_test
 {
@@ -18,10 +20,18 @@ namespace Console_test
         private static double[] countsOffset;
         private static float rangePerAxis = 17.7f; //range in mm, default full range 17.7mm
         private static int countsPerMM = 20000; // counts per mm
-        public static sbyte tolerance = 2;
-        public static double encoderResolution = 50e-6;
-        public static int[] countsReal = { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}
-        public static int[] countsOld = { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}
+        private static sbyte xDirectionOld = 0;
+        private static sbyte yDirectionOld = 0;
+        private static sbyte zDirectionOld = 0;
+        
+        public static double xBacklashMM = 0; // in mm
+        public static double yBacklashMM = 0; // in mm
+        public static double zBacklashMM = 0.0002; // in mm
+        public static sbyte tolerance = 2; // in encoder counts
+        public static double encoderResolution = 50e-6; // in mm
+        public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
+        public static int[] countsOld = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at SendCounts()
+        public static double[] resetPosition = new double[6] { 0, 0, 138, 0, 0, 0 };
 
         public BeetleControl()
         {
@@ -98,12 +108,12 @@ namespace Console_test
                     y3 = 179350;
                     break;
             }
-            A1x = x1 - (-85.796144) / 50e-6;
-            A1y = y1 - 9.55 / 50e-6;
-            A2x = x2 + 38.123072 / 50e-6;
-            A2y = y2 - (-73.022182) / 50e-6;
-            A3x = x3 + 38.123072 / 50e-6;
-            A3y = y3 - 92.122182 / 50e-6;
+            A1x = x1 - (-85.796144) / encoderResolution;
+            A1y = y1 - 9.55 / encoderResolution;
+            A2x = x2 + 38.123072 / encoderResolution;
+            A2y = y2 - (-73.022182) / encoderResolution;
+            A3x = x3 + 38.123072 / encoderResolution;
+            A3y = y3 - 92.122182 / encoderResolution;
 
             limit = new int[] { x1, y1, x2, y2, x3, y3 };
             countsOffset = new double[] { A1x, A1y, A2x, A2y, A3x, A3y };
@@ -135,132 +145,239 @@ namespace Console_test
 
         public static void EngageMotors()
         {
-
+            string xstr = "w axis0.requested_state 8";
+            string ystr = "w axis1.requested_state 8";
+            T123SendOnly(xstr, ystr);
         }
 
         public static void DisengageMotors()
         {
+            string xstr = "w axis0.requested_state 1";
+            string ystr = "w axis1.requested_state 1";
+            T123SendOnly(xstr, ystr);
+        }
 
+        public static void SlowTrajSpeed()
+        {
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 300";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 300";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 300";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 300";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 300";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 300";
+            T123SendOnly(xstr1, ystr1);
+            T123SendOnly(xstr2, ystr2);
+            T123SendOnly(xstr3, ystr3);
+        }
+
+        public static void SlowTrajSpeed2()
+        {
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 80";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 80";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 80";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 80";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 80";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 80";
+            T123SendOnly(xstr1, ystr1);
+            T123SendOnly(xstr2, ystr2);
+            T123SendOnly(xstr3, ystr3);
+        }
+
+        public static void NormalTrajSpeed()
+        {
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 70000";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 70000";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 100000";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 70000";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 70000";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 100000";
+            T123SendOnly(xstr1, ystr1);
+            T123SendOnly(xstr2, ystr2);
+            T123SendOnly(xstr3, ystr3);
+        }
+
+        // position is the platform position
+        public bool GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        {
+            double[] Tmm = BeetleMathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
+            int[] targetCounts = TranslateToCounts(Tmm);
+            position.CopyTo(GlobalVar.position, 0);
+            return GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+        }
+
+        // XAbs is the platform x absolute position in mm
+        public bool XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        {
+            sbyte xDirec;
+            double counter = 0;
+            if (XAbs > GlobalVar.position[0])
+                xDirec = 1;
+            else if (XAbs < GlobalVar.position[0])
+                xDirec = -1;
+            else
+                xDirec = xDirectionOld;
+            if (applyBacklash && xDirec != xDirectionOld)
+                counter = xBacklashMM * xDirec;
+            xDirectionOld = xDirec;
+
+            int[] targetCounts = new int[6];
+            countsOld.CopyTo(targetCounts, 0);
+            int deltacounts = (int)Math.Round((XAbs + counter - GlobalVar.position[0]) / encoderResolution);
+            targetCounts[0] = countsOld[0] + deltacounts;
+            targetCounts[2] = countsOld[2] - deltacounts;
+            targetCounts[4] = countsOld[4] - deltacounts;
+
+            GlobalVar.position[0] = XAbs;
+
+            return GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+        }
+
+        // YAbs is the platform y absolute position in mm
+        public bool YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        {
+            sbyte yDirec;
+            double counter = 0;
+            if (YAbs > GlobalVar.position[1])
+                yDirec = 1;
+            else if (YAbs < GlobalVar.position[1])
+                yDirec = -1;
+            else
+                yDirec = yDirectionOld;
+            if (applyBacklash && yDirec != yDirectionOld)
+                counter = yBacklashMM * yDirec;
+            yDirectionOld = yDirec;
+
+            int[] targetCounts = new int[6];
+            countsOld.CopyTo(targetCounts, 0);
+            int deltacounts = (int)Math.Round((YAbs + counter - GlobalVar.position[1]) / encoderResolution);
+            targetCounts[1] = countsOld[1] + deltacounts;
+            targetCounts[3] = countsOld[3] + deltacounts;
+            targetCounts[5] = countsOld[5] + deltacounts;
+
+            GlobalVar.position[1] = YAbs;
+
+            return GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+        }
+
+        // ZAbs is the platform z absolute position in mm
+        public bool ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        {
+            sbyte zDirec;
+            double counter = 0;
+            if (ZAbs > GlobalVar.position[2])
+                zDirec = 1;
+            else if (ZAbs < GlobalVar.position[2])
+                zDirec = -1;
+            else
+                zDirec = zDirectionOld;
+            if (applyBacklash && zDirec != zDirectionOld)
+                counter = zBacklashMM * zDirec;
+            zDirectionOld = zDirec;
+
+            double[] targetPosition = new double[6];
+            GlobalVar.position.CopyTo(targetPosition, 0);
+            targetPosition[2] = ZAbs + counter;
+
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+        }
+
+        public bool RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        {
+            double[] targetPosition = new double[6];
+            GlobalVar.position.CopyTo(targetPosition, 0);
+            targetPosition[3] = RxAbs;
+
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+        }
+
+        public bool RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        {
+            double[] targetPosition = new double[6];
+            GlobalVar.position.CopyTo(targetPosition, 0);
+            targetPosition[4] = RyAbs;
+
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+        }
+
+        public bool RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        {
+            double[] targetPosition = new double[6];
+            GlobalVar.position.CopyTo(targetPosition, 0);
+            targetPosition[5] = RzAbs;
+
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+        }
+
+        public bool GotoReset() => GotoPosition(resetPosition);
+
+        public bool GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 });
+
+        // return false when timeout or driver board errors or out of range
+        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        {
+            int timeout;
+            // try three times on doublecheck
+            for (int i = 0; i < 3; i++)
+            {
+                if (doubleCheck || stopInBetween)
+                    EngageMotors();
+                if (SafetyCheck(targetCounts))
+                    SendCounts(targetCounts, freedom: freedom, mode: mode);
+                else
+                {
+                    DisengageMotors();
+                    GlobalVar.errors = "Out of Range\n";
+                    return false;
+                }
+                // timeout for about 5s
+                timeout = 0;
+                while (timeout < 50)
+                {
+                    Thread.Sleep(100);
+                    if (OnTarget(targetCounts, freedrom: freedom))
+                        break;
+                    timeout++;
+                }
+                if (!ignoreError && timeout >= 49)
+                {
+                    DisengageMotors();
+                    if (!CheckErrors())
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            if (Math.Abs(targetCounts[i] - countsReal[i]) > tolerance)
+                                GlobalVar.errors = string.Concat(GlobalVar.errors, "Axis ", j + 1, " Timeout Error\n");
+                        }
+                    }
+                    return false;
+                }
+                if (doubleCheck || stopInBetween)
+                {
+                    DisengageMotors();
+                    if (doubleCheck)
+                    {
+                        Thread.Sleep(100);
+                        if (OnTarget(targetCounts, freedrom: freedom))
+                            return true;
+                        else
+                            continue;
+                    }
+                }
+                return true;
+            }
+            return true;
         }
 
         private static int[] TranslateToCounts(double[] Tmm)
         {
             int[] counts = { 0, 0, 0, 0, 0, 0};
-            counts[0] = (int)Math.Round(Tmm[0] / encoderResolution + countsOffset[0]);
-            counts[1] = (int)Math.Round(Tmm[1] / encoderResolution + countsOffset[1]);
-            counts[2] = (int)Math.Round(Tmm[2] / encoderResolution + countsOffset[2]);
-            counts[3] = (int)Math.Round(Tmm[3] / encoderResolution + countsOffset[3]);
-            counts[4] = (int)Math.Round(Tmm[4] / encoderResolution + countsOffset[4]);
-            counts[5] = (int)Math.Round(Tmm[5] / encoderResolution + countsOffset[5]);
+            counts[0] = (int)Math.Round( Tmm[0] / encoderResolution + countsOffset[0]);
+            counts[1] = (int)Math.Round( Tmm[1] / encoderResolution + countsOffset[1]);
+            counts[2] = (int)Math.Round(-Tmm[2] / encoderResolution + countsOffset[2]);
+            counts[3] = (int)Math.Round( Tmm[3] / encoderResolution + countsOffset[3]);
+            counts[4] = (int)Math.Round(-Tmm[4] / encoderResolution + countsOffset[4]);
+            counts[5] = (int)Math.Round( Tmm[5] / encoderResolution + countsOffset[5]);
             return counts;
-        }
-
-        private static string AxisErrorCode(int code)
-        {
-            switch(code)
-            {
-                case 0x_00:
-                    return "ERROR_NONE";
-                case 0x_01:
-                    return "ERROR_INVALID_STATE";
-                case 0x_02:
-                    return "ERROR_DC_BUS_UNDER_VOLTAGE";
-                case 0x_04:
-                    return "ERROR_DC_BUS_OVER_VOLTAGE";
-                case 0x_08:
-                    return "ERROR_CURRENT_MEASUREMENT_TIMEOUT";
-                case 0x_10:
-                    return "ERROR_BRAKE_RESISTOR_DISARMED";
-                case 0x_20:
-                    return "ERROR_MOTOR_DISARMED";
-                case 0x_40:
-                    return "ERROR_MOTOR_FAILED";
-                case 0x_80:
-                    return "ERROR_SENSORLESS_ESTIMATOR_FAILED";
-                case 0x_100:
-                    return "ERROR_ENCODER_FAILED";
-                case 0x_200:
-                    return "ERROR_CONTROLLER_FAILED";
-                case 0x_400:
-                    return "ERROR_POS_CTRL_DURING_SENSORLESS";
-                case 0x_800:
-                    return "ERROR_WATCHDOG_TIMER_EXPIRED";
-                default:
-                    return "Invalid Code";
-            }
-        }
-
-        private static string MotorErrorCode(int code)
-        {
-            switch (code)
-            {
-                case 0x_00:
-                    return "ERROR_NONE";
-                case 0x_01:
-                    return "ERROR_PHASE_RESISTANCE_OUT_OF_RANGE";
-                case 0x_02:
-                    return "ERROR_PHASE_INDUCTANCE_OUT_OF_RANGE";
-                case 0x_04:
-                    return "ERROR_ADC_FAILED";
-                case 0x_08:
-                    return "ERROR_DRV_FAULT";
-                case 0x_10:
-                    return "ERROR_CONTROL_DEADLINE_MISSED";
-                case 0x_20:
-                    return "ERROR_NOT_IMPLEMENTED_MOTOR_TYPE";
-                case 0x_40:
-                    return "ERROR_BRAKE_CURRENT_OUT_OF_RANGE";
-                case 0x_80:
-                    return "ERROR_MODULATION_MAGNITUDE";
-                case 0x_100:
-                    return "ERROR_BRAKE_DEADTIME_VIOLATION";
-                case 0x_200:
-                    return "ERROR_UNEXPECTED_TIMER_CALLBACK";
-                case 0x_400:
-                    return "ERROR_CURRENT_SENSE_SATURATION";
-                case 0x_800:
-                    return "ERROR_INVERTER_OVER_TEMP";
-                case 0x_1000:
-                    return "ERROR_CURRENT_UNSTABLE";
-                default:
-                    return "Invalid Code";
-            }
-        }
-
-        private static string EncoderErrorCode(int code)
-        {
-            switch (code)
-            {
-                case 0x_00:
-                    return "ERROR_NONE";
-                case 0x_01:
-                    return "ERROR_UNSTABLE_GAIN";
-                case 0x_02:
-                    return "ERROR_CPR_OUT_OF_RANGE";
-                case 0x_04:
-                    return "ERROR_NO_RESPONSE";
-                case 0x_08:
-                    return "ERROR_UNSUPPORTED_ENCODER_MODE";
-                case 0x_10:
-                    return "ERROR_ILLEGAL_HALL_STATE";
-                case 0x_20:
-                    return "ERROR_INDEX_NOT_FOUND_YET";
-                default:
-                    return "Invalid Code";
-            }
-        }
-
-        private static string ControllerErrorCode(int code)
-        {
-            switch (code)
-            {
-                case 0x_00:
-                    return "ERROR_NONE";
-                case 0x_01:
-                    return "ERROR_OVERSPEED";
-                default:
-                    return "Invalid Code";
-            }
         }
 
         // If the return is a number, it can be convert to int or float directly , no line feed sign
@@ -303,60 +420,61 @@ namespace Console_test
             T3SendOnly(ystr);
         }
 
-        // Send counts in X direction
-        private static void TxCountsSend(int x1, int x2, int x3, char mode)
+        // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
+        //mode can be 't' or 'p' meaning trajectory or stepping method
+        private static void SendCounts(int[] counts, char freedom = 'a', char mode = 'p')
         {
-            string str1, str2, str3;
-            if (mode == 't')
-            {
-                string var0 = "t 0 ";
-                str1 = string.Concat(var0, x1);
-                str2 = string.Concat(var0, x2);
-                str3 = string.Concat(var0, x3);
-            }
-            else
-            {
-                string var0 = "p 0 ";
-                string var00 = " 0 0";
-                str1 = string.Concat(var0, x1, var00);
-                str2 = string.Concat(var0, x2, var00);
-                str3 = string.Concat(var0, x3, var00);
-            }
-            T1Port.WriteLine(str1);
-            T2Port.WriteLine(str2);
-            T3Port.WriteLine(str3);
+            int trajectoryThreshold = 20000;
+            string xstrp = "p 0 ";
+            string xstrt = "t 0 ";
+            string ystrp = "p 1 ";
+            string ystrt = "t 1 ";
+            string strpp = " 0 0";
+            string cmd;
 
-            countsOld[0] = x1;
-            countsOld[2] = x2;
-            countsOld[4] = x3;
-        }
-
-        // Send counts in Y direction
-        private static void TyCountsSend(int y1, int y2, int y3, char mode)
-        {
-            string str1, str2, str3;
-            if (mode == 't')
+            if (freedom == 'x' || freedom == 'a')
             {
-                string var0 = "t 1 ";
-                str1 = string.Concat(var0, y1);
-                str2 = string.Concat(var0, y2);
-                str3 = string.Concat(var0, y3);
-            }
-            else
-            {
-                string var0 = "p 1 ";
-                string var00 = " 0 0";
-                str1 = string.Concat(var0, y1, var00);
-                str2 = string.Concat(var0, y2, var00);
-                str3 = string.Concat(var0, y3, var00);
-            }
-            T1Port.WriteLine(str1);
-            T2Port.WriteLine(str2);
-            T3Port.WriteLine(str3);
+                if ((Math.Abs(counts[0] - countsOld[0]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(xstrp, counts[0], strpp);
+                else
+                    cmd = string.Concat(xstrt, counts[0]);
+                T1SendOnly(cmd);
 
-            countsOld[1] = y1;
-            countsOld[3] = y2;
-            countsOld[5] = y3;
+                if ((Math.Abs(counts[2] - countsOld[2]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(xstrp, counts[2], strpp);
+                else
+                    cmd = string.Concat(xstrt, counts[2]);
+                T2SendOnly(cmd);
+
+                if ((Math.Abs(counts[4] - countsOld[4]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(xstrp, counts[4], strpp);
+                else
+                    cmd = string.Concat(xstrt, counts[4]);
+                T3SendOnly(cmd);
+            }
+            
+            if (freedom == 'y' || freedom == 'a')
+            {
+                if ((Math.Abs(counts[1] - countsOld[1]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(ystrp, counts[1], strpp);
+                else
+                    cmd = string.Concat(ystrt, counts[1]);
+                T1SendOnly(cmd);
+
+                if ((Math.Abs(counts[3] - countsOld[3]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(ystrp, counts[3], strpp);
+                else
+                    cmd = string.Concat(ystrt, counts[3]);
+                T2SendOnly(cmd);
+
+                if ((Math.Abs(counts[5] - countsOld[5]) < trajectoryThreshold) && mode == 'p')
+                    cmd = string.Concat(ystrp, counts[5], strpp);
+                else
+                    cmd = string.Concat(ystrt, counts[5]);
+                T3SendOnly(cmd);
+            }
+
+            counts.CopyTo(countsOld, 0);
         }
 
         // Fetch each axis's real counts. axis = 0 fetch all 6 axis
@@ -429,46 +547,43 @@ namespace Console_test
             }
         }
 
-        // Check if x motors are at counts x1, x2, x3
-        private static bool TxOnTarget(int x1, int x2, int x3)
+        // Check if x or y or all (freedom = 'x' or 'y' or 'a') motors are at target counts 
+        private static bool OnTarget(int[] counts, char freedrom = 'a')
         {
-            RealCountsFetch(1);
-            RealCountsFetch(3);
-            RealCountsFetch(5);
-            if (countsReal[0] < (x1 - tolerance) || countsReal[0] > (x1 + tolerance))
-            { return false; }
-            else if (countsReal[2] < (x2 - tolerance) || countsReal[2] > (x2 + tolerance))
-            { return false; }
-            else if (countsReal[4] < (x3 - tolerance) || countsReal[4] > (x3 + tolerance))
-            { return false; }
-            else
-            { return true; }
+            if (freedrom == 'x' || freedrom == 'a')
+            {
+                RealCountsFetch(1);
+                RealCountsFetch(3);
+                RealCountsFetch(5);
+                if (countsReal[0] < (counts[0] - tolerance) || countsReal[0] > (counts[0] + tolerance))
+                    return false; 
+                else if (countsReal[2] < (counts[2] - tolerance) || countsReal[2] > (counts[2] + tolerance))
+                    return false; 
+                else if (countsReal[4] < (counts[4] - tolerance) || countsReal[4] > (counts[4] + tolerance))
+                    return false; 
+            }
+            
+            if (freedrom == 'y' || freedrom == 'a')
+            {
+                RealCountsFetch(2);
+                RealCountsFetch(4);
+                RealCountsFetch(6);
+                if (countsReal[1] < (counts[1] - tolerance) || countsReal[1] > (counts[1] + tolerance))
+                    return false;
+                else if (countsReal[3] < (counts[3] - tolerance) || countsReal[3] > (counts[3] + tolerance))
+                    return false;
+                else if (countsReal[5] < (counts[5] - tolerance) || countsReal[5] > (counts[5] + tolerance))
+                    return false;
+            }
+            return true;
         }
-
-        // Check if y motors are at counts y1, y2, y3
-        private static bool TyOnTarget(int y1, int y2, int y3)
-        {
-            RealCountsFetch(2);
-            RealCountsFetch(4);
-            RealCountsFetch(6);
-            if (countsReal[1] < (y1 - tolerance) || countsReal[1] > (y1 + tolerance))
-            { return false; }
-            else if (countsReal[3] < (y2 - tolerance) || countsReal[3] > (y2 + tolerance))
-            { return false; }
-            else if (countsReal[5] < (y3 - tolerance) || countsReal[5] > (y3 + tolerance))
-            { return false; }
-            else
-            { return true; }
-        }
-
-        private static bool OnTarget(int[] counts) => TxOnTarget(counts[0], counts[2], counts[4]) && TyOnTarget(counts[1], counts[3], counts[5]);
 
         // if error exists return true, else return false
         private static bool CheckErrors()
         {
             string xstr = "r axis0.error";
             string ystr = "r axis1.error";
-            int[] errorCodes = { };
+            int[] errorCodes = new int[6];
             errorCodes[0] = int.Parse(T1Talk(xstr));
             errorCodes[1] = int.Parse(T1Talk(ystr));
             errorCodes[2] = int.Parse(T2Talk(xstr));
@@ -486,7 +601,6 @@ namespace Console_test
                 GlobalVar.errors = "";
                 return false;
             }
-                
         }
 
         private static void ErrorCodeExplain(int[] codes)
@@ -585,52 +699,112 @@ namespace Console_test
             
         }
 
-        private static void SendCounts(int[] counts)
+        private static string AxisErrorCode(int code)
         {
-            int trajectoryThreshold = 20000;
-            string xstrp = "p 0 ";
-            string xstrt = "t 0 ";
-            string ystrp = "p 1 ";
-            string ystrt = "t 1 ";
-            string strpp = " 0 0";
-            string cmd;
-            if (Math.Abs(counts[0] - countsOld[0]) < trajectoryThreshold)
-                cmd = string.Concat(xstrp, counts[0], strpp);
-            else
-                cmd = string.Concat(xstrt, counts[0]);
-            T1SendOnly(cmd);
+            switch (code)
+            {
+                case 0x_00:
+                    return "ERROR_NONE";
+                case 0x_01:
+                    return "ERROR_INVALID_STATE";
+                case 0x_02:
+                    return "ERROR_DC_BUS_UNDER_VOLTAGE";
+                case 0x_04:
+                    return "ERROR_DC_BUS_OVER_VOLTAGE";
+                case 0x_08:
+                    return "ERROR_CURRENT_MEASUREMENT_TIMEOUT";
+                case 0x_10:
+                    return "ERROR_BRAKE_RESISTOR_DISARMED";
+                case 0x_20:
+                    return "ERROR_MOTOR_DISARMED";
+                case 0x_40:
+                    return "ERROR_MOTOR_FAILED";
+                case 0x_80:
+                    return "ERROR_SENSORLESS_ESTIMATOR_FAILED";
+                case 0x_100:
+                    return "ERROR_ENCODER_FAILED";
+                case 0x_200:
+                    return "ERROR_CONTROLLER_FAILED";
+                case 0x_400:
+                    return "ERROR_POS_CTRL_DURING_SENSORLESS";
+                case 0x_800:
+                    return "ERROR_WATCHDOG_TIMER_EXPIRED";
+                default:
+                    return "INVALID CODE";
+            }
+        }
 
-            if (Math.Abs(counts[1] - countsOld[1]) < trajectoryThreshold)
-                cmd = string.Concat(ystrp, counts[1], strpp);
-            else
-                cmd = string.Concat(ystrt, counts[1]);
-            T1SendOnly(cmd);
+        private static string MotorErrorCode(int code)
+        {
+            switch (code)
+            {
+                case 0x_00:
+                    return "ERROR_NONE";
+                case 0x_01:
+                    return "ERROR_PHASE_RESISTANCE_OUT_OF_RANGE";
+                case 0x_02:
+                    return "ERROR_PHASE_INDUCTANCE_OUT_OF_RANGE";
+                case 0x_04:
+                    return "ERROR_ADC_FAILED";
+                case 0x_08:
+                    return "ERROR_DRV_FAULT";
+                case 0x_10:
+                    return "ERROR_CONTROL_DEADLINE_MISSED";
+                case 0x_20:
+                    return "ERROR_NOT_IMPLEMENTED_MOTOR_TYPE";
+                case 0x_40:
+                    return "ERROR_BRAKE_CURRENT_OUT_OF_RANGE";
+                case 0x_80:
+                    return "ERROR_MODULATION_MAGNITUDE";
+                case 0x_100:
+                    return "ERROR_BRAKE_DEADTIME_VIOLATION";
+                case 0x_200:
+                    return "ERROR_UNEXPECTED_TIMER_CALLBACK";
+                case 0x_400:
+                    return "ERROR_CURRENT_SENSE_SATURATION";
+                case 0x_800:
+                    return "ERROR_INVERTER_OVER_TEMP";
+                case 0x_1000:
+                    return "ERROR_CURRENT_UNSTABLE";
+                default:
+                    return "INVALID CODE";
+            }
+        }
 
-            if (Math.Abs(counts[2] - countsOld[2]) < trajectoryThreshold)
-                cmd = string.Concat(xstrp, counts[2], strpp);
-            else
-                cmd = string.Concat(xstrt, counts[2]);
-            T2SendOnly(cmd);
+        private static string EncoderErrorCode(int code)
+        {
+            switch (code)
+            {
+                case 0x_00:
+                    return "ERROR_NONE";
+                case 0x_01:
+                    return "ERROR_UNSTABLE_GAIN";
+                case 0x_02:
+                    return "ERROR_CPR_OUT_OF_RANGE";
+                case 0x_04:
+                    return "ERROR_NO_RESPONSE";
+                case 0x_08:
+                    return "ERROR_UNSUPPORTED_ENCODER_MODE";
+                case 0x_10:
+                    return "ERROR_ILLEGAL_HALL_STATE";
+                case 0x_20:
+                    return "ERROR_INDEX_NOT_FOUND_YET";
+                default:
+                    return "INVALID CODE";
+            }
+        }
 
-            if (Math.Abs(counts[3] - countsOld[3]) < trajectoryThreshold)
-                cmd = string.Concat(ystrp, counts[3], strpp);
-            else
-                cmd = string.Concat(ystrt, counts[3]);
-            T2SendOnly(cmd);
-
-            if (Math.Abs(counts[4] - countsOld[4]) < trajectoryThreshold)
-                cmd = string.Concat(xstrp, counts[4], strpp);
-            else
-                cmd = string.Concat(xstrt, counts[4]);
-            T3SendOnly(cmd);
-
-            if (Math.Abs(counts[5] - countsOld[5]) < trajectoryThreshold)
-                cmd = string.Concat(ystrp, counts[5], strpp);
-            else
-                cmd = string.Concat(ystrt, counts[5]);
-            T3SendOnly(cmd);
-
-            countsOld = counts;
+        private static string ControllerErrorCode(int code)
+        {
+            switch (code)
+            {
+                case 0x_00:
+                    return "ERROR_NONE";
+                case 0x_01:
+                    return "ERROR_OVERSPEED";
+                default:
+                    return "INVALID CODE";
+            }
         }
 
     }

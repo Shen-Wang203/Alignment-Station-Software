@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Console_for_tests
 {
-    class BeetleMathModel
+    static class BeetleMathModel
     {
         // Rotation first, relative to the pivot point; Translate second
         // Pivot point is based on center of the moving plate
@@ -80,7 +80,7 @@ namespace Console_for_tests
             return C;
         }
 
-        private static double[,] MRz(float Rz)
+        private static double[,] MRz(double Rz)
         {
             double angle = (Math.PI / 180) * Rz;
             double[,] mrz = { { Math.Cos(angle), -Math.Sin(angle), 0, 0 },
@@ -90,7 +90,7 @@ namespace Console_for_tests
             return mrz;
         }
 
-        private static double[,] MRy(float Ry)
+        private static double[,] MRy(double Ry)
         {
             double angle = (Math.PI / 180) * Ry;
             double[,] mry = { { Math.Cos(angle),  0, Math.Sin(angle), 0 },
@@ -100,7 +100,7 @@ namespace Console_for_tests
             return mry;
         }
 
-        private static double[,] MRx(float Rx)
+        private static double[,] MRx(double Rx)
         {
             double angle = (Math.PI / 180) * Rx;
             double[,] mrx = { { 1,               0, 0,                0 },
@@ -110,7 +110,7 @@ namespace Console_for_tests
             return mrx;
         }
 
-        private static double[,] MT(float x, float y, float z)
+        private static double[,] MT(double x, double y, double z)
         {
             double[,] mt = {{ 1, 0, 0, x },
                             { 0, 1, 0, y },
@@ -119,7 +119,8 @@ namespace Console_for_tests
             return mt;
         }
 
-        public static double[] FindAxialPosition(float x, float y, float z, float Rx, float Ry, float Rz)
+        // Find each axis's position in mm based on platform's target position
+        public static double[] FindAxialPosition(double x, double y, double z, double Rx, double Ry, double Rz)
         {
             // The z in the model excludes the base height and top moving plate thickness
              z -= baseZ;
