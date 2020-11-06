@@ -23,15 +23,16 @@ namespace Console_test
         private static sbyte xDirectionOld = 0;
         private static sbyte yDirectionOld = 0;
         private static sbyte zDirectionOld = 0;
+        private static bool motorEngaged = false;
         
         public static double xBacklashMM = 0; // in mm
         public static double yBacklashMM = 0; // in mm
         public static double zBacklashMM = 0.0002; // in mm
         public static sbyte tolerance = 2; // in encoder counts
-        public static double encoderResolution = 50e-6; // in mm
+        public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
-        public static int[] countsOld = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at SendCounts()
-        public static double[] resetPosition = new double[6] { 0, 0, 138, 0, 0, 0 };
+        public static int[] countsOld = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at SendCounts() or GotoTargetCounts()
+        public static double[] resetPosition = new double[6] { 0, 0, 138, 0, 0, 0 }; // This is the starting position
 
         public BeetleControl()
         {
@@ -159,12 +160,12 @@ namespace Console_test
 
         public static void SlowTrajSpeed()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 300";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 300";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 300";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 300";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 300";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 300";
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 1200";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 1200";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 1200";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 1200";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 1200";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 1200";
             T123SendOnly(xstr1, ystr1);
             T123SendOnly(xstr2, ystr2);
             T123SendOnly(xstr3, ystr3);
@@ -197,16 +198,18 @@ namespace Console_test
         }
 
         // position is the platform position
-        public bool GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        // will update GlobalVar.position
+        public bool GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] Tmm = BeetleMathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
             position.CopyTo(GlobalVar.position, 0);
-            return GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+            return GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
 
         // XAbs is the platform x absolute position in mm
-        public bool XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        // will update GlobalVar.position
+        public bool XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte xDirec;
             double counter = 0;
@@ -229,11 +232,12 @@ namespace Console_test
 
             GlobalVar.position[0] = XAbs;
 
-            return GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+            return GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
 
         // YAbs is the platform y absolute position in mm
-        public bool YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        // will update GlobalVar.position
+        public bool YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte yDirec;
             double counter = 0;
@@ -256,11 +260,12 @@ namespace Console_test
 
             GlobalVar.position[1] = YAbs;
 
-            return GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError);
+            return GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
 
         // ZAbs is the platform z absolute position in mm
-        public bool ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p')
+        // will update GlobalVar.position
+        public bool ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte zDirec;
             double counter = 0;
@@ -278,34 +283,40 @@ namespace Console_test
             GlobalVar.position.CopyTo(targetPosition, 0);
             targetPosition[2] = ZAbs + counter;
 
-            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public bool RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        // RxAbs is the absolute Rx value in degree
+        // will update GlobalVar.position
+        public bool RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
             targetPosition[3] = RxAbs;
 
-            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public bool RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        // RyAbs is the absolute Ry value in degree
+        // will update GlobalVar.position
+        public bool RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
             targetPosition[4] = RyAbs;
 
-            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public bool RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        // RzAbs is the absolute Rz value in degree
+        // will update GlobalVar.position
+        public bool RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
             targetPosition[5] = RzAbs;
 
-            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode);
+            return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
         public bool GotoReset() => GotoPosition(resetPosition);
@@ -313,34 +324,42 @@ namespace Console_test
         public bool GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 });
 
         // return false when timeout or driver board errors or out of range
-        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p')
+        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
-            int timeout;
+            int timeoutloop, timeout = 50;
+            if (mode == 't')
+                timeout = 100;
             // try three times on doublecheck
             for (int i = 0; i < 3; i++)
             {
-                if (doubleCheck || stopInBetween)
+                if (!motorEngaged)
+                {
                     EngageMotors();
+                    motorEngaged = true;
+                }
                 if (SafetyCheck(targetCounts))
                     SendCounts(targetCounts, freedom: freedom, mode: mode);
                 else
                 {
                     DisengageMotors();
+                    motorEngaged = false;
                     GlobalVar.errors = "Out of Range\n";
+                    GlobalVar.errorFlag = true;
                     return false;
                 }
                 // timeout for about 5s
-                timeout = 0;
-                while (timeout < 50)
+                timeoutloop = 0;
+                while (checkOnTarget && timeoutloop < timeout)
                 {
                     Thread.Sleep(100);
                     if (OnTarget(targetCounts, freedrom: freedom))
                         break;
-                    timeout++;
+                    timeoutloop++;
                 }
-                if (!ignoreError && timeout >= 49)
+                if (!ignoreError && timeoutloop >= 49)
                 {
                     DisengageMotors();
+                    motorEngaged = false;
                     if (!CheckErrors())
                     {
                         for (int j = 0; j < 6; j++)
@@ -349,11 +368,13 @@ namespace Console_test
                                 GlobalVar.errors = string.Concat(GlobalVar.errors, "Axis ", j + 1, " Timeout Error\n");
                         }
                     }
+                    GlobalVar.errorFlag = true;
                     return false;
                 }
                 if (doubleCheck || stopInBetween)
                 {
                     DisengageMotors();
+                    motorEngaged = false;
                     if (doubleCheck)
                     {
                         Thread.Sleep(100);
@@ -478,7 +499,8 @@ namespace Console_test
         }
 
         // Fetch each axis's real counts. axis = 0 fetch all 6 axis
-        private static void RealCountsFetch(byte axis)
+        // 0 - 5 will fetch motor 1 - 6 individually
+        public static void RealCountsFetch(sbyte axis)
         {
             string strx = "r axis0.encoder.shadow_count";
             string stry = "r axis1.encoder.shadow_count";
@@ -503,42 +525,42 @@ namespace Console_test
                     countsReal[5] = 1000000;
                 }
             }
-            else if (axis == 1)
+            else if (axis == 0)
             {
                 try
                 { countsReal[0] = int.Parse(T1Talk(strx)); }
                 catch (Exception)
                 { countsReal[0] = 1000000; }
             }
-            else if (axis == 2)
+            else if (axis == 1)
             {
                 try
                 { countsReal[1] = int.Parse(T1Talk(stry)); }
                 catch(Exception)
                 { countsReal[1] = 1000000; }
             }
-            else if (axis == 3)
+            else if (axis == 2)
             {
                 try
                 { countsReal[2] = int.Parse(T2Talk(strx)); }
                 catch (Exception)
                 { countsReal[2] = 1000000; }
             }
-            else if (axis == 4)
+            else if (axis == 3)
             {
                 try
                 { countsReal[3] = int.Parse(T2Talk(stry)); }
                 catch (Exception)
                 { countsReal[3] = 1000000; }
             }
-            else if (axis == 5)
+            else if (axis == 4)
             {
                 try
                 { countsReal[4] = int.Parse(T3Talk(strx)); }
                 catch (Exception)
                 { countsReal[4] = 1000000; }
             }
-            else if (axis == 6)
+            else if (axis == 5)
             {
                 try
                 { countsReal[5] = int.Parse(T3Talk(stry)); }
@@ -552,9 +574,9 @@ namespace Console_test
         {
             if (freedrom == 'x' || freedrom == 'a')
             {
-                RealCountsFetch(1);
-                RealCountsFetch(3);
-                RealCountsFetch(5);
+                RealCountsFetch(0);
+                RealCountsFetch(2);
+                RealCountsFetch(4);
                 if (countsReal[0] < (counts[0] - tolerance) || countsReal[0] > (counts[0] + tolerance))
                     return false; 
                 else if (countsReal[2] < (counts[2] - tolerance) || countsReal[2] > (counts[2] + tolerance))
@@ -565,9 +587,9 @@ namespace Console_test
             
             if (freedrom == 'y' || freedrom == 'a')
             {
-                RealCountsFetch(2);
-                RealCountsFetch(4);
-                RealCountsFetch(6);
+                RealCountsFetch(1);
+                RealCountsFetch(3);
+                RealCountsFetch(5);
                 if (countsReal[1] < (counts[1] - tolerance) || countsReal[1] > (counts[1] + tolerance))
                     return false;
                 else if (countsReal[3] < (counts[3] - tolerance) || countsReal[3] > (counts[3] + tolerance))
@@ -594,6 +616,7 @@ namespace Console_test
             {
                 ErrorCodeExplain(errorCodes);
                 DisengageMotors();
+                motorEngaged = false;
                 return true;
             }
             else

@@ -12,10 +12,11 @@ namespace Console_test
 
         static void Main(string[] args)
         {
-            BeetleControl BS = new BeetleControl();
-            double[] P1 = { 0, 0, 138, 0, 0, 0 };
-            BeetleControl.Calibration();
-            //BS.GotoPosition(P1);
+            //BeetleControl BS = new BeetleControl();
+            //double[] P1 = { 0, 0, 140, 1, -0.5, 0 }; // { x, y, z, Rx, Ry, Rz }
+            //BeetleControl.Calibration(); //Only run this at startup
+            //Thread.Sleep(20000);
+            //BS.GotoReset();
             //Thread.Sleep(3000);
             //BS.XMoveTo(-4);
             //Thread.Sleep(3000);
@@ -23,14 +24,15 @@ namespace Console_test
             //Thread.Sleep(3000);
             //BS.ZMoveTo(140);
             //Thread.Sleep(3000);
-            //P1 = new double[] { 0, 0, 142, 0, 0, 0};
             //BS.GotoPosition(P1);
             //Thread.Sleep(3000);
-            //BS.GotoReset();
+            //BS.GotoClose(); //Only run this if control box will be powered off
             //Thread.Sleep(3000);
-            //BS.GotoClose();
+            //Console.WriteLine(GlobalVar.errors);
 
-            Console.WriteLine(GlobalVar.errors);
+            Console.WriteLine(GlobalVar.product.Keys.ElementAt(0));
+            Console.WriteLine(GlobalVar.product.Values.ElementAt(0));
+            Console.WriteLine(GlobalVar.product[GlobalVar.productName]);
         }
 
     } 

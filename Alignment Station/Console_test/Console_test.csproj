@@ -43,9 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeetleAlignment.cs" />
     <Compile Include="BeetleControl.cs" />
     <Compile Include="BeetleMathModel.cs" />
     <Compile Include="GlobalVar.cs" />
+    <Compile Include="PowerMeter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
