@@ -38,9 +38,9 @@ namespace Console_test
         {
             try
             {
-                T1Port = new SerialPort(GlobalVar.T1ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T2Port = new SerialPort(GlobalVar.T2ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T3Port = new SerialPort(GlobalVar.T3ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T1Port = new SerialPort(GlobalVar.beetleT1ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T2Port = new SerialPort(GlobalVar.beetleT2ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T3Port = new SerialPort(GlobalVar.beetleT3ComPortName, 115200, Parity.None, 8, StopBits.One);
                 T1Port.ReadTimeout = 200;
                 T1Port.WriteTimeout = 200;
                 T2Port.ReadTimeout = 200;
@@ -58,7 +58,7 @@ namespace Console_test
 
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
             double A1x, A1y, A2x, A2y, A3x, A3y;
-            switch(GlobalVar.fixtureNumber)
+            switch(GlobalVar.beetleFixtureNumber)
             {
                 case 1:
                     x1 = 193050;
@@ -160,12 +160,12 @@ namespace Console_test
 
         public static void SlowTrajSpeed()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 1200";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 1200";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 1200";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 1200";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 1200";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 1200";
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 1000";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 1000";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 600";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 1000";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 1000";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 600";
             T123SendOnly(xstr1, ystr1);
             T123SendOnly(xstr2, ystr2);
             T123SendOnly(xstr3, ystr3);

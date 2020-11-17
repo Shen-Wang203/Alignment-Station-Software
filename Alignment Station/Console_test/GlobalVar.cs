@@ -10,10 +10,10 @@ namespace Console_test
 {
     static class GlobalVar
     {
-        public static string T1ComPortName = "COM60";
-        public static string T2ComPortName = "COM26";
-        public static string T3ComPortName = "COM23";
-        public static byte fixtureNumber = 3;
+        public static string beetleT1ComPortName = "COM60";
+        public static string beetleT2ComPortName = "COM26";
+        public static string beetleT3ComPortName = "COM23";
+        public static byte beetleFixtureNumber = 3;
 
         public static string errors = "";
         public static bool errorFlag = false;

@@ -30,9 +30,9 @@ namespace Console_test
             //Thread.Sleep(3000);
             //Console.WriteLine(GlobalVar.errors);
 
-            Console.WriteLine(GlobalVar.product.Keys.ElementAt(0));
-            Console.WriteLine(GlobalVar.product.Values.ElementAt(0));
-            Console.WriteLine(GlobalVar.product[GlobalVar.productName]);
+
+            double a = 2.5964;
+            Console.WriteLine(Math.Round(a, 1));
         }
 
     } 
