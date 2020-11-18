@@ -18,27 +18,27 @@ namespace Console_for_tests
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
         private static float[] pivotPoint = { 0, 0, 0, 0 };
 
-        public static float set_R
+        public static float SetR
         {
             //get { return R; }
             set { R = value; r = value / Math.Cos(Math.PI / 6); }
         }
 
-        public static float set_L
+        public static float SetL
         {
             //get { return L; }
             set { L = value; }
         }
 
-        public static float set_baseZ
+        public static float SetBaseZ
         {
             //get { return baseZ; }
             set { baseZ = value + 8f; }
         }
 
-        public static float[] set_pivotPoint
+        public static float[] SetPivotPoint
         {
-            get { return pivotPoint; }
+            //get { return pivotPoint; }
             set { pivotPoint = value; }
         }
 

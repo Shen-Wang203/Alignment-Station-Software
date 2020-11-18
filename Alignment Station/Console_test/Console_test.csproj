@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeetleAlignment.cs" />
+    <Compile Include="BeetleSearch.cs" />
     <Compile Include="BeetleControl.cs" />
     <Compile Include="BeetleMathModel.cs" />
     <Compile Include="GlobalVar.cs" />

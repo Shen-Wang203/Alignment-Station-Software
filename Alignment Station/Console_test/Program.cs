@@ -30,9 +30,7 @@ namespace Console_test
             //Thread.Sleep(3000);
             //Console.WriteLine(GlobalVar.errors);
 
-
-            double a = 2.5964;
-            Console.WriteLine(Math.Round(a, 1));
+            Console.WriteLine(GlobalVar.product["SM1xN"]);
         }
 
     } 

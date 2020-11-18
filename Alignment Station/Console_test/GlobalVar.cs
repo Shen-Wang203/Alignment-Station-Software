@@ -21,6 +21,7 @@ namespace Console_test
         //public static double[] position = { 0, 0, 140.4, 0, 0, 0 };
         public static double[] position = { 0, 0, 138, 0, 0, 0 };
         public static double loss = -50.0f;
+        public static double lossCriteria = -0.2;
 
         public static string productName = "SM1xN";
         // Product type and its focal length (to be complete)
