@@ -30,7 +30,10 @@ namespace Console_test
             //Thread.Sleep(3000);
             //Console.WriteLine(GlobalVar.errors);
 
-            Console.WriteLine(GlobalVar.product["SM1xN"]);
+            var startTime = DateTime.Now;
+            Thread.Sleep(4000);
+            var timeElapsed = DateTime.Now - startTime;
+            Console.WriteLine(timeElapsed.Seconds);
         }
 
     } 

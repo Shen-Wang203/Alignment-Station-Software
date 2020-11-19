@@ -22,84 +22,59 @@ namespace Console_test
 
         private static string searchMode = "scan"; // defaul scan mode
 
-        public static float SetlossStage1
-        {
-            //get { return lossStage1; }
-            set { lossStage1 = value; }
-        }
-
         public static double SetLossCriteria
         {
             get { return lossCriteria; }
-            set { lossCriteria = value; }
+            set { GlobalVar.lossCriteria = value; }
         }
 
         public static double ReadLossCurrentMax => lossCurrentMax;
-
-        public BeetleAlignment()
-        {
-            // for multimmode step size is larger
-            if (productCondition >= 3)
-            {
-                xyStepSizeAmp = 3.0f;
-                lossStage1 = -3.0f;
-                lossStage2 = -1.5f;
-            }
-        }
-
-        private void NewRunParameterReset()
-        {
-            lossFailToImprove = 0;
-            secondTry = false;
-            lossCriteria = GlobalVar.lossCriteria;
-            lossCurrentMax = -50;
-        }
-
-        // Start searching from the current position where ferrule and lens cap are very close to each other
-        // backDistanceAfterSearching means the distance to go back after searching, this is for another search after applying epoxy
-        public void RunfromContact(double backDistanceAfterSearching)
-        {
-            NewRunParameterReset();
-
-            // Assume the starting position is at contact, need to go back for some distance first based on focal length
-            limitZ = GlobalVar.position[2];
-            BC.ZMoveTo(limitZ - focalLength);
-
-            Run(criteriaSelect: "global", backDistanceAfterSearching: backDistanceAfterSearching);
-        }
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
         //      "global": use GlobalVar.lossCriteria as criteria
         //      "currentMax": use lossCurentMax as criteria
-        public void Run(string criteriaSelect, double backDistanceAfterSearching)
+        // runFromContact: start searching from the current position where ferrule and lens cap are very close to each other
+        // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
+        // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
+        public void Run(string criteriaSelect, double backDistanceAfterSearching, bool runFromContact, bool useScanMode = true)
         {
-            if (criteriaSelect == "global")
-                lossCriteria = GlobalVar.lossCriteria;
-            else if (criteriaSelect == "currentMax")
+            ProductSelect();
+
+            if (criteriaSelect == "currentMax")
             {
                 if (productCondition >= 3)
                     lossCriteria = lossCurrentMax - 0.006;
                 else
                     lossCriteria = lossCurrentMax - 0.02;
             }
+            else if (criteriaSelect == "global")
+                lossCriteria = GlobalVar.lossCriteria;
+
+            ParameterReset();
+
+            if (!useScanMode)
+                lossStage1 = -10;
+
+            if (runFromContact)
+            {
+                // Assume the starting position is at contact, need to go back for some distance first based on focal length
+                limitZ = GlobalVar.position[2];
+                BC.ZMoveTo(limitZ - GlobalVar.product[GlobalVar.productName]);
+            }
 
             BeetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
             lossCurrentMax = loss[loss.Count - 1];
-
             while (!GlobalVar.errorFlag)
             {
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-
                 if (XYSearch())
                     break;
-
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-
                 ZSteppingSearch();
             }
 
@@ -109,6 +84,27 @@ namespace Console_test
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
                 BC.ZMoveTo(GlobalVar.position[2] - backDistanceAfterSearching);
+        }
+
+        private static void ParameterReset()
+        {
+            lossFailToImprove = 0;
+            secondTry = false;
+            lossCurrentMax = -50;
+
+            lossStage1 = -4.0f;
+            lossStage2 = -2.0f;
+            //searchMode = "scan";
+
+            GlobalVar.errorFlag = false;
+
+            // for multimmode step size is larger
+            if (productCondition >= 3)
+            {
+                xyStepSizeAmp = 3.0f;
+                lossStage1 = -3.0f;
+                lossStage2 = -1.5f;
+            }
         }
 
         // Return true when errorFlag is errected, which is meet criteria here.

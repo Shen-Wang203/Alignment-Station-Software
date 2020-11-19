@@ -14,16 +14,25 @@ namespace Console_test
         /*
          * All the motor errors will errecte GlobalVar.errorFlag automaticly in BeetleControl, so monitor this flag constantly
          * GlobalVar.errorflag will be used as program stop flag as well. Intance like meet criteria, unexpected high loss, failed
-         *      to find better loss and motor errors will errect this flag.
+         *     to find better loss and motor errors will errect this flag.
+         *     
          * All the error messages will be in GlobalVar.error
+         * 
          * Real-time position (Globalvar.position) will be updated whenever XMoveTo (Y, Z as well) or GotoPosition method is called; one exception
          *     is that when checkOnTarget is false, then the GlobalVar.position will be updated early even thought target position hasn't been reached
+         *     
          * Loss will be updated in GlobalVar.loss whenever PowerMeter.read() is called
+         * 
          * Real-time motor counts can be get from BeetleControl.countsOld
-         */
+         * 
+         * Searching Step Size Adjust:
+         *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * minStepSize), so change xyStepSizeAmp can change the step size
+         *     AxisInterpolationSearch step size is automatically adjusted based on loss, can change xyStepSizeAmp to change step size as needed (xyStepSizeAmp * theStepBasedOnLoss)
+         *     ZSteppingSearch step size is automatically adjusted based on loss, can change zStepSizeAmp to change step size as needed () (zStepSizeAmp * theStepBasedOnLoss)
+         */ 
         private static int xDirectionTrend = 1;
         private static int yDirectionTrend = 1;
-        private static double[] posCurrentMax;
+        private static double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0};
         private static readonly double stepSearchMinStepSize = 0.0002; // in mm, default is 0.2um 
 
         protected static sbyte lossFailToImprove = 0;
@@ -32,7 +41,7 @@ namespace Console_test
         protected static sbyte productCondition = 0;
         protected static List<double> loss = new List<double>();
         protected static List<double> pos = new List<double>();
-        protected static double lossCriteria = -0.2;
+        protected static double lossCriteria = GlobalVar.lossCriteria;
         protected static bool xyStepCountsLimit = false;
         protected static bool xyStepGoBackToLast = true;
         protected static double scanSearchRadius = 0.15; // in mm, default is 150um
@@ -41,11 +50,9 @@ namespace Console_test
         protected static double limitZ = 145;
         protected static string zMode = "normal";
         protected static double lossCurrentMax = -50;
-        protected static float focalLength = 0.2f;
 
-        public BeetleSearch()
+        protected static void ProductSelect()
         {
-            focalLength = GlobalVar.product[GlobalVar.productName];
             /* Add more if product extended
             *  productCondition has four types:
             *       = 1: SM + Large Ferrule Focal Length (> 0.1mm)
@@ -67,7 +74,6 @@ namespace Console_test
                 Console.WriteLine("Unsupported product");
                 GlobalVar.errorFlag = true;
             }
-            GlobalVar.errorFlag = false;
         }
 
         // for axis: x is 0, y is 1
@@ -173,6 +179,7 @@ namespace Console_test
         // step size is not based on loss, can be adjusted through and xyStepSizeAmp. 
         // starting from the current position and exit at the best position
         // loss is updated at GlobalVar.loss and match current position
+        // return false only when loss unchanged
         protected bool AxisSteppingSearch(sbyte axis)
         {
             loss.Clear();
@@ -400,7 +407,7 @@ namespace Console_test
         // step size is based on loss value, can be adjusted through zStepSizeAmp. 
         // starting from the current position
         // loss is updated at GlobalVar.loss and match current position (if return true)
-        // return false when reach limit second times
+        // return false when reach Z limit the second time
         protected bool ZSteppingSearch()
         {
             double z = GlobalVar.position[2], loss0, step, bound, diff;
@@ -411,6 +418,7 @@ namespace Console_test
             pos.Add(z);
             loss0 = loss[loss.Count - 1];
 
+            // Step size is related to loss, for example in -15.72 dB, step size is 15.7 um, then times the amplifier
             step = Math.Round(Math.Abs(loss[loss.Count - 1]), 1) * 0.001 * zStepSizeAmp;
             // large focal length products
             if (step < 0.002 && (productCondition == 1 || productCondition == 3))
@@ -580,7 +588,7 @@ namespace Console_test
         }
 
         // In Python code its called check_abnormal_loss
-        protected virtual void StatusCheck(double loss0)
+        protected static void StatusCheck(double loss0)
         {
             if (loss0 > (lossCurrentMax + 0.01))
             {
@@ -610,7 +618,7 @@ namespace Console_test
         }
 
         // In Python code is method is called loss_target_check
-        protected virtual bool LossMeetCriteria()
+        protected static bool LossMeetCriteria()
         {
             if (GlobalVar.loss > lossCriteria)
             {
