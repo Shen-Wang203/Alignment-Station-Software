@@ -10,9 +10,9 @@ namespace Console_test
 {
     static class GlobalVar
     {
-        public static string beetleT1ComPortName = "COM60";
-        public static string beetleT2ComPortName = "COM26";
-        public static string beetleT3ComPortName = "COM23";
+        public static string beetleT1ComPortName = "COM6";
+        public static string beetleT2ComPortName = "COM2";
+        public static string beetleT3ComPortName = "COM2";
         public static byte beetleFixtureNumber = 3;
 
         public static string errors = "";
@@ -21,6 +21,7 @@ namespace Console_test
         //public static double[] position = { 0, 0, 140.4, 0, 0, 0 };
         public static double[] position = { 0, 0, 138, 0, 0, 0 };
         public static double loss = -50.0f;
+        public static double lossReference = -13.0;
         public static double lossCriteria = -0.2;
 
         public static string productName = "SM1xN";

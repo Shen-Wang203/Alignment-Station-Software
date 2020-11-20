@@ -27,6 +27,19 @@ namespace Console_test
 
         private static void ParameterReset()
         {
+            GlobalVar.errorFlag = false;
+            // Father class parameter reset
+            lossFailToImprove = 0;
+            xyStepCountsLimit = false;
+            xyStepGoBackToLast = false;
+            xyStepSizeAmp = 1.0f;
+            if (lossCurrentMax >= -10)
+            {
+                Console.WriteLine("Run Alignment first");
+                GlobalVar.errorFlag = true;
+            }
+
+            // this class parameter reset
             xEpoxySolid = false;
             yEpoxySolid = false;
             xySearchCount = 0;
@@ -46,14 +59,17 @@ namespace Console_test
             switch (productCondition)
             {
                 case 1: // SM + larget gap
+                    lossCriteria = lossCurrentMax - 0.01;
                     zStepSize = 0.001;
                     xyStepSizeAmp = 1.0f;
                     break;
                 case 2: // SM + small gap
+                    lossCriteria = lossCurrentMax - 0.01;
                     zStepSize = 0.0005;
                     xyStepSizeAmp = 1.0f;
                     break;
                 case 3: // MM + larget gap
+                    lossCriteria = lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
                     xyStepSizeAmp = 2.0f;
                     bufferBig = 0.007;
@@ -61,6 +77,7 @@ namespace Console_test
                     lowerCriteriaStep = 0.01;
                     break;
                 case 4: // MM + small gap
+                    lossCriteria = lossCurrentMax - 0.005;
                     zStepSizeAmp = 2.0f;
                     zMode = "normal";
                     break;
@@ -69,7 +86,144 @@ namespace Console_test
 
         public void CuringRun()
         {
+            ParameterReset();
+            var startTime = DateTime.Now;
+            TimeSpan timeElapsed;
+            bool curingActive = true;
 
+            loss.Clear();
+            while (!GlobalVar.errorFlag)
+            {
+                // Curing phase control by time
+                timeElapsed = DateTime.Now - startTime;
+                if (timeElapsed.Seconds > totalMinutes * 60)
+                {
+                    Console.WriteLine("Time is up");
+                    break;
+                }
+                else if (!laterTimeFlag && timeElapsed.Seconds > 150)
+                {
+                    Console.WriteLine("Later Time Flag is on");
+                    laterTimeFlag = true;
+                    zStepSize = 0.0005;
+                    buffer = bufferSmall;
+                    xyStepCountsLimit = true;
+                    loss.Clear();
+                    toleranceForNewCriteria = 0.002;
+                }
+                else if (!xyStepGoBackToLast && timeElapsed.Seconds > 60)
+                {
+                    xyStepGoBackToLast = true;
+                    Console.WriteLine("XY Step Go Back To Last is on");
+                }
+
+                // Curing phase control by loss
+                Thread.Sleep(500);
+                loss.Add(PowerMeter.Read());
+                StatusCheck(loss[loss.Count - 1]);
+                if (curingActive && laterTimeFlag && loss.Count == 160)
+                {
+                    // if loss is within the buffer range for 80s, then we assume the epoxy is solid already
+                    Console.WriteLine("Loss is stable, pause the program");
+                    curingActive = false;
+                }
+                else if (curingActive && loss.Count > 24)
+                {
+                    if (productCondition >= 3)
+                        buffer = 0.003;
+                    else
+                        buffer = 0.007;
+                }
+                else if (curingActive && loss.Count == 24)
+                    Console.WriteLine("Smaller the buffer");
+
+                // if loss is too high, cancel xy search step limit
+                if (curingActive && laterTimeFlag && loss[loss.Count - 1] < -3)
+                    xyStepCountsLimit = false;
+                else if (curingActive && laterTimeFlag && loss[loss.Count - 1] > (lossCriteria - 0.1))
+                    xyStepCountsLimit = true;
+
+                // Start Moving if loss smaller than criteria - buffer
+                if (curingActive && loss[loss.Count - 1] < (lossCriteria - buffer))
+                {
+                    buffer = 0;
+                    if (!epoxyWillSolidFlag && loss.Count > 80 && laterTimeFlag && productCondition < 3)
+                    {
+                        epoxyWillSolidFlag = true;
+                        lossCriteria -= 0.005;
+                        Console.WriteLine("Epoxy will solid, lower criteri 0.005 to minimize movements");
+                    }
+                    // Z adjust
+                    if (xySearchCount == 2)
+                    {
+                        if (zSearchCountLoop >= 2)
+                        {
+                            ZStepBidirection();
+                            zSearchCountLoop = 0;
+                        }
+                        else
+                        {
+                            ZStepBack();
+                            zSearchCountLoop += 1;
+                        }
+                        xySearchCount = 0;
+                        zSearchCount += 1;
+                        loss.Add(PowerMeter.Read());
+                        if (LossMeetCriteria())
+                        {
+                            loss.Clear();
+                            continue;
+                        }
+                    }
+                    // XY adjust
+                    xySearchCount += 1;
+                    if (!XYSearch())
+                    {
+                        Console.WriteLine("X or Y doesn't change");
+                        if (xEpoxySolid && yEpoxySolid)
+                        {
+                            Console.WriteLine("Pause Program because X and Y are solid");
+                            curingActive = false;
+                        }
+                        GlobalVar.errorFlag = false;
+                    }
+                    loss.Clear();
+
+                    // if fail to meet criteria for 2 rounds, then we loose the criteria
+                    if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && timeElapsed.Seconds > 50)
+                    {
+                        lossCriteria -= lowerCriteriaStep;
+                        Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
+                        zSearchCount = 0;
+                        // allow one more xy after lower criteria
+                        xySearchCount = 1;
+                    }
+                    // loose criteria earlier after latertimeflag
+                    else if (zSearchCount >= 1 && laterTimeFlag && xySearchCount >= 1)
+                    {
+                        lossCriteria -= lowerCriteriaStep;
+                        Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
+                        zSearchCount = 0;
+                        // allow one more xy after lower criteria
+                        xySearchCount = 1;
+                    }
+                }
+                else if (curingActive && loss[loss.Count - 1] >= lossCriteria)
+                {
+                    xySearchCount = 0;
+                    zSearchCount = 0;
+                    zSearchCountLoop = 0;
+                    if (laterTimeFlag)
+                        buffer = bufferSmall;
+                    else
+                        buffer = bufferBig;
+                    if (loss[loss.Count-1] > (lossCriteria + toleranceForNewCriteria))
+                    {
+                        lossCriteria = loss[loss.Count - 1] - toleranceForNewCriteria;
+                        Console.WriteLine($"New Criteria {Math.Round(lossCriteria, 4)}");
+                    }
+                }
+            }
         }
 
         private bool XYSearch()

@@ -8,6 +8,15 @@ namespace Console_test
 {
     class BeetleAlignment : BeetleSearch
     {
+        private static BeetleAlignment instance;
+        
+        public static BeetleAlignment GetInstance()
+        {
+            if (instance == null)
+                instance = new BeetleAlignment();
+            return instance;
+        }
+
         //GlobalVar.errorflag will be used as program stop flag as well.Intance like meet criteria, unexpected high loss, failed
         //      to find better loss and motor errors will errect this flag.
 
@@ -41,7 +50,7 @@ namespace Console_test
         {
             ProductSelect();
 
-            if (criteriaSelect == "currentMax")
+            if (criteriaSelect == "currentMax" && lossCurrentMax != -50)
             {
                 if (productCondition >= 3)
                     lossCriteria = lossCurrentMax - 0.006;

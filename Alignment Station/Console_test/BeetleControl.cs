@@ -51,9 +51,10 @@ namespace Console_test
                 T2Port.Open();
                 T3Port.Open();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO: message box
+                Console.WriteLine("Serial Connection Error");
             }
 
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
