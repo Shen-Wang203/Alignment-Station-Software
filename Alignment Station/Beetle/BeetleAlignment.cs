@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Console_test
+namespace Beetle
 {
     class BeetleAlignment : BeetleSearch
     {
@@ -31,13 +31,13 @@ namespace Console_test
 
         private static string searchMode = "scan"; // defaul scan mode
 
-        public static double SetLossCriteria
+        public double SetLossCriteria
         {
             get { return lossCriteria; }
             set { GlobalVar.lossCriteria = value; }
         }
 
-        public static double ReadLossCurrentMax => lossCurrentMax;
+        public string ReadLossCurrentMax => lossCurrentMax.ToString();
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
@@ -69,7 +69,7 @@ namespace Console_test
             {
                 // Assume the starting position is at contact, need to go back for some distance first based on focal length
                 limitZ = GlobalVar.position[2];
-                BC.ZMoveTo(limitZ - GlobalVar.product[GlobalVar.productName]);
+                BeetleControl.ZMoveTo(limitZ - GlobalVar.product[GlobalVar.productName]);
             }
 
             BeetleControl.SlowTrajSpeed();
@@ -92,7 +92,7 @@ namespace Console_test
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
-                BC.ZMoveTo(GlobalVar.position[2] - backDistanceAfterSearching);
+                BeetleControl.ZMoveTo(GlobalVar.position[2] - backDistanceAfterSearching);
         }
 
         private static void ParameterReset()

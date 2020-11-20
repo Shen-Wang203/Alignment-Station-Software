@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace Console_test
+namespace Beetle
 {
     class BeetleSearch
     {
@@ -34,7 +34,6 @@ namespace Console_test
 
         protected static sbyte lossFailToImprove = 0;
         protected static bool secondTry = false;
-        protected static BeetleControl BC = new BeetleControl();
         protected static sbyte productCondition = 0;
         protected static List<double> loss = new List<double>();
         protected static List<double> pos = new List<double>();
@@ -105,9 +104,9 @@ namespace Console_test
             for (int i = 0; i < 2; i ++)
             {
                 if (axis == 0)
-                    BC.XMoveTo(p[i], mode: 't', checkOnTarget: false);
+                    BeetleControl.XMoveTo(p[i], mode: 't', checkOnTarget: false);
                 else
-                    BC.YMoveTo(p[i], mode: 't', checkOnTarget: false);
+                    BeetleControl.YMoveTo(p[i], mode: 't', checkOnTarget: false);
                 
                 // Active Monitor Loss and Position
                 trend = 0;
@@ -147,12 +146,12 @@ namespace Console_test
                 {
                     if (axis == 0)
                     {
-                        BC.XMoveTo(pos[loss.IndexOf(loss.Max())]);
+                        BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())]);
                         xDirectionTrend = xDirectionTrend * (-2 * i + 1);
                     }
                     else
                     {
-                        BC.YMoveTo(pos[loss.IndexOf(loss.Max())]);
+                        BeetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())]);
                         yDirectionTrend = yDirectionTrend * (-2 * i + 1);
                     }
                     Thread.Sleep(150); // delay 150ms
@@ -164,9 +163,9 @@ namespace Console_test
                 {
                     // return to original position first
                     if (axis == 0)
-                        BC.XMoveTo(p0);
+                        BeetleControl.XMoveTo(p0);
                     else
-                        BC.YMoveTo(p0);
+                        BeetleControl.YMoveTo(p0);
                 }
             }
             // if both direction failed to find max, return false and return to original pos
@@ -202,12 +201,12 @@ namespace Console_test
                 if (axis == 0)
                 {
                     p = GlobalVar.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend;
-                    BC.XMoveTo(p, ignoreError: true, applyBacklash: true);
+                    BeetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true);
                 }
                 else
                 {
                     p = GlobalVar.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend;
-                    BC.YMoveTo(p, ignoreError: true, applyBacklash: true);
+                    BeetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true);
                 }
                 // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
                 Thread.Sleep(150); // delay 150ms
@@ -268,9 +267,9 @@ namespace Console_test
             }
 
             if (axis == 0)
-                BC.XMoveTo(p, ignoreError: true, applyBacklash: true);
+                BeetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true);
             else
-                BC.YMoveTo(p, ignoreError: true, applyBacklash: true);
+                BeetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true);
             // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
             Thread.Sleep(150); // delay 150ms
             loss.Add(PowerMeter.Read());
@@ -311,9 +310,9 @@ namespace Console_test
             while (i < 6)
             {
                 if (axis == 0)
-                    BC.XMoveTo(pList[i], ignoreError: true, applyBacklash: true);
+                    BeetleControl.XMoveTo(pList[i], ignoreError: true, applyBacklash: true);
                 else
-                    BC.YMoveTo(pList[i], ignoreError: true, applyBacklash: true);
+                    BeetleControl.YMoveTo(pList[i], ignoreError: true, applyBacklash: true);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[axis]);
@@ -366,9 +365,9 @@ namespace Console_test
             {
                 Console.WriteLine("Unchange, go back to original");
                 if (axis == 0)
-                    BC.XMoveTo(p0, ignoreError: true, applyBacklash: true);
+                    BeetleControl.XMoveTo(p0, ignoreError: true, applyBacklash: true);
                 else
-                    BC.YMoveTo(p0, ignoreError: true, applyBacklash: true);
+                    BeetleControl.YMoveTo(p0, ignoreError: true, applyBacklash: true);
                 return false;
             }
 
@@ -379,9 +378,9 @@ namespace Console_test
             if (Math.Abs(pFinal - pos[pos.Count - 1]) > BeetleControl.encoderResolution)
             {
                 if (axis == 0)
-                    BC.XMoveTo(pFinal, ignoreError: true, applyBacklash: true);
+                    BeetleControl.XMoveTo(pFinal, ignoreError: true, applyBacklash: true);
                 else
-                    BC.YMoveTo(pFinal, ignoreError: true, applyBacklash: true);
+                    BeetleControl.YMoveTo(pFinal, ignoreError: true, applyBacklash: true);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[axis]);
@@ -441,14 +440,16 @@ namespace Console_test
                     secondTry = true;
                     lossFailToImprove = 0;
                     z -= (step + 0.07);
-                    BC.ZMoveTo(z, ignoreError: true);
+                    BeetleControl.ZMoveTo(z, ignoreError: true);
+                    Console.WriteLine($"z: {z}");
                     break;
                 }
 
-                BC.ZMoveTo(z, ignoreError: true, applyBacklash: true);
+                BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[2]);
+                Console.WriteLine($"z: {z}");
                 if (LossMeetCriteria())
                     return true;
 
@@ -487,10 +488,11 @@ namespace Console_test
                     if (successNum != 0)
                     {
                         // go back to the previous points
-                        BC.ZMoveTo(z, ignoreError: true, applyBacklash: true);
+                        BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true);
                         Thread.Sleep(150); // delay 150ms
                         loss.Add(PowerMeter.Read());
                         pos.Add(GlobalVar.position[2]);
+                        Console.WriteLine($"z: {z}");
                         break;
                     }
                 }
@@ -603,7 +605,7 @@ namespace Console_test
                 {
                     GlobalVar.errors = "Unexpected High Loss";
                     BeetleControl.NormalTrajSpeed();
-                    BC.GotoReset();
+                    BeetleControl.GotoReset();
                     GlobalVar.errorFlag = true;
                 }
 
@@ -613,7 +615,7 @@ namespace Console_test
                     lossFailToImprove = 0;
                     GlobalVar.errors = "Fail to find better Loss, Go to Best Position";
                     GlobalVar.errorFlag = true;
-                    BC.GotoPosition(posCurrentMax);
+                    BeetleControl.GotoPosition(posCurrentMax);
                 }
             }
         }

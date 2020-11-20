@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Console_test
+namespace Beetle
 {
     static class BeetleMathModel
     {

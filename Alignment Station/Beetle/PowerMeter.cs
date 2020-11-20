@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using NationalInstruments.VisaNS;
 
-namespace Console_test
+namespace Beetle
 {
     static class PowerMeter
     {

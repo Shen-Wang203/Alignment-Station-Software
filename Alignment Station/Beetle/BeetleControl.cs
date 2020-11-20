@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO.Ports;
+using System.Windows.Forms;
 
-namespace Console_test
+namespace Beetle
 {
-    class BeetleControl
+    static class BeetleControl
     {
         private static SerialPort T1Port;
         private static SerialPort T2Port;
@@ -19,8 +20,8 @@ namespace Console_test
         private static sbyte xDirectionOld = 0;
         private static sbyte yDirectionOld = 0;
         private static sbyte zDirectionOld = 0;
-        private static bool motorEngaged = false;
         
+        public static bool motorEngaged = false;
         public static double xBacklashMM = 0; // in mm
         public static double yBacklashMM = 0; // in mm
         public static double zBacklashMM = 0.0002; // in mm
@@ -28,9 +29,9 @@ namespace Console_test
         public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
         public static int[] countsOld = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at SendCounts() or GotoTargetCounts()
-        public static double[] resetPosition = new double[6] { 0, 0, 138, 0, 0, 0 }; // This is the starting position
+        public static double[] resetPosition = new double[6] { 0, 0, 140, 0.8, 0, 0 }; // This is the starting position
 
-        public BeetleControl()
+        static BeetleControl()
         {
             try
             {
@@ -47,10 +48,11 @@ namespace Console_test
                 T2Port.Open();
                 T3Port.Open();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //TODO: message box
                 Console.WriteLine("Serial Connection Error");
+                MessageBox.Show(e.Message);
             }
 
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
@@ -196,7 +198,7 @@ namespace Console_test
 
         // position is the platform position
         // will update GlobalVar.position
-        public bool GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] Tmm = BeetleMathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
@@ -206,7 +208,7 @@ namespace Console_test
 
         // XAbs is the platform x absolute position in mm
         // will update GlobalVar.position
-        public bool XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte xDirec;
             double counter = 0;
@@ -234,7 +236,7 @@ namespace Console_test
 
         // YAbs is the platform y absolute position in mm
         // will update GlobalVar.position
-        public bool YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte yDirec;
             double counter = 0;
@@ -262,7 +264,7 @@ namespace Console_test
 
         // ZAbs is the platform z absolute position in mm
         // will update GlobalVar.position
-        public bool ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte zDirec;
             double counter = 0;
@@ -285,7 +287,7 @@ namespace Console_test
 
         // RxAbs is the absolute Rx value in degree
         // will update GlobalVar.position
-        public bool RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
@@ -296,7 +298,7 @@ namespace Console_test
 
         // RyAbs is the absolute Ry value in degree
         // will update GlobalVar.position
-        public bool RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
@@ -307,7 +309,7 @@ namespace Console_test
 
         // RzAbs is the absolute Rz value in degree
         // will update GlobalVar.position
-        public bool RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static bool RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
             GlobalVar.position.CopyTo(targetPosition, 0);
@@ -316,12 +318,12 @@ namespace Console_test
             return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public bool GotoReset() => GotoPosition(resetPosition);
+        public static bool GotoReset() => GotoPosition(resetPosition);
 
-        public bool GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 });
+        public static bool GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 });
 
         // return false when timeout or driver board errors or out of range
-        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        private static bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             int timeoutloop, timeout = 50;
             if (mode == 't')
@@ -342,6 +344,7 @@ namespace Console_test
                     motorEngaged = false;
                     GlobalVar.errors = "Out of Range\n";
                     GlobalVar.errorFlag = true;
+                    Console.WriteLine(GlobalVar.errors);
                     return false;
                 }
                 // timeout for about 5s
@@ -355,6 +358,7 @@ namespace Console_test
                 }
                 if (!ignoreError && timeoutloop >= 49)
                 {
+                    Console.WriteLine("Time Out Error");
                     DisengageMotors();
                     motorEngaged = false;
                     if (!CheckErrors())
@@ -365,6 +369,7 @@ namespace Console_test
                                 GlobalVar.errors = string.Concat(GlobalVar.errors, "Axis ", j + 1, " Timeout Error\n");
                         }
                     }
+                    Console.WriteLine(GlobalVar.errors);
                     GlobalVar.errorFlag = true;
                     return false;
                 }

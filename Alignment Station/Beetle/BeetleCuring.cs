@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Console_test
+namespace Beetle
 {
     class BeetleCuring : BeetleSearch
     {
@@ -294,7 +294,7 @@ namespace Console_test
             return true;
         }
 
-        private static void ZStepBack() => BC.ZMoveTo(GlobalVar.position[2] - zStepSize, ignoreError: true, doubleCheck: true);
+        private static void ZStepBack() => BeetleControl.ZMoveTo(GlobalVar.position[2] - zStepSize, ignoreError: true, doubleCheck: true);
 
         private static void ZStepBidirection()
         {
@@ -310,7 +310,7 @@ namespace Console_test
             while (!GlobalVar.errorFlag)
             {
                 z += zStepSize * direc;
-                BC.ZMoveTo(z, ignoreError: true, applyBacklash: true);
+                BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[2]);
@@ -352,7 +352,7 @@ namespace Console_test
                 }
             }
 
-            BC.ZMoveTo(z, ignoreError: true, applyBacklash: true);
+            BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true);
             Thread.Sleep(150);
             StatusCheck(loss.Max());
         }
