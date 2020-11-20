@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Console_for_tests
+namespace Console_test
 {
     static class BeetleMathModel
     {
@@ -16,7 +16,7 @@ namespace Console_for_tests
         // This is the height of base and top moving part thickness, this is a fixture fixed parameter, find it from the 3D model. 
         private static float baseZ = 65.9221f + 8f;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
-        private static float[] pivotPoint = { 0, 0, 0, 0 };
+        //GlobalVar.pivotPoint = { 0, 0, 0, 0 };
 
         public static float SetR
         {
@@ -39,7 +39,7 @@ namespace Console_for_tests
         public static float[] SetPivotPoint
         {
             //get { return pivotPoint; }
-            set { pivotPoint = value; }
+            set { GlobalVar.pivotPoint = value; }
         }
 
         //Matrix multiply C = A.B, A and B can be any dimension
@@ -49,7 +49,7 @@ namespace Console_for_tests
             int column = B.GetLength(1);
             int element = A.GetLength(1);
             double[,] C = new double[row, column];
-
+            
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
@@ -128,22 +128,22 @@ namespace Console_for_tests
             // Original coordinate's center is in the geometry center
             double[] a = { 0, r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                a[i] -= pivotPoint[i];
+                a[i] -= GlobalVar.pivotPoint[i];
             double[] b = { r * Math.Cos(Math.PI * 5 / 6), r * Math.Sin(Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                b[i] -= pivotPoint[i];
+                b[i] -= GlobalVar.pivotPoint[i];
             double[] c = { r * Math.Cos(-Math.PI * 5 / 6), r * Math.Sin(-Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                c[i] -= pivotPoint[i];
+                c[i] -= GlobalVar.pivotPoint[i];
             double[] d = { 0, -r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                d[i] -= pivotPoint[i];
+                d[i] -= GlobalVar.pivotPoint[i];
             double[] e = { r * Math.Cos(-Math.PI / 6), r * Math.Sin(-Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                e[i] -= pivotPoint[i];
+                e[i] -= GlobalVar.pivotPoint[i];
             double[] f = { r * Math.Cos(Math.PI / 6), r * Math.Sin(Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                f[i] -= pivotPoint[i];
+                f[i] -= GlobalVar.pivotPoint[i];
 
             // Coordinate transform based on pivot point
             double[] aa = MxA(MT(x, y, z), MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a))));
@@ -168,7 +168,7 @@ namespace Console_for_tests
             double A, B, C;
             double T1x, T1y, T2x, T2y, T3x, T3y;
             // Find the position of T1
-            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + pivotPoint[2];
+            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + GlobalVar.pivotPoint[2];
             double p = Vbc[0]; double q = Vbc[1]; double v = Vbc[2];
             if (p == 0)
             {
@@ -206,7 +206,7 @@ namespace Console_for_tests
             }
 
             // Find the position of T2
-            s = Mde[0]; t = Mde[1]; u = Mde[2] + pivotPoint[2];
+            s = Mde[0]; t = Mde[1]; u = Mde[2] + GlobalVar.pivotPoint[2];
             p = Vde[0]; q = Vde[1]; v = Vde[2];
             if (p == 0)
             {
@@ -243,7 +243,7 @@ namespace Console_for_tests
             }
 
             // Find the position of T3
-            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + pivotPoint[2];
+            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + GlobalVar.pivotPoint[2];
             p = Vfa[0]; q = Vfa[1]; v = Vfa[2];
             if (p == 0)
             {
@@ -279,12 +279,12 @@ namespace Console_for_tests
             }
 
             // The T points location at original/center coordinate
-            T1x += pivotPoint[0];
-            T1y += pivotPoint[1];
-            T2x += pivotPoint[0];
-            T2y += pivotPoint[1];
-            T3x += pivotPoint[0];
-            T3y += pivotPoint[1];
+            T1x += GlobalVar.pivotPoint[0];
+            T1y += GlobalVar.pivotPoint[1];
+            T2x += GlobalVar.pivotPoint[0];
+            T2y += GlobalVar.pivotPoint[1];
+            T3x += GlobalVar.pivotPoint[0];
+            T3y += GlobalVar.pivotPoint[1];
             double[] T = { T1x, T1y, T2x, T2y, T3x, T3y };
 
             return T;

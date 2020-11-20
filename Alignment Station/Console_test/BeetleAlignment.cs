@@ -46,7 +46,7 @@ namespace Console_test
         // runFromContact: start searching from the current position where ferrule and lens cap are very close to each other
         // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
-        public void Run(string criteriaSelect, double backDistanceAfterSearching, bool runFromContact, bool useScanMode = true)
+        public void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
             ProductSelect();
 

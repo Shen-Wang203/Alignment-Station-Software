@@ -4,10 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO.Ports;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Net.Http.Headers;
-using Console_for_tests;
-using System.Globalization;
 
 namespace Console_test
 {

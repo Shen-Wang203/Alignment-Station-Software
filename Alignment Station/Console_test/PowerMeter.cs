@@ -7,7 +7,7 @@ using NationalInstruments.VisaNS;
 
 namespace Console_test
 {
-    class PowerMeter
+    static class PowerMeter
     {
         private static MessageBasedSession mSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open("GPIB0::12::INSTR");
         private static double loss;

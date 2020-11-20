@@ -8,6 +8,15 @@ namespace Console_test
 {
     class BeetleCuring : BeetleSearch
     {
+        private static BeetleCuring instance;
+
+        public static BeetleCuring GetInstance()
+        {
+            if (instance == null)
+                instance = new BeetleCuring();
+            return instance;
+        }
+
         private static readonly int totalMinutes = 16;
         private static bool xEpoxySolid = false;
         private static bool yEpoxySolid = false;
@@ -84,7 +93,7 @@ namespace Console_test
             }
         }
 
-        public void CuringRun()
+        public void Run()
         {
             ParameterReset();
             var startTime = DateTime.Now;

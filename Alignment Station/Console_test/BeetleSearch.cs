@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 
 namespace Console_test
@@ -82,6 +79,7 @@ namespace Console_test
         // loss is updated at GlobalVar.loss and match current position (if return true)
         protected bool AxisScanSearch(sbyte axis)
         {
+            Console.WriteLine($"Scan Search {axis} Started");
             double p1, p2, p0;
             int count0;
             loss.Clear();
@@ -182,6 +180,7 @@ namespace Console_test
         // return false only when loss unchanged
         protected bool AxisSteppingSearch(sbyte axis)
         {
+            Console.WriteLine($"Stepping Search {axis} Started");
             loss.Clear();
             pos.Clear();
             double loss0, p = GlobalVar.position[axis], bound, diff;
@@ -290,6 +289,7 @@ namespace Console_test
         // loss is updated at GlobalVar.loss and match current position (if return true)
         protected bool AxisInterpolationSearch(sbyte axis)
         {
+            Console.WriteLine($"Interpolation Search {axis} Started");
             loss.Clear();
             pos.Clear();
             List<double> pList;
@@ -410,6 +410,7 @@ namespace Console_test
         // return false when reach Z limit the second time
         protected bool ZSteppingSearch()
         {
+            Console.WriteLine("Z Stepping Started");
             double z = GlobalVar.position[2], loss0, step, bound, diff;
             loss.Clear();
             pos.Clear();
