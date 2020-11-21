@@ -15,7 +15,7 @@ namespace Beetle
         public static string beetleT3ComPortName = "COM15";
         public static byte beetleFixtureNumber = 3;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
-        public static float[] pivotPoint = { 0, 0, 0, 0 };
+        public static float[] pivotPoint = { 0, 0, 42, 0 };
 
         public static string errors = "";
         public static bool errorFlag = false;

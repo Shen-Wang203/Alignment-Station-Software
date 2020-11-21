@@ -53,5 +53,11 @@ namespace Beetle
         {
             BeetleControl.Calibration();
         }
+
+        private void IL_Click(object sender, EventArgs e)
+        {
+            PowerMeter.Read();
+            IL.Text = GlobalVar.loss.ToString();
+        }
     }
 }

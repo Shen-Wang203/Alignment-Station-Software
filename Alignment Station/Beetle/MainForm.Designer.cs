@@ -105,6 +105,7 @@
             this.IL.Size = new System.Drawing.Size(35, 13);
             this.IL.TabIndex = 7;
             this.IL.Text = "-50dB";
+            this.IL.Click += new System.EventHandler(this.IL_Click);
             // 
             // MainForm
             // 

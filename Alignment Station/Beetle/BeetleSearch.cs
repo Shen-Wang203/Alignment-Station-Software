@@ -114,6 +114,7 @@ namespace Beetle
                 loss.Clear();
                 pos.Clear();
                 loss0 = PowerMeter.Read();
+                GlobalVar.position[axis] = p0;
                 while (Math.Abs(GlobalVar.position[axis] - p[i]) > BeetleControl.tolerance * BeetleControl.encoderResolution)
                 {
                     BeetleControl.RealCountsFetch(axis);
@@ -137,7 +138,7 @@ namespace Beetle
                     // when trend <= -2 means wrong direction, trend = 1 means has max
                     if (trend <= -2 || trend == 1)
                         break;
-                    if (unchange > 50)
+                    if (unchange > 100)
                         break;
                 }
 
@@ -147,12 +148,12 @@ namespace Beetle
                     if (axis == 0)
                     {
                         BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())]);
-                        xDirectionTrend = xDirectionTrend * (-2 * i + 1);
+                        xDirectionTrend *= (-2 * i + 1);
                     }
                     else
                     {
                         BeetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())]);
-                        yDirectionTrend = yDirectionTrend * (-2 * i + 1);
+                        yDirectionTrend *= (-2 * i + 1);
                     }
                     Thread.Sleep(150); // delay 150ms
                     StatusCheck(PowerMeter.Read());
@@ -161,6 +162,7 @@ namespace Beetle
                 // else go the other direction
                 else
                 {
+                    Console.WriteLine("Return to Original and Change Direction");
                     // return to original position first
                     if (axis == 0)
                         BeetleControl.XMoveTo(p0);

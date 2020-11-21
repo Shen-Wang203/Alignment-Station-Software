@@ -48,6 +48,8 @@ namespace Beetle
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
         public void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
+            Console.WriteLine("A New Alignemnt Starts");
+
             ProductSelect();
 
             if (criteriaSelect == "currentMax" && lossCurrentMax != -50)

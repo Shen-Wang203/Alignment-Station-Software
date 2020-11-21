@@ -447,7 +447,7 @@ namespace Beetle
         //mode can be 't' or 'p' meaning trajectory or stepping method
         private static void SendCounts(int[] counts, char freedom = 'a', char mode = 'p')
         {
-            int trajectoryThreshold = 20000;
+            int trajectoryThreshold = 10000;
             string xstrp = "p 0 ";
             string xstrt = "t 0 ";
             string ystrp = "p 1 ";

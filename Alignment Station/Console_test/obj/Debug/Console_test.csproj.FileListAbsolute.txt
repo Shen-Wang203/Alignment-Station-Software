@@ -6,3 +6,11 @@ C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Console_tes
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CopyComplete
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.exe
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.pdb
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\bin\Debug\Console_test.exe.config
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\bin\Debug\Console_test.exe
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\bin\Debug\Console_test.pdb
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\obj\Debug\Console_test.csprojAssemblyReference.cache
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CoreCompileInputs.cache
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CopyComplete
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\obj\Debug\Console_test.exe
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Console_test\obj\Debug\Console_test.pdb

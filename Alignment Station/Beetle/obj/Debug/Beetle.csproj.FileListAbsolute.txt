@@ -9,3 +9,14 @@ C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CopyComplete
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.exe
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.pdb
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\bin\Debug\Beetle.exe.config
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\bin\Debug\Beetle.exe
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\bin\Debug\Beetle.pdb
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.csprojAssemblyReference.cache
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.MainForm.resources
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.Properties.Resources.resources
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.GenerateResource.cache
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CoreCompileInputs.cache
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CopyComplete
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.exe
+C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.pdb
