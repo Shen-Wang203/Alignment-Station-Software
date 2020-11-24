@@ -20,7 +20,7 @@ namespace Beetle
          *     
          * Loss will be updated in GlobalVar.loss whenever PowerMeter.read() is called
          * 
-         * Real-time motor counts can be get from BeetleControl.countsOld
+         * Real-time motor counts can be get from BeetleControl.countsReal
          * 
          * Searching Step Size Adjust:
          *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * minStepSize), so change xyStepSizeAmp can change the step size
@@ -99,7 +99,7 @@ namespace Beetle
 
             double[] p = new double[2] { p1, p2 };
             p0 = GlobalVar.position[axis];
-            count0 = BeetleControl.countsOld[axis];
+            count0 = BeetleControl.countsReal[axis];
 
             for (int i = 0; i < 2; i ++)
             {
@@ -114,7 +114,6 @@ namespace Beetle
                 loss.Clear();
                 pos.Clear();
                 loss0 = PowerMeter.Read();
-                GlobalVar.position[axis] = p0;
                 while (Math.Abs(GlobalVar.position[axis] - p[i]) > BeetleControl.tolerance * BeetleControl.encoderResolution)
                 {
                     BeetleControl.RealCountsFetch(axis);

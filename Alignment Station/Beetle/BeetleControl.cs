@@ -28,7 +28,6 @@ namespace Beetle
         public static sbyte tolerance = 2; // in encoder counts
         public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
-        public static int[] countsOld = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at SendCounts() or GotoTargetCounts()
         public static double[] resetPosition = new double[6] { 0, 0, 140, 0.8, 0, 0 }; // This is the starting position
 
         static BeetleControl()
@@ -223,13 +222,14 @@ namespace Beetle
             xDirectionOld = xDirec;
 
             int[] targetCounts = new int[6];
-            countsOld.CopyTo(targetCounts, 0);
+            countsReal.CopyTo(targetCounts, 0);
             int deltacounts = (int)Math.Round((XAbs + counter - GlobalVar.position[0]) / encoderResolution);
-            targetCounts[0] = countsOld[0] + deltacounts;
-            targetCounts[2] = countsOld[2] - deltacounts;
-            targetCounts[4] = countsOld[4] - deltacounts;
+            targetCounts[0] = countsReal[0] + deltacounts;
+            targetCounts[2] = countsReal[2] - deltacounts;
+            targetCounts[4] = countsReal[4] - deltacounts;
 
-            GlobalVar.position[0] = XAbs;
+            if (checkOnTarget)
+                GlobalVar.position[0] = XAbs;
 
             return GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
@@ -251,13 +251,14 @@ namespace Beetle
             yDirectionOld = yDirec;
 
             int[] targetCounts = new int[6];
-            countsOld.CopyTo(targetCounts, 0);
+            countsReal.CopyTo(targetCounts, 0);
             int deltacounts = (int)Math.Round((YAbs + counter - GlobalVar.position[1]) / encoderResolution);
-            targetCounts[1] = countsOld[1] + deltacounts;
-            targetCounts[3] = countsOld[3] + deltacounts;
-            targetCounts[5] = countsOld[5] + deltacounts;
+            targetCounts[1] = countsReal[1] + deltacounts;
+            targetCounts[3] = countsReal[3] + deltacounts;
+            targetCounts[5] = countsReal[5] + deltacounts;
 
-            GlobalVar.position[1] = YAbs;
+            if (checkOnTarget)
+                GlobalVar.position[1] = YAbs;
 
             return GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
@@ -356,6 +357,7 @@ namespace Beetle
                         break;
                     timeoutloop++;
                 }
+
                 if (!ignoreError && timeoutloop >= 49)
                 {
                     Console.WriteLine("Time Out Error");
@@ -457,19 +459,19 @@ namespace Beetle
 
             if (freedom == 'x' || freedom == 'a')
             {
-                if ((Math.Abs(counts[0] - countsOld[0]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[0] - countsReal[0]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[0], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[0]);
                 T1SendOnly(cmd);
 
-                if ((Math.Abs(counts[2] - countsOld[2]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[2] - countsReal[2]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[2], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[2]);
                 T2SendOnly(cmd);
 
-                if ((Math.Abs(counts[4] - countsOld[4]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[4] - countsReal[4]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[4], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[4]);
@@ -478,26 +480,24 @@ namespace Beetle
             
             if (freedom == 'y' || freedom == 'a')
             {
-                if ((Math.Abs(counts[1] - countsOld[1]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[1] - countsReal[1]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[1], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[1]);
                 T1SendOnly(cmd);
 
-                if ((Math.Abs(counts[3] - countsOld[3]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[3] - countsReal[3]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[3], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[3]);
                 T2SendOnly(cmd);
 
-                if ((Math.Abs(counts[5] - countsOld[5]) < trajectoryThreshold) && mode == 'p')
+                if ((Math.Abs(counts[5] - countsReal[5]) < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[5], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[5]);
                 T3SendOnly(cmd);
             }
-
-            counts.CopyTo(countsOld, 0);
         }
 
         // Fetch each axis's real counts. axis = 0 fetch all 6 axis
