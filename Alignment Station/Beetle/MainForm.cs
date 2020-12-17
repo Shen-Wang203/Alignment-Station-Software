@@ -59,5 +59,22 @@ namespace Beetle
             PowerMeter.Read();
             IL.Text = GlobalVar.loss.ToString();
         }
+
+        private void ControlBoxDetection_Click(object sender, EventArgs e)
+        {
+            if (BeetleSerialPortAssign.AssignPorts("COM27","COM28","COM32"))
+                GlobalVar.SaveCOMPorts();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            GlobalVar.LoadParameters();
+        }
+
+        private void Test_Click(object sender, EventArgs e)
+        {
+            BeetleControl.XMoveTo(-2, mode: 't', checkOnTarget: false);
+            Console.WriteLine(GlobalVar.position[0]);
+        }
     }
 }

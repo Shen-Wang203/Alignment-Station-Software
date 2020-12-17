@@ -76,9 +76,13 @@ namespace Beetle
         // radius in mm
         // starting from the current position and exit at the best position (if return true)
         // loss is updated at GlobalVar.loss and match current position (if return true)
+        // TODO: Use threading to do scan and power fetch
         protected bool AxisScanSearch(sbyte axis)
-        {
-            Console.WriteLine($"Scan Search {axis} Started");
+        {   
+            if (axis == 0)
+                Console.WriteLine("Scan Search X Started");
+            else
+                Console.WriteLine("Scan Search Y Started");
             double p1, p2, p0;
             int count0;
             loss.Clear();
@@ -118,6 +122,7 @@ namespace Beetle
                 {
                     BeetleControl.RealCountsFetch(axis);
                     GlobalVar.position[axis] = p0 + (BeetleControl.countsReal[axis] - count0) * BeetleControl.encoderResolution;
+                    Console.WriteLine(Math.Round(GlobalVar.position[axis], 4));
                     pos.Add(GlobalVar.position[axis]);
                     loss.Add(PowerMeter.Read());
 
@@ -144,6 +149,7 @@ namespace Beetle
                 // if has max, go to the max position
                 if (trend == 1)
                 {
+                    Console.WriteLine("Has Max");
                     if (axis == 0)
                     {
                         BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())]);
@@ -180,7 +186,10 @@ namespace Beetle
         // return false only when loss unchanged
         protected bool AxisSteppingSearch(sbyte axis)
         {
-            Console.WriteLine($"Stepping Search {axis} Started");
+            if (axis == 0)
+                Console.WriteLine("Stepping Search X Started");
+            else
+                Console.WriteLine("Stepping Search Y Started");
             loss.Clear();
             pos.Clear();
             double loss0, p = GlobalVar.position[axis], bound, diff;
@@ -289,7 +298,10 @@ namespace Beetle
         // loss is updated at GlobalVar.loss and match current position (if return true)
         protected bool AxisInterpolationSearch(sbyte axis)
         {
-            Console.WriteLine($"Interpolation Search {axis} Started");
+            if (axis == 0)
+                Console.WriteLine("Interpolation Search X Started");
+            else
+                Console.WriteLine("Interpolation Search Y Started");
             loss.Clear();
             pos.Clear();
             List<double> pList;
@@ -314,6 +326,7 @@ namespace Beetle
                     BeetleControl.XMoveTo(pList[i], ignoreError: true, applyBacklash: true);
                 else
                     BeetleControl.YMoveTo(pList[i], ignoreError: true, applyBacklash: true);
+                Console.WriteLine($"X: {Math.Round(GlobalVar.position[0], 4)}, Y: {Math.Round(GlobalVar.position[1], 4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[axis]);
@@ -369,6 +382,7 @@ namespace Beetle
                     BeetleControl.XMoveTo(p0, ignoreError: true, applyBacklash: true);
                 else
                     BeetleControl.YMoveTo(p0, ignoreError: true, applyBacklash: true);
+                Console.WriteLine($"X: {Math.Round(GlobalVar.position[0], 4)}, Y: {Math.Round(GlobalVar.position[1], 4)}");
                 return false;
             }
 
@@ -382,6 +396,7 @@ namespace Beetle
                     BeetleControl.XMoveTo(pFinal, ignoreError: true, applyBacklash: true);
                 else
                     BeetleControl.YMoveTo(pFinal, ignoreError: true, applyBacklash: true);
+                Console.WriteLine($"End X: {Math.Round(GlobalVar.position[0], 4)}, End Y: {Math.Round(GlobalVar.position[1],4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[axis]);
@@ -436,13 +451,14 @@ namespace Beetle
                     if (secondTry)
                     {
                         GlobalVar.errorFlag = true;
+                        Console.WriteLine("Reach Limit Second Try Failed");
                         return false;
                     }
                     secondTry = true;
                     lossFailToImprove = 0;
                     z -= (step + 0.07);
                     BeetleControl.ZMoveTo(z, ignoreError: true);
-                    Console.WriteLine($"z: {z}");
+                    Console.WriteLine($"z: {Math.Round(z, 5)}");
                     break;
                 }
 
@@ -450,7 +466,7 @@ namespace Beetle
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(GlobalVar.position[2]);
-                Console.WriteLine($"z: {z}");
+                Console.WriteLine($"z: {Math.Round(z, 5)}");
                 if (LossMeetCriteria())
                     return true;
 
@@ -493,7 +509,7 @@ namespace Beetle
                         Thread.Sleep(150); // delay 150ms
                         loss.Add(PowerMeter.Read());
                         pos.Add(GlobalVar.position[2]);
-                        Console.WriteLine($"z: {z}");
+                        Console.WriteLine($"Z position: {Math.Round(z, 5)}");
                         break;
                     }
                 }
@@ -514,7 +530,7 @@ namespace Beetle
                 }
             }
 
-            Console.WriteLine($"Z ends at {z}");
+            Console.WriteLine($"Z ends at {Math.Round(z, 5)}");
             // set current pos as max loss position temporarily in order to update the max loss position in check_abnormal_loss function
             GlobalVar.position[2] = pos[loss.IndexOf(loss.Max())];
             StatusCheck(loss.Max());
@@ -605,6 +621,7 @@ namespace Beetle
                 if ((loss0 < (4 * lossCurrentMax) && loss0 < -10) || loss0 < -45)
                 {
                     GlobalVar.errors = "Unexpected High Loss";
+                    Console.WriteLine("Unexpected High Loss");
                     BeetleControl.NormalTrajSpeed();
                     BeetleControl.GotoReset();
                     GlobalVar.errorFlag = true;
@@ -615,6 +632,7 @@ namespace Beetle
                 {
                     lossFailToImprove = 0;
                     GlobalVar.errors = "Fail to find better Loss, Go to Best Position";
+                    Console.WriteLine("Fail to find better Loss, Go to Best Position");
                     GlobalVar.errorFlag = true;
                     BeetleControl.GotoPosition(posCurrentMax);
                 }

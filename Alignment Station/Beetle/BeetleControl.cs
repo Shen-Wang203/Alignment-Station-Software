@@ -28,7 +28,6 @@ namespace Beetle
         public static sbyte tolerance = 2; // in encoder counts
         public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
-        public static double[] resetPosition = new double[6] { 0, 0, 140, 0.8, 0, 0 }; // This is the starting position
 
         static BeetleControl()
         {
@@ -319,7 +318,7 @@ namespace Beetle
             return GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public static bool GotoReset() => GotoPosition(resetPosition);
+        public static bool GotoReset() => GotoPosition(GlobalVar.initialPosition);
 
         public static bool GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 });
 
@@ -375,7 +374,7 @@ namespace Beetle
                     GlobalVar.errorFlag = true;
                     return false;
                 }
-                if (doubleCheck || stopInBetween)
+                if (checkOnTarget && (doubleCheck || stopInBetween))
                 {
                     DisengageMotors();
                     motorEngaged = false;

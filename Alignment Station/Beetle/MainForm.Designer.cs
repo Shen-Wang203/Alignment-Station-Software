@@ -35,6 +35,8 @@
             this.ButtonClearError = new System.Windows.Forms.Button();
             this.ButtonCalibration = new System.Windows.Forms.Button();
             this.IL = new System.Windows.Forms.Label();
+            this.ControlBoxDetection = new System.Windows.Forms.Button();
+            this.Test = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ButtonReset
@@ -107,11 +109,33 @@
             this.IL.Text = "-50dB";
             this.IL.Click += new System.EventHandler(this.IL_Click);
             // 
+            // ControlBoxDetection
+            // 
+            this.ControlBoxDetection.Location = new System.Drawing.Point(507, 188);
+            this.ControlBoxDetection.Name = "ControlBoxDetection";
+            this.ControlBoxDetection.Size = new System.Drawing.Size(96, 34);
+            this.ControlBoxDetection.TabIndex = 8;
+            this.ControlBoxDetection.Text = "Control Box Detection";
+            this.ControlBoxDetection.UseVisualStyleBackColor = true;
+            this.ControlBoxDetection.Click += new System.EventHandler(this.ControlBoxDetection_Click);
+            // 
+            // Test
+            // 
+            this.Test.Location = new System.Drawing.Point(507, 275);
+            this.Test.Name = "Test";
+            this.Test.Size = new System.Drawing.Size(96, 23);
+            this.Test.TabIndex = 9;
+            this.Test.Text = "Test";
+            this.Test.UseVisualStyleBackColor = true;
+            this.Test.Click += new System.EventHandler(this.Test_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Test);
+            this.Controls.Add(this.ControlBoxDetection);
             this.Controls.Add(this.IL);
             this.Controls.Add(this.ButtonCalibration);
             this.Controls.Add(this.ButtonClearError);
@@ -121,6 +145,7 @@
             this.Controls.Add(this.ButtonReset);
             this.Name = "MainForm";
             this.Text = "Beetle";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,6 +160,8 @@
         private System.Windows.Forms.Button ButtonClearError;
         private System.Windows.Forms.Button ButtonCalibration;
         private System.Windows.Forms.Label IL;
+        private System.Windows.Forms.Button ControlBoxDetection;
+        private System.Windows.Forms.Button Test;
     }
 }
 

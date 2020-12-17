@@ -108,6 +108,7 @@ namespace Beetle
             }
             catch (Exception)
             {
+                Console.WriteLine("Wrong Connection On" + portName);
                 return "";
             }
             port.Close();

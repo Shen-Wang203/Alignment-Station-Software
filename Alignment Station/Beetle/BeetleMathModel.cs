@@ -36,7 +36,7 @@ namespace Beetle
             set { baseZ = value + 8f; }
         }
 
-        public static float[] SetPivotPoint
+        public static double[] SetPivotPoint
         {
             //get { return pivotPoint; }
             set { GlobalVar.pivotPoint = value; }
