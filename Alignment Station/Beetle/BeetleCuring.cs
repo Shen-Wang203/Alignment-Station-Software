@@ -80,7 +80,7 @@ namespace Beetle
                 case 3: // MM + larget gap
                     lossCriteria = lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 2.0f;
+                    xyStepSizeAmp = 3.5f;
                     bufferBig = 0.007;
                     bufferSmall = 0.007;
                     lowerCriteriaStep = 0.01;
@@ -120,7 +120,7 @@ namespace Beetle
                     loss.Clear();
                     toleranceForNewCriteria = 0.002;
                 }
-                else if (!xyStepGoBackToLast && timeElapsed.Seconds > 60)
+                else if (!xyStepGoBackToLast && timeElapsed.Seconds > 120)
                 {
                     xyStepGoBackToLast = true;
                     Console.WriteLine("XY Step Go Back To Last is on");
@@ -160,10 +160,10 @@ namespace Beetle
                     {
                         epoxyWillSolidFlag = true;
                         lossCriteria -= 0.005;
-                        Console.WriteLine("Epoxy will solid, lower criteri 0.005 to minimize movements");
+                        Console.WriteLine("Epoxy will solid, lower criteria 0.005 to minimize movements");
                     }
                     // Z adjust
-                    if (xySearchCount == 2)
+                    if (xySearchCount == 3)
                     {
                         if (zSearchCountLoop >= 2)
                         {
@@ -199,7 +199,7 @@ namespace Beetle
                     loss.Clear();
 
                     // if fail to meet criteria for 2 rounds, then we loose the criteria
-                    if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && timeElapsed.Seconds > 50)
+                    if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && timeElapsed.Seconds > 60)
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");

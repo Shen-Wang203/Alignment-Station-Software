@@ -27,9 +27,9 @@ namespace Beetle
         public static double lossCriteria = -0.2;
 
         public static string productName = "MM1xN";
-        // Product type and its focal length (to be complete)
-        // focal length can be get through productName: GlobalVar.product[GlobalVar.productName]
-        public static Dictionary<string, float> product =
+        // Product type and its Gap or focal length (to be complete)
+        // Gap or focal length can be get through productName: GlobalVar.product[GlobalVar.productName]
+        public static Dictionary<string, float> productGap =
             new Dictionary<string, float>()
             {
                 { "VOA", 0.05f },

@@ -70,14 +70,15 @@ namespace Beetle
             if (runFromContact)
             {
                 // Assume the starting position is at contact, need to go back for some distance first based on focal length
-                limitZ = GlobalVar.position[2];
-                BeetleControl.ZMoveTo(limitZ - GlobalVar.product[GlobalVar.productName]);
+                limitZ = GlobalVar.position[2] + 0.03;
+                BeetleControl.ZMoveTo(limitZ - GlobalVar.productGap[GlobalVar.productName]);
             }
 
             BeetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
             lossCurrentMax = loss[loss.Count - 1];
+            GlobalVar.position.CopyTo(posCurrentMax, 0);
             while (!GlobalVar.errorFlag)
             {
                 if (ParameterUpdate(loss[loss.Count - 1]))

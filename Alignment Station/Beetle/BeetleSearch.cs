@@ -29,7 +29,6 @@ namespace Beetle
          */ 
         private static int xDirectionTrend = 1;
         private static int yDirectionTrend = 1;
-        private static double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0};
         private static readonly double stepSearchMinStepSize = 0.0002; // in mm, default is 0.2um 
 
         protected static sbyte lossFailToImprove = 0;
@@ -46,6 +45,7 @@ namespace Beetle
         protected static double limitZ = 145;
         protected static string zMode = "normal";
         protected static double lossCurrentMax = -50;
+        protected static double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0 };
 
         protected static void ProductSelect()
         {
