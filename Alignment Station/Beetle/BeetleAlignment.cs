@@ -17,7 +17,7 @@ namespace Beetle
             return instance;
         }
 
-        //GlobalVar.errorflag will be used as program stop flag as well.Intance like meet criteria, unexpected high loss, failed
+        //Parameters.errorflag will be used as program stop flag as well.Intance like meet criteria, unexpected high loss, failed
         //      to find better loss and motor errors will errect this flag.
 
 
@@ -34,19 +34,29 @@ namespace Beetle
         public double SetLossCriteria
         {
             get { return lossCriteria; }
-            set { GlobalVar.lossCriteria = value; }
+            set { Parameters.lossCriteria = value; }
         }
 
         public string ReadLossCurrentMax => lossCurrentMax.ToString();
 
+        public void AlignmentRun()
+        {
+            Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
+        }
+
+        public void PreAlignRun()
+        {
+            Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
+        }
+
         // Start search from the current position, and stopped at the best position
         // criteria select: 
-        //      "global": use GlobalVar.lossCriteria as criteria
+        //      "global": use Parameters.lossCriteria as criteria
         //      "currentMax": use lossCurentMax as criteria
         // runFromContact: start searching from the current position where ferrule and lens cap are very close to each other
         // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
-        public void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
+        private void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
             Console.WriteLine("A New Alignemnt Starts");
 
@@ -60,7 +70,7 @@ namespace Beetle
                     lossCriteria = lossCurrentMax - 0.02;
             }
             else if (criteriaSelect == "global")
-                lossCriteria = GlobalVar.lossCriteria;
+                lossCriteria = Parameters.lossCriteria;
 
             ParameterReset();
 
@@ -70,16 +80,16 @@ namespace Beetle
             if (runFromContact)
             {
                 // Assume the starting position is at contact, need to go back for some distance first based on focal length
-                limitZ = GlobalVar.position[2] + 0.03;
-                BeetleControl.ZMoveTo(limitZ - GlobalVar.productGap[GlobalVar.productName]);
+                limitZ = Parameters.position[2] + 0.03;
+                BeetleControl.ZMoveTo(limitZ - Parameters.productGap[Parameters.productName]);
             }
 
             BeetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
             lossCurrentMax = loss[loss.Count - 1];
-            GlobalVar.position.CopyTo(posCurrentMax, 0);
-            while (!GlobalVar.errorFlag)
+            Parameters.position.CopyTo(posCurrentMax, 0);
+            while (!Parameters.errorFlag)
             {
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
@@ -95,7 +105,8 @@ namespace Beetle
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
-                BeetleControl.ZMoveTo(GlobalVar.position[2] - backDistanceAfterSearching);
+                BeetleControl.ZMoveTo(Parameters.position[2] - backDistanceAfterSearching);
+            BeetleControl.DisengageMotors();
         }
 
         private static void ParameterReset()
@@ -103,12 +114,14 @@ namespace Beetle
             lossFailToImprove = 0;
             secondTry = false;
             lossCurrentMax = -50;
+            doubleCheckFlag = Parameters.doublecheckFlag;
+            stopInBetweenFlag = Parameters.stopInBetweenFlag;
 
             lossStage1 = -4.0f;
             lossStage2 = -2.0f;
             //searchMode = "scan";
 
-            GlobalVar.errorFlag = false;
+            Parameters.errorFlag = false;
 
             // for multimmode step size is larger
             if (productCondition >= 3)
@@ -155,6 +168,7 @@ namespace Beetle
             {
                 searchMode = "interpolation";
                 zMode = "normal";
+                BeetleControl.tolerance = 1;
                 switch (productCondition)
                 {
                     case 1:
@@ -174,7 +188,7 @@ namespace Beetle
             else
             {
                 Console.WriteLine($"Meet Criteria {lossCriteria}");
-                GlobalVar.errorFlag = true;
+                Parameters.errorFlag = true;
                 return true;
             }
             return false;
@@ -196,14 +210,14 @@ namespace Beetle
                 {
                     Console.WriteLine("X Scan Search Failed");
                     // for scan mode don't set errorFlag until y is complited
-                    //GlobalVar.errorFlag = true;
+                    //Parameters.errorFlag = true;
                 }
                 if (LossMeetCriteria())
                     return true;
                 if (!AxisScanSearch(axis: 1))
                 {
                     Console.WriteLine("Y Scan Search Failed");
-                    GlobalVar.errorFlag = true;
+                    Parameters.errorFlag = true;
                     return true;
                 }
             }
@@ -212,14 +226,14 @@ namespace Beetle
                 if (!AxisInterpolationSearch(axis: 0))
                 {
                     Console.WriteLine("X Interpolation Search Failed");
-                    GlobalVar.errorFlag = true;
+                    Parameters.errorFlag = true;
                 }
-                if (GlobalVar.errorFlag || LossMeetCriteria())
+                if (Parameters.errorFlag || LossMeetCriteria())
                     return true;
                 if (!AxisInterpolationSearch(axis: 1))
                 {
                     Console.WriteLine("Y Interpolation Search Failed");
-                    GlobalVar.errorFlag = true;
+                    Parameters.errorFlag = true;
                     return true;
                 }
             }

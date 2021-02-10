@@ -16,7 +16,7 @@ namespace Beetle
         // This is the height of base and top moving part thickness, this is a fixture fixed parameter, find it from the 3D model. 
         private static float baseZ = 65.9221f + 8f;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
-        //GlobalVar.pivotPoint = { 0, 0, 0, 0 };
+        //Parameters.pivotPoint = { 0, 0, 0, 0 };
 
         public static float SetR
         {
@@ -39,7 +39,7 @@ namespace Beetle
         public static double[] SetPivotPoint
         {
             //get { return pivotPoint; }
-            set { GlobalVar.pivotPoint = value; }
+            set { Parameters.pivotPoint = value; }
         }
 
         //Matrix multiply C = A.B, A and B can be any dimension
@@ -128,22 +128,22 @@ namespace Beetle
             // Original coordinate's center is in the geometry center
             double[] a = { 0, r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                a[i] -= GlobalVar.pivotPoint[i];
+                a[i] -= Parameters.pivotPoint[i];
             double[] b = { r * Math.Cos(Math.PI * 5 / 6), r * Math.Sin(Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                b[i] -= GlobalVar.pivotPoint[i];
+                b[i] -= Parameters.pivotPoint[i];
             double[] c = { r * Math.Cos(-Math.PI * 5 / 6), r * Math.Sin(-Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                c[i] -= GlobalVar.pivotPoint[i];
+                c[i] -= Parameters.pivotPoint[i];
             double[] d = { 0, -r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                d[i] -= GlobalVar.pivotPoint[i];
+                d[i] -= Parameters.pivotPoint[i];
             double[] e = { r * Math.Cos(-Math.PI / 6), r * Math.Sin(-Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                e[i] -= GlobalVar.pivotPoint[i];
+                e[i] -= Parameters.pivotPoint[i];
             double[] f = { r * Math.Cos(Math.PI / 6), r * Math.Sin(Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                f[i] -= GlobalVar.pivotPoint[i];
+                f[i] -= Parameters.pivotPoint[i];
 
             // Coordinate transform based on pivot point
             double[] aa = MxA(MT(x, y, z), MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a))));
@@ -168,7 +168,7 @@ namespace Beetle
             double A, B, C;
             double T1x, T1y, T2x, T2y, T3x, T3y;
             // Find the position of T1
-            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + GlobalVar.pivotPoint[2];
+            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + Parameters.pivotPoint[2];
             double p = Vbc[0]; double q = Vbc[1]; double v = Vbc[2];
             if (p == 0)
             {
@@ -206,7 +206,7 @@ namespace Beetle
             }
 
             // Find the position of T2
-            s = Mde[0]; t = Mde[1]; u = Mde[2] + GlobalVar.pivotPoint[2];
+            s = Mde[0]; t = Mde[1]; u = Mde[2] + Parameters.pivotPoint[2];
             p = Vde[0]; q = Vde[1]; v = Vde[2];
             if (p == 0)
             {
@@ -243,7 +243,7 @@ namespace Beetle
             }
 
             // Find the position of T3
-            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + GlobalVar.pivotPoint[2];
+            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + Parameters.pivotPoint[2];
             p = Vfa[0]; q = Vfa[1]; v = Vfa[2];
             if (p == 0)
             {
@@ -279,12 +279,12 @@ namespace Beetle
             }
 
             // The T points location at original/center coordinate
-            T1x += GlobalVar.pivotPoint[0];
-            T1y += GlobalVar.pivotPoint[1];
-            T2x += GlobalVar.pivotPoint[0];
-            T2y += GlobalVar.pivotPoint[1];
-            T3x += GlobalVar.pivotPoint[0];
-            T3y += GlobalVar.pivotPoint[1];
+            T1x += Parameters.pivotPoint[0];
+            T1y += Parameters.pivotPoint[1];
+            T2x += Parameters.pivotPoint[0];
+            T2y += Parameters.pivotPoint[1];
+            T3x += Parameters.pivotPoint[0];
+            T3y += Parameters.pivotPoint[1];
             double[] T = { T1x, T1y, T2x, T2y, T3x, T3y };
 
             return T;

@@ -14,6 +14,7 @@ namespace Beetle
     {
         private static BeetleAlignment BA;
         private static BeetleCuring BC;
+        private static Thread runThread;
         public MainForm()
         {
             InitializeComponent();
@@ -23,25 +24,27 @@ namespace Beetle
 
         private void ButtonReset_Click(object sender, EventArgs e)
         {
-            BeetleControl.GotoReset();
-        }
-
-        private void ButtonBackAlign_Click(object sender, EventArgs e)
-        {
-            BA.Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
+            runThread = new Thread(BeetleControl.GotoReset);
+            runThread.Start();
         }
 
         private void ButtonAlignment_Click(object sender, EventArgs e)
         {
-            //Thread runThread = new Thread(BA.Run);
-            BA.Run(criteriaSelect: "global");
-            //runThread.Start(criteriaSelect: "global");
+            runThread = new Thread(BA.AlignmentRun);
+            runThread.Start();
             IL.Text = BA.ReadLossCurrentMax;
+        }
+
+        private void ButtonPreAlign_Click(object sender, EventArgs e)
+        {
+            runThread = new Thread(BA.PreAlignRun);
+            runThread.Start();
         }
 
         private void ButtonCuring_Click(object sender, EventArgs e)
         {
-            BC.Run();
+            runThread = new Thread(BC.Run);
+            runThread.Start();
         }
 
         private void ButtonClearError_Click(object sender, EventArgs e)
@@ -57,24 +60,23 @@ namespace Beetle
         private void IL_Click(object sender, EventArgs e)
         {
             PowerMeter.Read();
-            IL.Text = GlobalVar.loss.ToString();
+            IL.Text = Parameters.loss.ToString();
         }
 
         private void ControlBoxDetection_Click(object sender, EventArgs e)
         {
-            if (BeetleSerialPortAssign.AssignPorts("COM27","COM28","COM32"))
-                GlobalVar.SaveCOMPorts();
+            if (BeetleConnection.AssignPorts())
+                Parameters.SaveCOMPorts();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            GlobalVar.LoadParameters();
+            Parameters.LoadParameters();
         }
 
         private void Test_Click(object sender, EventArgs e)
         {
-            BeetleControl.XMoveTo(-2, mode: 't', checkOnTarget: false);
-            Console.WriteLine(GlobalVar.position[0]);
+            BeetleConnection.AssignPorts();
         }
     }
 }

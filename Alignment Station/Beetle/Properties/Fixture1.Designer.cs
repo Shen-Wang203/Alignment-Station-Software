@@ -13,11 +13,11 @@ namespace Beetle.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class Fixture : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        private static Fixture defaultInstance = ((Fixture)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Fixture())));
         
-        public static Settings Default {
+        public static Fixture Default {
             get {
                 return defaultInstance;
             }
@@ -164,6 +164,18 @@ namespace Beetle.Properties {
             }
             set {
                 this["PivotZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public sbyte BeetleFixtureNum {
+            get {
+                return ((sbyte)(this["BeetleFixtureNum"]));
+            }
+            set {
+                this["BeetleFixtureNum"] = value;
             }
         }
     }

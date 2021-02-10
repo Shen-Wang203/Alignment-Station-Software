@@ -53,20 +53,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Alignment.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Alignment.settings</DependentUpon>
+    </Compile>
     <Compile Include="BeetleAlignment.cs" />
     <Compile Include="BeetleControl.cs" />
     <Compile Include="BeetleCuring.cs" />
     <Compile Include="BeetleMathModel.cs" />
     <Compile Include="BeetleSearch.cs" />
-    <Compile Include="BeetleSerialPortAssign.cs" />
+    <Compile Include="BeetleConnection.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GlobalVar.cs" />
+    <Compile Include="Parameters.cs" />
     <Compile Include="PowerMeter.cs" />
+    <Compile Include="Properties\Powermeter.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Powermeter.settings</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -81,13 +91,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Properties\Settings.settings">
+    <None Include="Properties\Alignment.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>Alignment.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
+    <None Include="Properties\Powermeter.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Powermeter.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\Fixture.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Fixture1.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Fixture1.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>Fixture.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>

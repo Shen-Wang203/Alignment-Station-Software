@@ -24,10 +24,10 @@ namespace Beetle
         //        if (loss > 10)
         //            loss = -90.0;
         //    }
-        //    loss -= GlobalVar.lossReference;
+        //    loss -= Parameters.lossReference;
         //    loss = Math.Round(loss, 4);
         //    Console.WriteLine(loss);
-        //    GlobalVar.loss = loss;
+        //    Parameters.loss = loss;
         //    return loss;
         //}
 
@@ -43,7 +43,7 @@ namespace Beetle
             }
             // loss = Math.Round(loss, 4);
             Console.WriteLine(loss);
-            GlobalVar.loss = loss;
+            Parameters.loss = loss;
             Thread.Sleep(50);
             return loss;
         }

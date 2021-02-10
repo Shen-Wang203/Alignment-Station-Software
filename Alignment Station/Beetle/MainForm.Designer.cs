@@ -30,7 +30,7 @@
         {
             this.ButtonReset = new System.Windows.Forms.Button();
             this.ButtonAlignment = new System.Windows.Forms.Button();
-            this.ButtonBackAlign = new System.Windows.Forms.Button();
+            this.ButtonPreAlign = new System.Windows.Forms.Button();
             this.ButtonCuring = new System.Windows.Forms.Button();
             this.ButtonClearError = new System.Windows.Forms.Button();
             this.ButtonCalibration = new System.Windows.Forms.Button();
@@ -59,15 +59,15 @@
             this.ButtonAlignment.UseVisualStyleBackColor = true;
             this.ButtonAlignment.Click += new System.EventHandler(this.ButtonAlignment_Click);
             // 
-            // ButtonBackAlign
+            // ButtonPreAlign
             // 
-            this.ButtonBackAlign.Location = new System.Drawing.Point(113, 210);
-            this.ButtonBackAlign.Name = "ButtonBackAlign";
-            this.ButtonBackAlign.Size = new System.Drawing.Size(123, 42);
-            this.ButtonBackAlign.TabIndex = 2;
-            this.ButtonBackAlign.Text = "Back Align";
-            this.ButtonBackAlign.UseVisualStyleBackColor = true;
-            this.ButtonBackAlign.Click += new System.EventHandler(this.ButtonBackAlign_Click);
+            this.ButtonPreAlign.Location = new System.Drawing.Point(113, 210);
+            this.ButtonPreAlign.Name = "ButtonPreAlign";
+            this.ButtonPreAlign.Size = new System.Drawing.Size(123, 42);
+            this.ButtonPreAlign.TabIndex = 2;
+            this.ButtonPreAlign.Text = "PreAlign";
+            this.ButtonPreAlign.UseVisualStyleBackColor = true;
+            this.ButtonPreAlign.Click += new System.EventHandler(this.ButtonPreAlign_Click);
             // 
             // ButtonCuring
             // 
@@ -140,7 +140,7 @@
             this.Controls.Add(this.ButtonCalibration);
             this.Controls.Add(this.ButtonClearError);
             this.Controls.Add(this.ButtonCuring);
-            this.Controls.Add(this.ButtonBackAlign);
+            this.Controls.Add(this.ButtonPreAlign);
             this.Controls.Add(this.ButtonAlignment);
             this.Controls.Add(this.ButtonReset);
             this.Name = "MainForm";
@@ -155,7 +155,7 @@
 
         private System.Windows.Forms.Button ButtonReset;
         private System.Windows.Forms.Button ButtonAlignment;
-        private System.Windows.Forms.Button ButtonBackAlign;
+        private System.Windows.Forms.Button ButtonPreAlign;
         private System.Windows.Forms.Button ButtonCuring;
         private System.Windows.Forms.Button ButtonClearError;
         private System.Windows.Forms.Button ButtonCalibration;
