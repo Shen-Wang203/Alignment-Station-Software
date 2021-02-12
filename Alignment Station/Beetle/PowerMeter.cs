@@ -11,8 +11,8 @@ namespace Beetle
     {
         private static MessageBasedSession mSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open("GPIB0::12::INSTR");
         private static double loss;
-        private static readonly string[] testPowerLines = System.IO.File.ReadAllLines(@"C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\powerread.txt");
-        private static int testlinenum = 0;
+        //private static readonly string[] testPowerLines = System.IO.File.ReadAllLines(@"C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\powerread.txt");
+        //private static int testlinenum = 0;
         private static readonly string readcmd = "READ" + Parameters.channel + ":POW?";
 
         public static double Read()
@@ -27,8 +27,8 @@ namespace Beetle
             }
             loss -= Parameters.lossReference;
             loss = Math.Round(loss, 4);
-            Console.WriteLine(loss);
-            Parameters.Log(loss.ToString());
+            Console.WriteLine($"Loss: {loss}");
+            Parameters.Log($"Loss: {loss}");
             Parameters.loss = loss;
             return loss;
         }

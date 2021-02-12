@@ -133,8 +133,8 @@ namespace Beetle
                 {
                     BeetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
                     Parameters.position[axis] = p0 + (BeetleControl.countsReal[axis] - count0) * BeetleControl.encoderResolution;
-                    Console.WriteLine(Math.Round(Parameters.position[axis], 4));
-                    Parameters.Log(Math.Round(Parameters.position[axis], 4).ToString());
+                    Console.WriteLine($"Pos: {Math.Round(Parameters.position[axis], 4)}");
+                    Parameters.Log($"Pos: {Math.Round(Parameters.position[axis], 4)}");
                     pos.Add(Parameters.position[axis]);
                     loss.Add(PowerMeter.Read());
 
@@ -163,16 +163,15 @@ namespace Beetle
                 {
                     Console.WriteLine("Has Max");
                     Parameters.Log("Has Max");
+                    BeetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
                     if (axis == 0)
                     {
-                        Parameters.Log($"Goes to {pos[loss.IndexOf(loss.Max())]}");
-                        Console.WriteLine($"Goes to {pos[loss.IndexOf(loss.Max())]}");
-                        BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                        BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         xDirectionTrend *= (-2 * i + 1);
                     }
                     else
                     {
-                        BeetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                        BeetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         yDirectionTrend *= (-2 * i + 1);
                     }
                     Thread.Sleep(150); // delay 150ms
@@ -501,7 +500,9 @@ namespace Beetle
                     lossFailToImprove = 0;
                     z -= (step + 0.07);
                     BeetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    Console.WriteLine("Reach Limit, Go Back 0.07 for second try");
                     Console.WriteLine($"z: {Math.Round(z, 5)}");
+                    Parameters.Log("Reach Limit, Go Back 0.07 for second try");
                     Parameters.Log($"z: {Math.Round(z, 5)}");
                     break;
                 }

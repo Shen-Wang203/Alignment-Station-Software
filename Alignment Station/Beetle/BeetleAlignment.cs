@@ -91,8 +91,8 @@ namespace Beetle
             }
 
             BeetleControl.NormalTrajSpeed();
-            Console.WriteLine($"Best Loss {Parameters.lossCurrentMax}");
-            Parameters.Log($"Best Loss {Parameters.lossCurrentMax}");
+            Console.WriteLine($"Alignment Finished. Best Loss {Parameters.lossCurrentMax}");
+            Parameters.Log($"Alignment Finished. Best Loss {Parameters.lossCurrentMax}");
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.

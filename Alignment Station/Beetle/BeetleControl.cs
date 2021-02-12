@@ -15,7 +15,7 @@ namespace Beetle
         private static SerialPort T3Port;
         private static int[] limit; //this limit is the max counts for each axis for the version where 0 count is at middle; or min for the version where 0 counts is at end  
         private static double[] countsOffset;
-        private static float rangePerAxis = 17.7f; //range in mm, default full range 17.7mm
+        private static readonly float rangePerAxis = 17.7f; //range in mm, default full range 17.7mm
         private static int countsPerMM = 20000; // counts per mm
         private static sbyte xDirectionOld = 0;
         private static sbyte yDirectionOld = 0;
@@ -275,6 +275,7 @@ namespace Beetle
 
         // XAbs is the platform x absolute position in mm
         // will update Parameters.position
+        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
         public static void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte xDirec;
@@ -304,6 +305,7 @@ namespace Beetle
 
         // YAbs is the platform y absolute position in mm
         // will update Parameters.position
+        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
         public static void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte yDirec;

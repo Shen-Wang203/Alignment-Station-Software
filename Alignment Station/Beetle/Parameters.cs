@@ -14,7 +14,7 @@ namespace Beetle
         public static sbyte beetleFixtureNumber = 3;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
         public static double[] pivotPoint = { 0, 0, 42, 0 };
-        public static double[] position = { 0, 0, 138, 0, 0, 0 }; // Position in mm { x, y, z, Rx, Ry, Rz}
+        public static double[] position = { 0, 0, 140, 2.4, -1.0, 0 }; // Position in mm { x, y, z, Rx, Ry, Rz}
         public static double[] initialPosition = { 0, 0, 138, 0, 0, 0 }; // This is the starting(Or Initial) position
 
         // Power Meter paramters
