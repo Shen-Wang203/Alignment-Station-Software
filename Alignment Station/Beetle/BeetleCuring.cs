@@ -47,6 +47,7 @@ namespace Beetle
             if (Parameters.lossCurrentMax >= -10)
             {
                 Console.WriteLine("Run Alignment first");
+                // TODO: Display on the GUI
                 Parameters.errorFlag = true;
             }
 
@@ -110,11 +111,13 @@ namespace Beetle
                 if (timeElapsed.Seconds > totalMinutes * 60)
                 {
                     Console.WriteLine("Time is up");
+                    Parameters.Log("Time is up");
                     break;
                 }
                 else if (!laterTimeFlag && timeElapsed.Seconds > 150)
                 {
                     Console.WriteLine("Later Time Flag is on");
+                    Parameters.Log("Later Time Flag is on");
                     laterTimeFlag = true;
                     zStepSize = 0.0005;
                     buffer = bufferSmall;
@@ -126,6 +129,7 @@ namespace Beetle
                 {
                     xyStepGoBackToLast = true;
                     Console.WriteLine("XY Step Go Back To Last is on");
+                    Parameters.Log("XY Step Go Back To Last is on");
                     // Change step size smaller at this moment
                     xyStepSizeAmp -= 2;
                     if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
@@ -140,6 +144,7 @@ namespace Beetle
                 {
                     // if loss is within the buffer range for 80s, then we assume the epoxy is solid already
                     Console.WriteLine("Loss is stable, pause the program");
+                    Parameters.Log("Loss is stable, pause the program");
                     curingActive = false;
                 }
                 else if (curingActive && loss.Count > 24)
@@ -150,7 +155,10 @@ namespace Beetle
                         buffer = 0.01;
                 }
                 else if (curingActive && loss.Count == 24)
+                {
                     Console.WriteLine("Smaller the buffer");
+                    Parameters.Log("Smaller the buffer");
+                }
 
                 // if loss is too high, cancel xy search step limit
                 if (curingActive && laterTimeFlag && loss[loss.Count - 1] < -3)
@@ -167,6 +175,7 @@ namespace Beetle
                         epoxyWillSolidFlag = true;
                         lossCriteria -= 0.005;
                         Console.WriteLine("Epoxy will solid, lower criteria 0.005 to minimize movements");
+                        Parameters.Log("Epoxy will solid, lower criteria 0.005 to minimize movements");
                     }
                     // Z adjust
                     if (xySearchCount == 2 && timeElapsed.Seconds < 300) 
@@ -195,9 +204,11 @@ namespace Beetle
                     if (!XYSearch())
                     {
                         Console.WriteLine("X or Y doesn't change");
+                        Parameters.Log("X or Y doesn't change");
                         if (xEpoxySolid && yEpoxySolid)
                         {
                             Console.WriteLine("Pause Program because X and Y are solid");
+                            Parameters.Log("Pause Program because X and Y are solid");
                             curingActive = false;
                         }
                         Parameters.errorFlag = false;
@@ -209,6 +220,7 @@ namespace Beetle
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
+                        Parameters.Log($"Lower Criteria for {lowerCriteriaStep}");
                         zSearchCount = 0;
                         // allow one more xy after lower criteria
                         xySearchCount = 1;
@@ -218,6 +230,7 @@ namespace Beetle
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
+                        Parameters.Log($"Lower Criteria for {lowerCriteriaStep}");
                         zSearchCount = 0;
                         // allow one more xy after lower criteria
                         xySearchCount = 1;
@@ -226,6 +239,7 @@ namespace Beetle
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
+                        Parameters.Log($"Lower Criteria for {lowerCriteriaStep}");
                         zSearchCount = 0;
                         // allow one more xy after lower criteria
                         xySearchCount = 1;
@@ -244,6 +258,7 @@ namespace Beetle
                     {
                         lossCriteria = loss[loss.Count - 1] - toleranceForNewCriteria;
                         Console.WriteLine($"New Criteria {Math.Round(lossCriteria, 4)}");
+                        Parameters.Log($"New Criteria {Math.Round(lossCriteria, 4)}");
                     }
                 }
             }
@@ -261,6 +276,7 @@ namespace Beetle
                     if (!xEpoxySolid && !AxisSteppingSearch(axis: 0))
                     {
                         Console.WriteLine("X step Unchange");
+                        Parameters.Log("X step Unchange");
                         if (laterTimeFlag)
                         {
                             Parameters.errorFlag = true;
@@ -282,6 +298,7 @@ namespace Beetle
                 if (!yEpoxySolid && !AxisSteppingSearch(axis: 1))
                 {
                     Console.WriteLine("Y step Unchange");
+                    Parameters.Log("Y step Unchange");
                     if (laterTimeFlag)
                     {
                         Parameters.errorFlag = true;
@@ -341,11 +358,13 @@ namespace Beetle
                     if (trend != 0)
                     {
                         Console.WriteLine("Over");
+                        Parameters.Log("Over");
                         break;
                     }
                     direc = -direc;
                     loss0 = loss[loss.Count - 1];
                     Console.WriteLine("Change Direction");
+                    Parameters.Log("Change Direction");
                     sameCount = 0;
                 }
                 else if (diff >= bound)
@@ -362,6 +381,7 @@ namespace Beetle
                     {
                         z = z - zStepSize * direc * 5 - BeetleControl.zBacklashMM * direc;
                         Console.WriteLine("Loss doesn't Change in Z");
+                        Parameters.Log("Loss doesn't Change in Z");
                         break;
                     }
                 }
@@ -383,6 +403,7 @@ namespace Beetle
             else if (loss0 < -20)
             {
                 Console.WriteLine("Unexpected High Loss");
+                Parameters.Log("Unexpected High Loss");
                 BeetleControl.NormalTrajSpeed();
                 Parameters.errorFlag = true;
             }
@@ -393,6 +414,7 @@ namespace Beetle
             if (Parameters.loss >= lossCriteria)
             {
                 Console.WriteLine($"Meet Criteria {Math.Round(lossCriteria, 4)}");
+                Parameters.Log($"Meet Criteria {Math.Round(lossCriteria, 4)}");
                 xySearchCount = 0;
                 zSearchCount = 0;
                 zSearchCountLoop = 0;

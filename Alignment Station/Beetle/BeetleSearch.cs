@@ -70,6 +70,7 @@ namespace Beetle
             else
             {
                 Console.WriteLine("Unsupported product");
+                Parameters.Log("Unsupported product");
                 Parameters.errorFlag = true;
             }
         }
@@ -82,11 +83,17 @@ namespace Beetle
         // loss is updated at Parameters.loss and match current position (if return true)
         // TODO: Use threading to do scan and power fetch
         protected bool AxisScanSearch(sbyte axis)
-        {   
+        {
             if (axis == 0)
+            {
                 Console.WriteLine("Scan Search X Started");
+                Parameters.Log("Scan Search X Started");
+            }
             else
+            {
                 Console.WriteLine("Scan Search Y Started");
+                Parameters.Log("Scan Search Y Started");
+            }
             double p1, p2, p0;
             int count0;
             loss.Clear();
@@ -127,6 +134,7 @@ namespace Beetle
                     BeetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
                     Parameters.position[axis] = p0 + (BeetleControl.countsReal[axis] - count0) * BeetleControl.encoderResolution;
                     Console.WriteLine(Math.Round(Parameters.position[axis], 4));
+                    Parameters.Log(Math.Round(Parameters.position[axis], 4).ToString());
                     pos.Add(Parameters.position[axis]);
                     loss.Add(PowerMeter.Read());
 
@@ -154,8 +162,11 @@ namespace Beetle
                 if (trend == 1)
                 {
                     Console.WriteLine("Has Max");
+                    Parameters.Log("Has Max");
                     if (axis == 0)
                     {
+                        Parameters.Log($"Goes to {pos[loss.IndexOf(loss.Max())]}");
+                        Console.WriteLine($"Goes to {pos[loss.IndexOf(loss.Max())]}");
                         BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                         xDirectionTrend *= (-2 * i + 1);
                     }
@@ -172,6 +183,7 @@ namespace Beetle
                 else
                 {
                     Console.WriteLine("Return to Original and Change Direction");
+                    Parameters.Log("Return to Original and Change Direction");
                     // return to original position first
                     if (axis == 0)
                         BeetleControl.XMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
@@ -191,9 +203,15 @@ namespace Beetle
         protected bool AxisSteppingSearch(sbyte axis)
         {
             if (axis == 0)
+            {
                 Console.WriteLine("Stepping Search X Started");
+                Parameters.Log("Stepping Search X Started");
+            }
             else
+            {
                 Console.WriteLine("Stepping Search Y Started");
+                Parameters.Log("Stepping Search Y Started");
+            }
             loss.Clear();
             pos.Clear();
             double loss0, p = Parameters.position[axis], bound, diff;
@@ -209,6 +227,7 @@ namespace Beetle
                 if (xyStepCountsLimit && totalStep >= 4)
                 {
                     Console.WriteLine("Reach step limit");
+                    Parameters.Log("Reach step limit");
                     return true;
                 }
 
@@ -245,6 +264,7 @@ namespace Beetle
                     if (trend != 0)
                     {
                         Console.WriteLine("Over");
+                        Parameters.Log("Over");
                         break;
                     }
                     if (axis == 0)
@@ -253,6 +273,7 @@ namespace Beetle
                         yDirectionTrend = -yDirectionTrend;
                     loss0 = loss[loss.Count - 1];
                     Console.WriteLine("Change Direction");
+                    Parameters.Log("Change Direction");
                     sameCount = 0;
                     totalStep = 0;
                 }
@@ -275,6 +296,7 @@ namespace Beetle
                         else
                             p = Parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend * 2;
                         Console.WriteLine("Exit due to same loss");
+                        Parameters.Log("Exit due to same loss");
                         break;
                     }
                 }
@@ -293,7 +315,10 @@ namespace Beetle
             if (loss.Max() - loss.Min() < 0.002)
                 return false;
             if (loss[loss.Count - 1] < (loss.Max() - 0.04))
+            {
                 Console.WriteLine("Failed to go to best");
+                Parameters.Log("Failed to go to best");
+            }
             return true;
         }
 
@@ -303,9 +328,15 @@ namespace Beetle
         protected bool AxisInterpolationSearch(sbyte axis)
         {
             if (axis == 0)
+            {
                 Console.WriteLine("Interpolation Search X Started");
+                Parameters.Log("Interpolation Search X Started");
+            }
             else
+            {
                 Console.WriteLine("Interpolation Search Y Started");
+                Parameters.Log("Interpolation Search Y Started");
+            }
             loss.Clear();
             pos.Clear();
             List<double> pList;
@@ -331,6 +362,7 @@ namespace Beetle
                 else
                     BeetleControl.YMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 Console.WriteLine($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
+                Parameters.Log($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(Parameters.position[axis]);
@@ -382,11 +414,13 @@ namespace Beetle
             if ((loss.Max() - loss.Min()) < 0.002)
             {
                 Console.WriteLine("Unchange, go back to original");
+                Parameters.Log("Unchange, go back to original");
                 if (axis == 0)
                     BeetleControl.XMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 else
                     BeetleControl.YMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 Console.WriteLine($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
+                Parameters.Log($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
                 return false;
             }
 
@@ -401,6 +435,7 @@ namespace Beetle
                 else
                     BeetleControl.YMoveTo(pFinal, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 Console.WriteLine($"End X: {Math.Round(Parameters.position[0], 4)}, End Y: {Math.Round(Parameters.position[1],4)}");
+                Parameters.Log($"End X: {Math.Round(Parameters.position[0], 4)}, End Y: {Math.Round(Parameters.position[1], 4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(Parameters.position[axis]);
@@ -418,8 +453,10 @@ namespace Beetle
                     yDirectionTrend = -1;
             StatusCheck(loss.Max());
             if (loss[loss.Count - 1] < (loss.Max() - 0.04))
+            {
                 Console.WriteLine("Failed to go to best");
-
+                Parameters.Log("Failed to go to best");
+            }
             return true;
         }
 
@@ -430,6 +467,7 @@ namespace Beetle
         protected bool ZSteppingSearch()
         {
             Console.WriteLine("Z Stepping Started");
+            Parameters.Log("Z Stepping Started");
             double z = Parameters.position[2], loss0, step, bound, diff;
             loss.Clear();
             pos.Clear();
@@ -456,6 +494,7 @@ namespace Beetle
                     {
                         Parameters.errorFlag = true;
                         Console.WriteLine("Reach Limit Second Try Failed");
+                        Parameters.Log("Reach Limit Second Try Failed");
                         return false;
                     }
                     secondTry = true;
@@ -463,6 +502,7 @@ namespace Beetle
                     z -= (step + 0.07);
                     BeetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                     Console.WriteLine($"z: {Math.Round(z, 5)}");
+                    Parameters.Log($"z: {Math.Round(z, 5)}");
                     break;
                 }
 
@@ -471,6 +511,7 @@ namespace Beetle
                 loss.Add(PowerMeter.Read());
                 pos.Add(Parameters.position[2]);
                 Console.WriteLine($"z: {Math.Round(z, 5)}");
+                Parameters.Log($"z: {Math.Round(z, 5)}");
                 if (LossMeetCriteria())
                     return true;
 
@@ -514,6 +555,7 @@ namespace Beetle
                         loss.Add(PowerMeter.Read());
                         pos.Add(Parameters.position[2]);
                         Console.WriteLine($"Z position: {Math.Round(z, 5)}");
+                        Parameters.Log($"Z position: {Math.Round(z, 5)}");
                         break;
                     }
                 }
@@ -535,6 +577,7 @@ namespace Beetle
             }
 
             Console.WriteLine($"Z ends at {Math.Round(z, 5)}");
+            Parameters.Log($"Z ends at {Math.Round(z, 5)}");
             // set current pos as max loss position temporarily in order to update the max loss position in check_abnormal_loss function
             Parameters.position[2] = pos[loss.IndexOf(loss.Max())];
             StatusCheck(loss.Max());
@@ -626,6 +669,7 @@ namespace Beetle
                 {
                     Parameters.errors = "Unexpected High Loss";
                     Console.WriteLine("Unexpected High Loss");
+                    Parameters.Log("Unexpected High Loss");
                     BeetleControl.NormalTrajSpeed();
                     BeetleControl.GotoReset();
                     Parameters.errorFlag = true;
@@ -637,6 +681,7 @@ namespace Beetle
                     lossFailToImprove = 0;
                     Parameters.errors = "Fail to find better Loss, Go to Best Position";
                     Console.WriteLine("Fail to find better Loss, Go to Best Position");
+                    Parameters.Log("Fail to find better Loss, Go to Best Position");
                     Parameters.errorFlag = true;
                     BeetleControl.GotoPosition(posCurrentMax);
                 }

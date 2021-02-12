@@ -50,8 +50,6 @@ namespace Beetle
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
         private void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
-            Console.WriteLine("A New Alignemnt Starts");
-
             ProductSelect();
 
             if (criteriaSelect == "currentMax" && Parameters.lossCurrentMax != -50)
@@ -94,6 +92,7 @@ namespace Beetle
 
             BeetleControl.NormalTrajSpeed();
             Console.WriteLine($"Best Loss {Parameters.lossCurrentMax}");
+            Parameters.Log($"Best Loss {Parameters.lossCurrentMax}");
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
@@ -182,6 +181,7 @@ namespace Beetle
             else
             {
                 Console.WriteLine($"Meet Criteria {lossCriteria}");
+                Parameters.Log($"Meet Criteria {lossCriteria}");
                 Parameters.errorFlag = true;
                 return true;
             }
@@ -203,6 +203,7 @@ namespace Beetle
                 if (!AxisScanSearch(axis: 0))
                 {
                     Console.WriteLine("X Scan Search Failed");
+                    Parameters.Log("X Scan Search Failed");
                     // for scan mode don't set errorFlag until y is complited
                     //Parameters.errorFlag = true;
                 }
@@ -211,6 +212,7 @@ namespace Beetle
                 if (!AxisScanSearch(axis: 1))
                 {
                     Console.WriteLine("Y Scan Search Failed");
+                    Parameters.Log("Y Scan Search Failed");
                     Parameters.errorFlag = true;
                     return true;
                 }
@@ -220,6 +222,7 @@ namespace Beetle
                 if (!AxisInterpolationSearch(axis: 0))
                 {
                     Console.WriteLine("X Interpolation Search Failed");
+                    Parameters.Log("X Interpolation Search Failed");
                     Parameters.errorFlag = true;
                 }
                 if (Parameters.errorFlag || LossMeetCriteria())
@@ -227,6 +230,7 @@ namespace Beetle
                 if (!AxisInterpolationSearch(axis: 1))
                 {
                     Console.WriteLine("Y Interpolation Search Failed");
+                    Parameters.Log("Y Interpolation Search Failed");
                     Parameters.errorFlag = true;
                     return true;
                 }

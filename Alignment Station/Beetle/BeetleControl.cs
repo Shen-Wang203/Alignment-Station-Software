@@ -435,6 +435,7 @@ namespace Beetle
                 if (!ignoreError && timeoutloop >= 49)
                 {
                     Console.WriteLine("Time Out Error");
+                    Parameters.Log("Time Out Error");
                     DisengageMotors();
                     if (!CheckErrors())
                     {
@@ -445,6 +446,7 @@ namespace Beetle
                         }
                     }
                     Console.WriteLine(Parameters.errors);
+                    Parameters.Log(Parameters.errors);
                     Parameters.errorFlag = true;
                     return false;
                 }

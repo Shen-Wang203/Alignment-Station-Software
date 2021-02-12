@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Beetle
 {
     static class Parameters
     {
-
         // Fixture parameteres
         public static string beetleT1ComPortName = "";
         public static string beetleT2ComPortName = "";
@@ -85,6 +85,7 @@ namespace Beetle
             stopInBetweenFlag = Properties.Alignment.Default.StopInBetween;
 
             Console.WriteLine("Parameters Loaded");
+            Log("Parameters Loaded");
         }
 
         public static void SaveCOMPorts()
@@ -95,6 +96,7 @@ namespace Beetle
 
             Properties.Fixture.Default.Save();
             Console.WriteLine("COM Ports Saved");
+            //Log("COM Ports Saved");
         }
 
         public static void SaveInitialPosition()
@@ -108,6 +110,7 @@ namespace Beetle
 
             Properties.Fixture.Default.Save();
             Console.WriteLine("Initial Position Saved");
+            Log("Initial Position Saved");
         }
 
         public static void SavePivotPoint()
@@ -118,9 +121,17 @@ namespace Beetle
 
             Properties.Fixture.Default.Save();
             Console.WriteLine("Pivot Point Saved");
+            Log("Pivot Point Saved");
         }
 
-        
-        
+        public static void Log(string logMessage)
+        {
+            using (StreamWriter w = File.AppendText("log.txt"))
+            {
+                w.Write($"{DateTime.Now.ToLongTimeString()}: ");
+                w.WriteLine($"{logMessage}");
+            }
+        }
+
     }
 }
