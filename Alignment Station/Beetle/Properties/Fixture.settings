@@ -18,13 +18,13 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="InitialZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">138</Value>
+      <Value Profile="(Default)">140</Value>
     </Setting>
     <Setting Name="InitialRx" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">2.4</Value>
     </Setting>
     <Setting Name="InitialRy" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">-1</Value>
     </Setting>
     <Setting Name="InitialRz" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -39,7 +39,7 @@
       <Value Profile="(Default)">42</Value>
     </Setting>
     <Setting Name="BeetleFixtureNum" Type="System.SByte" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -12,7 +12,7 @@ namespace Beetle.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Fixture : global::System.Configuration.ApplicationSettingsBase {
         
         private static Fixture defaultInstance = ((Fixture)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Fixture())));
@@ -85,7 +85,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("138")]
+        [global::System.Configuration.DefaultSettingValueAttribute("140")]
         public double InitialZ {
             get {
                 return ((double)(this["InitialZ"]));
@@ -97,7 +97,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2.4")]
         public double InitialRx {
             get {
                 return ((double)(this["InitialRx"]));
@@ -109,7 +109,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public double InitialRy {
             get {
                 return ((double)(this["InitialRy"]));
@@ -169,7 +169,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public sbyte BeetleFixtureNum {
             get {
                 return ((sbyte)(this["BeetleFixtureNum"]));

@@ -19,9 +19,9 @@ namespace Beetle
 
         // Power Meter paramters
         public static double loss = -50.0f;
-        public static double lossReference = -14.4326;
+        public static double lossReference = -19.4588;
         public static string addr = "12";
-        public static string channel = "1";
+        public static string channel = "2";
 
         // Alignment parameters
         public static string errors = "";
@@ -32,7 +32,7 @@ namespace Beetle
         public static bool stopInBetweenFlag = false;
         public static bool smallestResolution = false;
 
-        public static string productName = "SM1xN";
+        public static string productName = "MM1xN";
         // Product type and its Gap or focal length (to be complete)
         // Gap or focal length can be get through productName: Parameters.product[Parameters.productName]
         public static Dictionary<string, float> productGap =

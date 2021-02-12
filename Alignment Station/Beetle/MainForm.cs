@@ -71,7 +71,7 @@ namespace Beetle
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Parameters.LoadParameters();
+            Parameters.LoadAll();
         }
 
         private void Test_Click(object sender, EventArgs e)

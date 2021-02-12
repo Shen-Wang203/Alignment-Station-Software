@@ -12,7 +12,7 @@ namespace Beetle.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Powermeter : global::System.Configuration.ApplicationSettingsBase {
         
         private static Powermeter defaultInstance = ((Powermeter)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Powermeter())));
@@ -49,7 +49,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-19.4588")]
         public double Reference {
             get {
                 return ((double)(this["Reference"]));
