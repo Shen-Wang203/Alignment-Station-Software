@@ -13,7 +13,7 @@ namespace Beetle
         private static float R = 50f;
         private static double r = R / Math.Cos(Math.PI / 6);
         private static float L = 78.5f;
-        // This is the height of base and top moving part thickness, this is a fixture fixed parameter, find it from the 3D model. 
+        // This is the height of the universal joint center point to the base + top moving part thickness, this is a fixture fixed parameter, find it from the 3D model. 
         private static float baseZ = 65.9221f + 8f;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
         //Parameters.pivotPoint = { 0, 0, 0, 0 };
@@ -120,10 +120,11 @@ namespace Beetle
         }
 
         // Find each axis's position in mm based on platform's target position
+        // Angles are in degrees
         public static double[] FindAxialPosition(double x, double y, double z, double Rx, double Ry, double Rz)
         {
             // The z in the model excludes the base height and top moving plate thickness
-             z -= baseZ;
+            z -= baseZ;
             // Coordinate center is in pivot point, let's name it pivot point coordinate
             // Original coordinate's center is in the geometry center
             double[] a = { 0, r, 0, 1 };
@@ -187,7 +188,7 @@ namespace Beetle
                 A = 1 + (p / q) * (p / q);
                 B = 2 * p * v * u / (q * q);
                 C = (v * u) * (v * u) / (q * q) + u * u - L * L;
-            
+
                 double T1x1 = s + 0.5 * B / A - 0.5 * Math.Sqrt(B * B - 4 * A * C) / A;
                 double T1x2 = s + 0.5 * B / A + 0.5 * Math.Sqrt(B * B - 4 * A * C) / A;
                 double T1y1 = t + v * u / q + p * s / q - p * T1x1 / q;
@@ -288,6 +289,13 @@ namespace Beetle
             double[] T = { T1x, T1y, T2x, T2y, T3x, T3y };
 
             return T;
+        }
+
+        // Return the normal vector of the current platform face
+        public static double[] NormalVector(double Rx, double Ry, double Rz)
+        {
+            double[] a = {0, 0, 1, 1};
+            return MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a)));
         }
     }
 }

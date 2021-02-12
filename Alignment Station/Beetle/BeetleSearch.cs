@@ -29,7 +29,7 @@ namespace Beetle
          */ 
         private static int xDirectionTrend = 1;
         private static int yDirectionTrend = 1;
-        private static readonly double stepSearchMinStepSize = 0.0002; // in mm, default is 0.2um 
+        private static readonly double stepSearchMinStepSize = 0.0001; // in mm, default is 0.1um 
 
         protected static sbyte lossFailToImprove = 0;
         protected static bool secondTry = false;
@@ -44,11 +44,10 @@ namespace Beetle
         protected static float xyStepSizeAmp = 1.0f;
         protected static double limitZ = 145;
         protected static string zMode = "normal";
-        protected static double lossCurrentMax = -50;
+        //protected static double lossCurrentMax = Parameters.lossCurrentMax;
         protected static double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0 };
         protected static bool doubleCheckFlag = false;
         protected static bool stopInBetweenFlag = false;
-
         
         protected static void ProductSelect()
         {
@@ -74,6 +73,8 @@ namespace Beetle
                 Parameters.errorFlag = true;
             }
         }
+
+
 
         // for axis: x is 0, y is 1
         // radius in mm
@@ -613,15 +614,15 @@ namespace Beetle
         // In Python code its called check_abnormal_loss
         protected static void StatusCheck(double loss0)
         {
-            if (loss0 > (lossCurrentMax + 0.01))
+            if (loss0 > (Parameters.lossCurrentMax + 0.01))
             {
-                lossCurrentMax = loss0;
+                Parameters.lossCurrentMax = loss0;
                 Parameters.position.CopyTo(posCurrentMax, 0);
                 lossFailToImprove = 0;
             }
             else
             {
-                if ((loss0 < (4 * lossCurrentMax) && loss0 < -10) || loss0 < -45)
+                if ((loss0 < (4 * Parameters.lossCurrentMax) && loss0 < -10) || loss0 < -45)
                 {
                     Parameters.errors = "Unexpected High Loss";
                     Console.WriteLine("Unexpected High Loss");

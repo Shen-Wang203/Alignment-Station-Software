@@ -37,17 +37,9 @@ namespace Beetle
             set { Parameters.lossCriteria = value; }
         }
 
-        public string ReadLossCurrentMax => lossCurrentMax.ToString();
+        public void AlignmentRun() => Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
 
-        public void AlignmentRun()
-        {
-            Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
-        }
-
-        public void PreAlignRun()
-        {
-            Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
-        }
+        public void PreAlignRun() => Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
@@ -62,12 +54,12 @@ namespace Beetle
 
             ProductSelect();
 
-            if (criteriaSelect == "currentMax" && lossCurrentMax != -50)
+            if (criteriaSelect == "currentMax" && Parameters.lossCurrentMax != -50)
             {
                 if (productCondition >= 3)
-                    lossCriteria = lossCurrentMax - 0.006;
+                    lossCriteria = Parameters.lossCurrentMax - 0.006;
                 else
-                    lossCriteria = lossCurrentMax - 0.02;
+                    lossCriteria = Parameters.lossCurrentMax - 0.02;
             }
             else if (criteriaSelect == "global")
                 lossCriteria = Parameters.lossCriteria;
@@ -87,7 +79,7 @@ namespace Beetle
             BeetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
-            lossCurrentMax = loss[loss.Count - 1];
+            Parameters.lossCurrentMax = loss[loss.Count - 1];
             Parameters.position.CopyTo(posCurrentMax, 0);
             while (!Parameters.errorFlag)
             {
@@ -101,7 +93,7 @@ namespace Beetle
             }
 
             BeetleControl.NormalTrajSpeed();
-            Console.WriteLine($"Best Loss {lossCurrentMax}");
+            Console.WriteLine($"Best Loss {Parameters.lossCurrentMax}");
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
@@ -113,7 +105,7 @@ namespace Beetle
         {
             lossFailToImprove = 0;
             secondTry = false;
-            lossCurrentMax = -50;
+            Parameters.lossCurrentMax = -50;
             doubleCheckFlag = Parameters.doublecheckFlag;
             stopInBetweenFlag = Parameters.stopInBetweenFlag;
 
@@ -130,6 +122,8 @@ namespace Beetle
                 lossStage1 = -3.0f;
                 lossStage2 = -1.5f;
             }
+            else
+                xyStepSizeAmp = 1.0f;
         }
 
         // Return true when errorFlag is errected, which is meet criteria here.

@@ -32,7 +32,7 @@ namespace Beetle
         {
             runThread = new Thread(BA.AlignmentRun);
             runThread.Start();
-            IL.Text = BA.ReadLossCurrentMax;
+            IL.Text = Parameters.lossCurrentMax.ToString();
         }
 
         private void ButtonPreAlign_Click(object sender, EventArgs e)

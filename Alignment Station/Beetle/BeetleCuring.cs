@@ -41,10 +41,10 @@ namespace Beetle
             lossFailToImprove = 0;
             xyStepCountsLimit = false;
             xyStepGoBackToLast = false;
-            xyStepSizeAmp = 1.0f;
+            xyStepSizeAmp = 2.0f;
             doubleCheckFlag = Parameters.doublecheckFlag;
             stopInBetweenFlag = Parameters.stopInBetweenFlag;
-            if (lossCurrentMax >= -10)
+            if (Parameters.lossCurrentMax >= -10)
             {
                 Console.WriteLine("Run Alignment first");
                 Parameters.errorFlag = true;
@@ -70,27 +70,27 @@ namespace Beetle
             switch (productCondition)
             {
                 case 1: // SM + larget gap
-                    lossCriteria = lossCurrentMax - 0.01;
+                    lossCriteria = Parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.001;
-                    xyStepSizeAmp = 1.5f;
+                    xyStepSizeAmp = 3.0f; // 6 counts
                     break;
                 case 2: // SM + small gap
-                    lossCriteria = lossCurrentMax - 0.01;
+                    lossCriteria = Parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 1.5f;
+                    xyStepSizeAmp = 3.0f; // 6 counts
                     break;
                 case 3: // MM + larget gap
-                    lossCriteria = lossCurrentMax - 0.005;
+                    lossCriteria = Parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 4.0f;
+                    xyStepSizeAmp = 8.0f; // 16 counts
                     bufferBig = 0.007;
                     bufferSmall = 0.007;
                     lowerCriteriaStep = 0.01;
                     break;
                 case 4: // MM + small gap
-                    lossCriteria = lossCurrentMax - 0.005;
+                    lossCriteria = Parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 3.0f;
+                    xyStepSizeAmp = 6.0f; // 12 counts
                     break;
             }
         }
@@ -127,9 +127,9 @@ namespace Beetle
                     xyStepGoBackToLast = true;
                     Console.WriteLine("XY Step Go Back To Last is on");
                     // Change step size smaller at this moment
-                    xyStepSizeAmp -= 1;
-                    if (xyStepSizeAmp < 1)
-                        xyStepSizeAmp = 1;
+                    xyStepSizeAmp -= 2;
+                    if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
+                        xyStepSizeAmp = 2;
                 }
 
                 // Curing phase control by loss
@@ -375,10 +375,10 @@ namespace Beetle
 
         private static new void StatusCheck(double loss0)
         {
-            if (loss0 > lossCurrentMax)
+            if (loss0 > Parameters.lossCurrentMax)
             {
-                lossCurrentMax = loss0;
-                lossCriteria = lossCurrentMax - toleranceForNewCriteria;
+                Parameters.lossCurrentMax = loss0;
+                lossCriteria = Parameters.lossCurrentMax - toleranceForNewCriteria;
             }
             else if (loss0 < -20)
             {
@@ -402,10 +402,10 @@ namespace Beetle
                     buffer = bufferBig;
                 if (Parameters.loss > (lossCriteria + toleranceForNewCriteria))
                     lossCriteria = Parameters.loss - toleranceForNewCriteria;
-                if (Parameters.loss > lossCurrentMax)
+                if (Parameters.loss > Parameters.lossCurrentMax)
                 {
-                    lossCurrentMax = Parameters.loss;
-                    lossCriteria = lossCurrentMax - toleranceForNewCriteria;
+                    Parameters.lossCurrentMax = Parameters.loss;
+                    lossCriteria = Parameters.lossCurrentMax - toleranceForNewCriteria;
                 }
 
                 return true;

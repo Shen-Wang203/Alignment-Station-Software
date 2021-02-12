@@ -26,9 +26,9 @@ namespace Beetle.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public sbyte Channel {
+        public string Channel {
             get {
-                return ((sbyte)(this["Channel"]));
+                return ((string)(this["Channel"]));
             }
             set {
                 this["Channel"] = value;

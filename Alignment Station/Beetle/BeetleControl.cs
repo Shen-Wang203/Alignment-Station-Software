@@ -333,7 +333,7 @@ namespace Beetle
 
         // ZAbs is the platform z absolute position in mm
         // will update Parameters.position
-        public static void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public static void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true)
         {
             sbyte zDirec;
             double counter = 0;
@@ -350,6 +350,17 @@ namespace Beetle
             double[] targetPosition = new double[6];
             Parameters.position.CopyTo(targetPosition, 0);
             targetPosition[2] = ZAbs + counter;
+
+            // Move along Z direction that's norm to current platform face, instead of along world coordicate Z direciton
+            // This will take angles into consideration
+            if (normToFace)
+            {
+                double deltaZ = targetPosition[2] - Parameters.position[2];
+                double[] normVector = BeetleMathModel.NormalVector(Parameters.position[3], Parameters.position[4], Parameters.position[5]);
+                targetPosition[0] = deltaZ * normVector[0] + Parameters.position[0];
+                targetPosition[1] = deltaZ * normVector[1] + Parameters.position[1];
+                targetPosition[2] = deltaZ * normVector[2] + Parameters.position[2];
+            }
 
             GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }

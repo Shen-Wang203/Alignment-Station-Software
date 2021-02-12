@@ -46,5 +46,29 @@ namespace Beetle.Properties {
                 this["ProductName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DoubleCheck {
+            get {
+                return ((bool)(this["DoubleCheck"]));
+            }
+            set {
+                this["DoubleCheck"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StopInBetween {
+            get {
+                return ((bool)(this["StopInBetween"]));
+            }
+            set {
+                this["StopInBetween"] = value;
+            }
+        }
     }
 }
