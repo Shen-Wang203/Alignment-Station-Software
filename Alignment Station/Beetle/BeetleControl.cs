@@ -26,7 +26,7 @@ namespace Beetle
         public static double xBacklashMM = 0; // in mm
         public static double yBacklashMM = 0; // in mm
         public static double zBacklashMM = 0.0002; // in mm
-        public static sbyte tolerance = 1; // in encoder counts
+        public static sbyte tolerance = 2; // in encoder counts
         public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
 
@@ -274,8 +274,9 @@ namespace Beetle
         }
 
         // XAbs is the platform x absolute position in mm
-        // will update Parameters.position
-        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
+        // will update Parameters.position if checkOnTarget is true
+        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial. 
+        // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
         public static void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte xDirec;
@@ -304,8 +305,9 @@ namespace Beetle
         }
 
         // YAbs is the platform y absolute position in mm
-        // will update Parameters.position
+        // will update Parameters.position if checkOnTarget is true
         // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
+        // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
         public static void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte yDirec;

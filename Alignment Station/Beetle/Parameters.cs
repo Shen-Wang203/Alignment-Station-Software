@@ -23,7 +23,7 @@ namespace Beetle
         public static string addr = "12";
         public static string channel = "2";
 
-        // Alignment parameters
+        // Alignment/Curing parameters
         public static string errors = "";
         public static bool errorFlag = false;
         public static double lossCriteria = -0.2;
@@ -31,6 +31,7 @@ namespace Beetle
         public static bool doublecheckFlag = false;
         public static bool stopInBetweenFlag = false;
         public static bool smallestResolution = false;
+        public static bool highestAccuracy = true;
 
         public static string productName = "MM1xN";
         // Product type and its Gap or focal length (to be complete)

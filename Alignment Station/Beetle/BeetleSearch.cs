@@ -75,7 +75,47 @@ namespace Beetle
             }
         }
 
+        // Square shape search where the center is current position
+        // will return true is loss imporved for 10dB
+        protected bool AxisSquareSearch()
+        {
+            Console.WriteLine("Square Search Started");
+            Parameters.Log("Square Search Started");
+            double pX0 = Parameters.position[0], pY0 = Parameters.position[1];
+            int countX0 = BeetleControl.countsReal[0], countY0 = BeetleControl.countsReal[1];
+            double squareRadius = scanSearchRadius + 0.02;
+            double[] px = new double[5] { pX0 + squareRadius, pX0, pX0 - squareRadius, pX0, pX0 + squareRadius };
+            double[] py = new double[5] { pY0, pY0 + squareRadius, pY0, pY0 - squareRadius, pY0 };
+            double loss0 = PowerMeter.Read();
 
+            BeetleControl.XMoveTo(px[0], doubleCheck: false, stopInBetween: false);
+
+            for (int i = 1; i < 5; i ++)
+            {
+                BeetleControl.XMoveTo(px[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
+                BeetleControl.YMoveTo(py[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
+                while (Math.Abs(Parameters.position[0] - px[i]) > 4 * BeetleControl.encoderResolution)
+                {
+                    BeetleControl.RealCountsFetch(0); // 0 is T1x, 1 is T1y
+                    Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
+                    if (PowerMeter.Read() > loss0 + 10.0)
+                    {
+                        BeetleControl.DisengageMotors();
+                        // Update counts and position before exiting
+                        BeetleControl.RealCountsFetch(6);
+                        Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
+                        Parameters.position[1] = pY0 + (BeetleControl.countsReal[1] - countY0) * BeetleControl.encoderResolution;
+                        return true;
+                    }
+                }
+                Thread.Sleep(100);
+                // Update counts and position for next movement
+                BeetleControl.RealCountsFetch(6);
+                Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
+                Parameters.position[1] = pY0 + (BeetleControl.countsReal[1] - countY0) * BeetleControl.encoderResolution;
+            }
+            return false;
+        }
 
         // for axis: x is 0, y is 1
         // radius in mm
@@ -158,12 +198,12 @@ namespace Beetle
                         break;
                 }
 
+                BeetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
                 // if has max, go to the max position
                 if (trend == 1)
                 {
                     Console.WriteLine("Has Max");
                     Parameters.Log("Has Max");
-                    BeetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
                     if (axis == 0)
                     {
                         BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
@@ -181,8 +221,8 @@ namespace Beetle
                 // else go the other direction
                 else
                 {
-                    Console.WriteLine("Return to Original and Change Direction");
-                    Parameters.Log("Return to Original and Change Direction");
+                    Console.WriteLine("Return to Original");
+                    Parameters.Log("Return to Original");
                     // return to original position first
                     if (axis == 0)
                         BeetleControl.XMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
@@ -494,6 +534,7 @@ namespace Beetle
                         Parameters.errorFlag = true;
                         Console.WriteLine("Reach Limit Second Try Failed");
                         Parameters.Log("Reach Limit Second Try Failed");
+                        Parameters.errors = "Reach Z Limit, Move Closer";
                         return false;
                     }
                     secondTry = true;

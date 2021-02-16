@@ -39,7 +39,9 @@ namespace Beetle
 
         public void AlignmentRun() => Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
 
-        public void PreAlignRun() => Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
+        public void PreCuringRun() => Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
+
+        public void Test() => AxisSquareSearch();
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
@@ -137,6 +139,8 @@ namespace Beetle
             else if (lossRef < lossStage2)
             {
                 searchMode = "interpolation";
+                if (Parameters.highestAccuracy)
+                    BeetleControl.tolerance = 1;
                 switch(productCondition)
                 {
                     case 1: // SM + larget gap
@@ -161,7 +165,8 @@ namespace Beetle
             {
                 searchMode = "interpolation";
                 zMode = "normal";
-                BeetleControl.tolerance = 1;
+                if (Parameters.highestAccuracy)
+                    BeetleControl.tolerance = 1;
                 switch (productCondition)
                 {
                     case 1:
@@ -213,8 +218,14 @@ namespace Beetle
                 {
                     Console.WriteLine("Y Scan Search Failed");
                     Parameters.Log("Y Scan Search Failed");
-                    Parameters.errorFlag = true;
-                    return true;
+                    // if x and y scan search all failed, use square search one time
+                    if (!AxisSquareSearch())
+                    {
+                        Console.WriteLine("Square Search Failed");
+                        Parameters.Log("Square Search Failed");
+                        Parameters.errorFlag = true;
+                        return true;
+                    }
                 }
             }
             else if (searchMode == "interpolation")

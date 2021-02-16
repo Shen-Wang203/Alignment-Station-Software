@@ -40,13 +40,13 @@ namespace Beetle
             IL.Text = Parameters.lossCurrentMax.ToString();
         }
 
-        private void ButtonPreAlign_Click(object sender, EventArgs e)
+        private void ButtonPreCuring_Click(object sender, EventArgs e)
         {
             Parameters.Log("\r\n");
             Parameters.Log("***************************");
             Parameters.Log("PreAligment Starts");
             Console.WriteLine("PreAlignemnt Starts");
-            runThread = new Thread(BA.PreAlignRun);
+            runThread = new Thread(BA.PreCuringRun);
             runThread.Start();
         }
 
@@ -89,15 +89,8 @@ namespace Beetle
 
         private void Test_Click(object sender, EventArgs e)
         {
-            List<double> loss = new List<double>();
-            List<double> pos = new List<double>();
-            loss.Add(-0.2);
-            loss.Add(-0.1);
-            loss.Add(-0.3);
-            pos.Add(12);
-            pos.Add(31);
-            pos.Add(54);
-            Console.WriteLine(pos[loss.IndexOf(loss.Max())]);
+            runThread = new Thread(BA.Test);
+            runThread.Start();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

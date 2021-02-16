@@ -37,6 +37,7 @@ namespace Beetle
         private static void ParameterReset()
         {
             Parameters.errorFlag = false;
+            BeetleControl.tolerance = 2;
             // Father class parameter reset
             lossFailToImprove = 0;
             xyStepCountsLimit = false;
@@ -133,7 +134,12 @@ namespace Beetle
                     // Change step size smaller at this moment
                     xyStepSizeAmp -= 2;
                     if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
+                    {
                         xyStepSizeAmp = 2;
+                        BeetleControl.tolerance = 1;
+                    }
+                    if (Parameters.highestAccuracy)
+                        BeetleControl.tolerance = 1;
                 }
 
                 // Curing phase control by loss

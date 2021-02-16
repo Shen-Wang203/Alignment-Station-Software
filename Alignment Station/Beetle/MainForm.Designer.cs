@@ -30,7 +30,7 @@
         {
             this.ButtonReset = new System.Windows.Forms.Button();
             this.ButtonAlignment = new System.Windows.Forms.Button();
-            this.ButtonPreAlign = new System.Windows.Forms.Button();
+            this.ButtonPreCuring = new System.Windows.Forms.Button();
             this.ButtonCuring = new System.Windows.Forms.Button();
             this.ButtonClearError = new System.Windows.Forms.Button();
             this.ButtonCalibration = new System.Windows.Forms.Button();
@@ -59,15 +59,15 @@
             this.ButtonAlignment.UseVisualStyleBackColor = true;
             this.ButtonAlignment.Click += new System.EventHandler(this.ButtonAlignment_Click);
             // 
-            // ButtonPreAlign
+            // ButtonPreCuring
             // 
-            this.ButtonPreAlign.Location = new System.Drawing.Point(113, 210);
-            this.ButtonPreAlign.Name = "ButtonPreAlign";
-            this.ButtonPreAlign.Size = new System.Drawing.Size(123, 42);
-            this.ButtonPreAlign.TabIndex = 2;
-            this.ButtonPreAlign.Text = "PreAlign";
-            this.ButtonPreAlign.UseVisualStyleBackColor = true;
-            this.ButtonPreAlign.Click += new System.EventHandler(this.ButtonPreAlign_Click);
+            this.ButtonPreCuring.Location = new System.Drawing.Point(113, 210);
+            this.ButtonPreCuring.Name = "ButtonPreCuring";
+            this.ButtonPreCuring.Size = new System.Drawing.Size(123, 42);
+            this.ButtonPreCuring.TabIndex = 2;
+            this.ButtonPreCuring.Text = "PreCuring";
+            this.ButtonPreCuring.UseVisualStyleBackColor = true;
+            this.ButtonPreCuring.Click += new System.EventHandler(this.ButtonPreCuring_Click);
             // 
             // ButtonCuring
             // 
@@ -140,7 +140,7 @@
             this.Controls.Add(this.ButtonCalibration);
             this.Controls.Add(this.ButtonClearError);
             this.Controls.Add(this.ButtonCuring);
-            this.Controls.Add(this.ButtonPreAlign);
+            this.Controls.Add(this.ButtonPreCuring);
             this.Controls.Add(this.ButtonAlignment);
             this.Controls.Add(this.ButtonReset);
             this.Name = "MainForm";
@@ -156,7 +156,7 @@
 
         private System.Windows.Forms.Button ButtonReset;
         private System.Windows.Forms.Button ButtonAlignment;
-        private System.Windows.Forms.Button ButtonPreAlign;
+        private System.Windows.Forms.Button ButtonPreCuring;
         private System.Windows.Forms.Button ButtonCuring;
         private System.Windows.Forms.Button ButtonClearError;
         private System.Windows.Forms.Button ButtonCalibration;

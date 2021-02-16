@@ -11,9 +11,10 @@ namespace Beetle
     {
         private static MessageBasedSession mSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open("GPIB0::12::INSTR");
         private static double loss;
+        private static readonly string readcmd = "READ" + Parameters.channel + ":POW?";
         //private static readonly string[] testPowerLines = System.IO.File.ReadAllLines(@"C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\powerread.txt");
         //private static int testlinenum = 0;
-        private static readonly string readcmd = "READ" + Parameters.channel + ":POW?";
+
 
         public static double Read()
         {
@@ -32,6 +33,13 @@ namespace Beetle
             Parameters.loss = loss;
             return loss;
         }
+
+        //public static double Read()
+        //{
+        //    Parameters.loss = -40.0;
+        //    Thread.Sleep(30);
+        //    return -40.0;
+        //}
 
         //public static double Read()
         //{
