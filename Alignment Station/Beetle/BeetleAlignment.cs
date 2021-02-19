@@ -219,7 +219,7 @@ namespace Beetle
                     Console.WriteLine("Y Scan Search Failed");
                     Parameters.Log("Y Scan Search Failed");
                     // if x and y scan search all failed, use square search one time
-                    if (!AxisSquareSearch())
+                    if (loss.Max() < -40.0 && !AxisSquareSearch())
                     {
                         Console.WriteLine("Square Search Failed");
                         Parameters.Log("Square Search Failed");
@@ -244,6 +244,23 @@ namespace Beetle
                     Parameters.Log("Y Interpolation Search Failed");
                     Parameters.errorFlag = true;
                     return true;
+                }
+            }
+            else if (searchMode == "stepping")
+            {
+                if (!AxisSteppingSearch(axis: 0))
+                {
+                    Console.WriteLine("X Stepping Search Failed");
+                    Parameters.Log("X Stepping Search Failed");
+                    Parameters.errorFlag = true;
+                }
+                if (Parameters.errorFlag || LossMeetCriteria())
+                    return true;
+                if (!AxisSteppingSearch(axis: 1))
+                {
+                    Console.WriteLine("Y Stepping Search Failed");
+                    Parameters.Log("Y Stepping Search Failed");
+                    Parameters.errorFlag = true;
                 }
             }
             return false;

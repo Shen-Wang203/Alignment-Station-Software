@@ -27,6 +27,8 @@ namespace Beetle
         private static bool epoxyWillSolidFlag = false;
         private static bool xSearchFirst = true;
         private static double zStepSize = 0.001; // in mm
+        private static bool zStepOff = false;
+        private static bool beginLowerCriteria = false;
 
         private static double buffer = 0.03;
         private static double bufferBig = 0.03;
@@ -62,6 +64,8 @@ namespace Beetle
             epoxyWillSolidFlag = false;
             xSearchFirst = true;
             zStepSize = 0.001; // in mm
+            zStepOff = false;
+            beginLowerCriteria = false;
 
             buffer = 0.03;
             bufferBig = 0.03;
@@ -115,17 +119,8 @@ namespace Beetle
                     Parameters.Log("Time is up");
                     break;
                 }
-                else if (!laterTimeFlag && timeElapsed.Seconds > 150)
-                {
-                    Console.WriteLine("Later Time Flag is on");
-                    Parameters.Log("Later Time Flag is on");
-                    laterTimeFlag = true;
-                    zStepSize = 0.0005;
-                    buffer = bufferSmall;
-                    xyStepCountsLimit = true;
-                    loss.Clear();
-                    toleranceForNewCriteria = 0.002;
-                }
+                else if (!beginLowerCriteria && timeElapsed.Seconds > 60)
+                    beginLowerCriteria = true;
                 else if (!xyStepGoBackToLast && timeElapsed.Seconds > 100)
                 {
                     xyStepGoBackToLast = true;
@@ -141,6 +136,19 @@ namespace Beetle
                     if (Parameters.highestAccuracy)
                         BeetleControl.tolerance = 1;
                 }
+                else if (!laterTimeFlag && timeElapsed.Seconds > 150)
+                {
+                    Console.WriteLine("Later Time Flag is on");
+                    Parameters.Log("Later Time Flag is on");
+                    laterTimeFlag = true;
+                    zStepSize = 0.0005;
+                    buffer = bufferSmall;
+                    xyStepCountsLimit = true;
+                    loss.Clear();
+                    toleranceForNewCriteria = 0.002;
+                }
+                else if (!zStepOff && timeElapsed.Seconds > 300)
+                    zStepOff = true;
 
                 // Curing phase control by loss
                 Thread.Sleep(500);
@@ -184,7 +192,7 @@ namespace Beetle
                         Parameters.Log("Epoxy will solid, lower criteria 0.005 to minimize movements");
                     }
                     // Z adjust
-                    if (xySearchCount == 2 && timeElapsed.Seconds < 300) 
+                    if (xySearchCount == 2 && !zStepOff) 
                     {
                         if (zSearchCountLoop >= 2)
                         {
@@ -221,8 +229,8 @@ namespace Beetle
                     }
                     loss.Clear();
 
-                    // if fail to meet criteria for 2 rounds, then we loose the criteria
-                    if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && timeElapsed.Seconds > 60)
+                    // if fail to meet criteria for 2 rounds, then we loose the criteria; don't lower the criteria for the first minute
+                    if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && beginLowerCriteria)
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");
@@ -241,7 +249,7 @@ namespace Beetle
                         // allow one more xy after lower criteria
                         xySearchCount = 1;
                     }
-                    else if (timeElapsed.Seconds > 300 && xySearchCount >= 3)
+                    else if (zStepOff && xySearchCount >= 3)
                     {
                         lossCriteria -= lowerCriteriaStep;
                         Console.WriteLine($"Lower Criteria for {lowerCriteriaStep}");

@@ -18,7 +18,15 @@ namespace Beetle
 
         public static double Read()
         {
-            loss = double.Parse(mSession.Query(readcmd));
+            try
+            {
+                loss = double.Parse(mSession.Query(readcmd));
+            }
+            catch (Exception)
+            {
+                Parameters.errors = "Power Meter Error";
+                Parameters.errorFlag = true;
+            }
             if (loss > 10)
             {
                 Thread.Sleep(50);
