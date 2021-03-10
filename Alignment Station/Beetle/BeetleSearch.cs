@@ -697,7 +697,7 @@ namespace Beetle
         }
 
         // In Python code its called check_abnormal_loss
-        protected static void StatusCheck(double loss0)
+        protected virtual void StatusCheck(double loss0)
         {
             if (loss0 > (Parameters.lossCurrentMax + 0.01))
             {
@@ -731,7 +731,7 @@ namespace Beetle
         }
 
         // In Python code is method is called loss_target_check
-        protected static bool LossMeetCriteria()
+        protected virtual bool LossMeetCriteria()
         {
             if (Parameters.loss > lossCriteria)
             {

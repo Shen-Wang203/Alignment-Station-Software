@@ -281,6 +281,8 @@ namespace Beetle
                     }
                 }
             }
+            Console.WriteLine("Program Stopped");
+            Parameters.Log("Program Stopped");
             BeetleControl.DisengageMotors();
         }
 
@@ -345,14 +347,14 @@ namespace Beetle
             return true;
         }
 
-        private static void ZStepBack()
+        private void ZStepBack()
         {
             Console.WriteLine("Z Steps Back");
             Parameters.Log("Z Steps Back");
             BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
         }
 
-        private static void ZStepBidirection()
+        private void ZStepBidirection()
         {
             Console.WriteLine("Z Bidirection Stepping Start");
             Parameters.Log("Z Bidirection Stepping Start");
@@ -419,7 +421,7 @@ namespace Beetle
         }
 
 
-        private static new void StatusCheck(double loss0)
+        protected override void StatusCheck(double loss0)
         {
             if (loss0 > Parameters.lossCurrentMax)
             {
@@ -435,7 +437,7 @@ namespace Beetle
             }
         }
 
-        private static new bool LossMeetCriteria()
+        protected override bool LossMeetCriteria()
         {
             if (Parameters.loss >= lossCriteria)
             {
@@ -473,11 +475,6 @@ namespace Beetle
             else
                 return (0.00003 * lossRef * lossRef * lossRef - 0.0011 * lossRef * lossRef + 0.0245 * lossRef - 0.018) * 0.8;
         }
-
-
-
-
-
 
     }
 

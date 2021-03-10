@@ -12,10 +12,16 @@ namespace Console_test
 
         static void Main(string[] args)
         {
-
+            Father f = new Father();
+            f.Runprint();
+            Son s = new Son();
+            s.Run();
 
             
+            
         }
+
+
 
     } 
 }
