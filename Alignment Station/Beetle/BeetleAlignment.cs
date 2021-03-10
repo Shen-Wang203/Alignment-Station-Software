@@ -246,23 +246,6 @@ namespace Beetle
                     return true;
                 }
             }
-            else if (searchMode == "stepping")
-            {
-                if (!AxisSteppingSearch(axis: 0))
-                {
-                    Console.WriteLine("X Stepping Search Failed");
-                    Parameters.Log("X Stepping Search Failed");
-                    Parameters.errorFlag = true;
-                }
-                if (Parameters.errorFlag || LossMeetCriteria())
-                    return true;
-                if (!AxisSteppingSearch(axis: 1))
-                {
-                    Console.WriteLine("Y Stepping Search Failed");
-                    Parameters.Log("Y Stepping Search Failed");
-                    Parameters.errorFlag = true;
-                }
-            }
             return false;
         }
 

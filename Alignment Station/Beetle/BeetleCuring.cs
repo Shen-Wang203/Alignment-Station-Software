@@ -47,7 +47,7 @@ namespace Beetle
             xyStepSizeAmp = 2.0f;
             doubleCheckFlag = Parameters.doublecheckFlag;
             stopInBetweenFlag = Parameters.stopInBetweenFlag;
-            if (Parameters.lossCurrentMax >= -10)
+            if (Parameters.lossCurrentMax <= -10)
             {
                 Console.WriteLine("Run Alignment first");
                 // TODO: Display on the GUI
@@ -113,6 +113,11 @@ namespace Beetle
             {
                 // Curing phase control by time
                 timeElapsed = DateTime.Now - startTime;
+                if (timeElapsed.Seconds > 10)
+                {
+                    Console.WriteLine("time test");
+                    Parameters.Log("time test");
+                }
                 if (timeElapsed.Seconds > totalMinutes * 60)
                 {
                     Console.WriteLine("Time is up");
@@ -340,10 +345,17 @@ namespace Beetle
             return true;
         }
 
-        private static void ZStepBack() => BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+        private static void ZStepBack()
+        {
+            Console.WriteLine("Z Steps Back");
+            Parameters.Log("Z Steps Back");
+            BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+        }
 
         private static void ZStepBidirection()
         {
+            Console.WriteLine("Z Bidirection Stepping Start");
+            Parameters.Log("Z Bidirection Stepping Start");
             double z = Parameters.position[2], loss0, bound, diff;
             sbyte trend = 1, sameCount = 0;
             int direc = -1;
