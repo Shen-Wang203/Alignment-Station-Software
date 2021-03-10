@@ -105,55 +105,13 @@ namespace Beetle
         {
             ParameterReset();
             var startTime = DateTime.Now;
-            TimeSpan timeElapsed;
             bool curingActive = true;
 
             loss.Clear();
             while (!Parameters.errorFlag)
             {
                 // Curing phase control by time
-                timeElapsed = DateTime.Now - startTime;
-                if (timeElapsed.Seconds > 10)
-                {
-                    Console.WriteLine("time test");
-                    Parameters.Log("time test");
-                }
-                if (timeElapsed.Seconds > totalMinutes * 60)
-                {
-                    Console.WriteLine("Time is up");
-                    Parameters.Log("Time is up");
-                    break;
-                }
-                else if (!beginLowerCriteria && timeElapsed.Seconds > 60)
-                    beginLowerCriteria = true;
-                else if (!xyStepGoBackToLast && timeElapsed.Seconds > 100)
-                {
-                    xyStepGoBackToLast = true;
-                    Console.WriteLine("XY Step Go Back To Last is on");
-                    Parameters.Log("XY Step Go Back To Last is on");
-                    // Change step size smaller at this moment
-                    xyStepSizeAmp -= 2;
-                    if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
-                    {
-                        xyStepSizeAmp = 2;
-                        BeetleControl.tolerance = 1;
-                    }
-                    if (Parameters.highestAccuracy)
-                        BeetleControl.tolerance = 1;
-                }
-                else if (!laterTimeFlag && timeElapsed.Seconds > 150)
-                {
-                    Console.WriteLine("Later Time Flag is on");
-                    Parameters.Log("Later Time Flag is on");
-                    laterTimeFlag = true;
-                    zStepSize = 0.0005;
-                    buffer = bufferSmall;
-                    xyStepCountsLimit = true;
-                    loss.Clear();
-                    toleranceForNewCriteria = 0.002;
-                }
-                else if (!zStepOff && timeElapsed.Seconds > 300)
-                    zStepOff = true;
+                TimeBasedUpdates(startTime);
 
                 // Curing phase control by loss
                 Thread.Sleep(500);
@@ -234,6 +192,8 @@ namespace Beetle
                     }
                     loss.Clear();
 
+                    TimeBasedUpdates(startTime);
+
                     // if fail to meet criteria for 2 rounds, then we loose the criteria; don't lower the criteria for the first minute
                     if (zSearchCount >= 1 && !laterTimeFlag && xySearchCount >= 2 && beginLowerCriteria)
                     {
@@ -284,6 +244,59 @@ namespace Beetle
             Console.WriteLine("Program Stopped");
             Parameters.Log("Program Stopped");
             BeetleControl.DisengageMotors();
+        }
+
+        private bool TimeBasedUpdates(DateTime sT)
+        {
+            TimeSpan timeElapsed = DateTime.Now - sT;
+            if (timeElapsed.Seconds % 30 == 0)
+            {
+                Console.WriteLine($"Time: {timeElapsed.Minutes}min{timeElapsed.Seconds % 60}s");
+                Parameters.Log($"Time: {timeElapsed.Minutes}min{timeElapsed.Seconds % 60}s");
+            }
+
+            if (!beginLowerCriteria && timeElapsed.Seconds > 60)
+            {
+                beginLowerCriteria = true;
+                Console.WriteLine("Allow Lower Criteria");
+                Parameters.Log("Allow Lower Criteria");
+            }
+            else if (!xyStepGoBackToLast && timeElapsed.Seconds > 100)
+            {
+                xyStepGoBackToLast = true;
+                Console.WriteLine("XY Step Go Back To Last is on");
+                Parameters.Log("XY Step Go Back To Last is on");
+                // Change step size smaller at this moment
+                xyStepSizeAmp -= 2;
+                if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
+                {
+                    xyStepSizeAmp = 2;
+                    BeetleControl.tolerance = 1;
+                }
+                if (Parameters.highestAccuracy)
+                    BeetleControl.tolerance = 1;
+            }
+            else if (!laterTimeFlag && timeElapsed.Seconds > 150)
+            {
+                Console.WriteLine("Later Time Flag is on");
+                Parameters.Log("Later Time Flag is on");
+                laterTimeFlag = true;
+                zStepSize = 0.0005;
+                buffer = bufferSmall;
+                xyStepCountsLimit = true;
+                loss.Clear();
+                toleranceForNewCriteria = 0.002;
+            }
+            else if (!zStepOff && timeElapsed.Seconds > 300)
+                zStepOff = true;
+            else if (timeElapsed.Seconds > totalMinutes * 60)
+            {
+                Console.WriteLine("Time is up");
+                Parameters.Log("Time is up");
+                return false;
+            }
+
+            return true;
         }
 
         private bool XYSearch()

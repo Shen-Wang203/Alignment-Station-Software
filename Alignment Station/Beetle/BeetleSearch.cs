@@ -23,7 +23,7 @@ namespace Beetle
          * Real-time motor counts can be get from BeetleControl.countsReal
          * 
          * Searching Step Size Adjust:
-         *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * minStepSize), so change xyStepSizeAmp can change the step size
+         *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * stepSearchMinStepSize), so change xyStepSizeAmp can change the step size
          *     AxisInterpolationSearch step size is automatically adjusted based on loss, can change xyStepSizeAmp to change step size as needed (xyStepSizeAmp * theStepBasedOnLoss)
          *     ZSteppingSearch step size is automatically adjusted based on loss, can change zStepSizeAmp to change step size as needed () (zStepSizeAmp * theStepBasedOnLoss)
          */ 
@@ -41,7 +41,7 @@ namespace Beetle
         protected static bool xyStepGoBackToLast = true;
         protected static double scanSearchRadius = 0.15; // in mm, default is 150um
         protected static float zStepSizeAmp = 1.0f;
-        protected static float xyStepSizeAmp = 1.0f;
+        protected static float xyStepSizeAmp = 1.0f; // need to larger than 1
         protected static double limitZ = 145;
         protected static string zMode = "normal";
         //protected static double lossCurrentMax = Parameters.lossCurrentMax;
