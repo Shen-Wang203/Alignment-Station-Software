@@ -62,7 +62,10 @@ namespace Beetle
                     lossCriteria = Parameters.lossCurrentMax - 0.02;
             }
             else if (criteriaSelect == "global")
+            {
                 lossCriteria = Parameters.lossCriteria;
+                Parameters.lossCurrentMax = -50;
+            }
 
             ParameterReset();
 
@@ -79,7 +82,6 @@ namespace Beetle
             BeetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
-            Parameters.lossCurrentMax = loss[loss.Count - 1];
             Parameters.position.CopyTo(posCurrentMax, 0);
             while (!Parameters.errorFlag)
             {
@@ -106,7 +108,6 @@ namespace Beetle
         {
             lossFailToImprove = 0;
             secondTry = false;
-            Parameters.lossCurrentMax = -50;
             doubleCheckFlag = Parameters.doublecheckFlag;
             stopInBetweenFlag = Parameters.stopInBetweenFlag;
 
