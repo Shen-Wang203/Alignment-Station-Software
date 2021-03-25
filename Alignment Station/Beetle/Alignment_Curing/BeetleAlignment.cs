@@ -24,7 +24,7 @@ namespace Beetle
         /* Based on Loss, we divide it into three phases
          * 1. -60 ~ lossStage1: use ScanSearch method
          * 2. lossStage1 ~ lossStage2: use InterpolationSerach method, change ZSteppingSearch parameters 
-         * 3. lossStage2 ~ lossCriteria: use InterpolationSearch method, change ZSteppingSearch parameters
+         * 3. lossStage2 ~ lossCriteria: use InterpolationSearch method, change ZSteppingSearch parameters 
         */
         private static float lossStage1 = -4.0f;
         private static float lossStage2 = -2.0f;
@@ -52,6 +52,8 @@ namespace Beetle
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
         private void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
+            if (Parameters.usePiezo)
+                PiezoControl.Reset();
             ProductSelect();
 
             if (criteriaSelect == "currentMax" && Parameters.lossCurrentMax != -50)
@@ -116,6 +118,8 @@ namespace Beetle
             //searchMode = "scan";
 
             Parameters.errorFlag = false;
+
+            BeetleControl.globalErrorCount = 0;
 
             // for multimmode step size is larger
             if (productCondition >= 3)

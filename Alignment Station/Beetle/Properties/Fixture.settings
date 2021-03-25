@@ -41,5 +41,8 @@
     <Setting Name="BeetleFixtureNum" Type="System.SByte" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
+    <Setting Name="ArdnCOM" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

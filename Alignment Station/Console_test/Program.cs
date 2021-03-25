@@ -12,15 +12,28 @@ namespace Console_test
 
         static void Main(string[] args)
         {
-            Father f = new Father();
-            f.Runprint();
-            Son s = new Son();
-            s.Run();
-
-            
-            
+            bool xEpoxySolid = false;
+            bool usePiezo = false;
+            double x = 645;
+            if (!xEpoxySolid && ((usePiezo && !PiezoSteppingSearch()) || (!usePiezo && !AxisSteppingSearch())))
+            {
+                ushort dacValue;
+                dacValue = (ushort)x;
+                Console.WriteLine((dacValue & 0x0f00) >> 8);
+            }
         }
 
+        private static bool PiezoSteppingSearch()
+        {
+            Console.WriteLine("piezo");
+            return false;
+        }
+
+        private static bool AxisSteppingSearch()
+        {
+            Console.WriteLine("step");
+            return false;
+        }
 
 
     } 

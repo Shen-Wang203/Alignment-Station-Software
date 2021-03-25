@@ -22,6 +22,7 @@ namespace Beetle
         private static sbyte zDirectionOld = 0;
         private static sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move
         
+        public static byte globalErrorCount = 0;
         public static sbyte[] motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 };
         public static double xBacklashMM = 0; // in mm
         public static double yBacklashMM = 0; // in mm
@@ -29,31 +30,10 @@ namespace Beetle
         public static sbyte tolerance = 2; // in encoder counts
         public static double encoderResolution = 50e-6; // in mm/counts
         public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
+        public static double[] tempP;
 
         static BeetleControl()
         {
-            try
-            {
-                T1Port = new SerialPort(Parameters.beetleT1ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T2Port = new SerialPort(Parameters.beetleT2ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T3Port = new SerialPort(Parameters.beetleT3ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T1Port.ReadTimeout = 200;
-                T1Port.WriteTimeout = 200;
-                T2Port.ReadTimeout = 200;
-                T2Port.WriteTimeout = 200;
-                T3Port.ReadTimeout = 200;
-                T3Port.WriteTimeout = 200;
-                T1Port.Open();
-                T2Port.Open();
-                T3Port.Open();
-            }
-            catch (Exception e)
-            {
-                //TODO: message box
-                Console.WriteLine("Serial Connection Error");
-                MessageBox.Show(e.Message);
-            }
-
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
             double A1x, A1y, A2x, A2y, A3x, A3y;
             switch(Parameters.beetleFixtureNumber)
@@ -118,6 +98,31 @@ namespace Beetle
             countsOffset = new double[] { A1x, A1y, A2x, A2y, A3x, A3y };
         }
 
+        public static bool Connection()
+        {
+            try
+            {
+                T1Port = new SerialPort(Parameters.beetleT1ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T2Port = new SerialPort(Parameters.beetleT2ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T3Port = new SerialPort(Parameters.beetleT3ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T1Port.ReadTimeout = 200;
+                T1Port.WriteTimeout = 200;
+                T2Port.ReadTimeout = 200;
+                T2Port.WriteTimeout = 200;
+                T3Port.ReadTimeout = 200;
+                T3Port.WriteTimeout = 200;
+                T1Port.Open();
+                T2Port.Open();
+                T3Port.Open();
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + "\nFailed to Connect Beetle Control Box");
+                return false;
+            }
+        }
+
         public static void ClearErrors()
         {
             Parameters.errors = "";
@@ -140,6 +145,10 @@ namespace Beetle
             string xstr = "w axis0.requested_state 3";
             string ystr = "w axis1.requested_state 3";
             T123SendOnly(xstr, ystr);
+            motorEngageFlag = new sbyte[6] { 1, 1, 1, 1, 1, 1 }; // indicating that the motor is running
+            Thread.Sleep(15000);
+            CheckErrors();
+            motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // indicating the motor is in idle
         }
 
         // axial can be 0(all axis) or 0-5 axis
@@ -406,6 +415,8 @@ namespace Beetle
 
         public static void GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 }, stopInBetween:true);
 
+        public static void GotoTemp() => GotoPosition(tempP, stopInBetween: true);
+
         // return false when timeout or driver board errors or out of range
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
         private static bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
@@ -436,23 +447,29 @@ namespace Beetle
                     timeoutloop++;
                 }
 
-                if (!ignoreError && timeoutloop >= 49)
+                if (timeoutloop >= 49)
                 {
                     Console.WriteLine("Time Out Error");
                     Parameters.Log("Time Out Error");
-                    DisengageMotors();
-                    if (!CheckErrors())
+                    globalErrorCount += 1;
+                    if (!ignoreError || globalErrorCount > 4)
                     {
-                        for (int j = 0; j < 6; j++)
+                        Console.WriteLine("Exit Due to Time Out ");
+                        Parameters.Log("Exit Due to Time Out");
+                        DisengageMotors();
+                        if (!CheckErrors())
                         {
-                            if (Math.Abs(targetCounts[i] - countsReal[i]) > tolerance)
-                                Parameters.errors = string.Concat(Parameters.errors, "Axis ", j + 1, " Timeout Error\n");
+                            for (int j = 0; j < 6; j++)
+                            {
+                                if (Math.Abs(targetCounts[i] - countsReal[i]) > tolerance)
+                                    Parameters.errors = string.Concat(Parameters.errors, "Axis ", j + 1, " Timeout Error\n");
+                            }
                         }
+                        Console.WriteLine(Parameters.errors);
+                        Parameters.Log(Parameters.errors);
+                        Parameters.errorFlag = true;
+                        return false;
                     }
-                    Console.WriteLine(Parameters.errors);
-                    Parameters.Log(Parameters.errors);
-                    Parameters.errorFlag = true;
-                    return false;
                 }
                 if (checkOnTarget && (doubleCheck || stopInBetween))
                 {
@@ -824,12 +841,14 @@ namespace Beetle
             if (errorCodes.Sum() != 0)
             {
                 ErrorCodeExplain(errorCodes);
-                DisengageMotors();
+                //DisengageMotors();
+                Parameters.errorFlag = true;
                 return true;
             }
             else
             {
                 Parameters.errors = "";
+                Parameters.errorFlag = false;
                 return false;
             }
         }

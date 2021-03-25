@@ -22,6 +22,8 @@ namespace Beetle
          * 
          * Real-time motor counts can be get from BeetleControl.countsReal
          * 
+         * Motors don't need to engage before moving, BeetleControl will engage motors that will need to move. But remember to disengage all motors after alignment and curing process.
+         * 
          * Searching Step Size Adjust:
          *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * stepSearchMinStepSize), so change xyStepSizeAmp can change the step size
          *     AxisInterpolationSearch step size is automatically adjusted based on loss, can change xyStepSizeAmp to change step size as needed (xyStepSizeAmp * theStepBasedOnLoss)
@@ -29,7 +31,9 @@ namespace Beetle
          */ 
         private static int xDirectionTrend = 1;
         private static int yDirectionTrend = 1;
+        private static int zDirectionTrend = 1;
         private static readonly double stepSearchMinStepSize = 0.0001; // in mm, default is 0.1um 
+        private static readonly ushort piezoStepSize = 4; // in DAC value
 
         protected static sbyte lossFailToImprove = 0;
         protected static bool secondTry = false;
@@ -61,9 +65,9 @@ namespace Beetle
             */
             if (Parameters.productName == "VOA")
                 productCondition = 2;
-            else if (Parameters.productName == "SM1xN")
+            else if (Parameters.productName == "SM 1xN")
                 productCondition = 1;
-            else if (Parameters.productName == "MM1xN")
+            else if (Parameters.productName == "MM 1xN")
                 productCondition = 3;
             else if (Parameters.productName == "UWDM")
                 productCondition = 2;
@@ -94,7 +98,7 @@ namespace Beetle
             {
                 BeetleControl.XMoveTo(px[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
                 BeetleControl.YMoveTo(py[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
-                while (Math.Abs(Parameters.position[0] - px[i]) > 4 * BeetleControl.encoderResolution)
+                while (Math.Abs(Parameters.position[0] - px[i]) > 4 * BeetleControl.encoderResolution && !Parameters.errorFlag)
                 {
                     BeetleControl.RealCountsFetch(0); // 0 is T1x, 1 is T1y
                     Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
@@ -108,6 +112,10 @@ namespace Beetle
                         return true;
                     }
                 }
+
+                if (Parameters.errorFlag)
+                    return false;
+
                 Thread.Sleep(100);
                 // Update counts and position for next movement
                 BeetleControl.RealCountsFetch(6);
@@ -169,7 +177,7 @@ namespace Beetle
                 loss.Clear();
                 pos.Clear();
                 loss0 = PowerMeter.Read();
-                while (Math.Abs(Parameters.position[axis] - p[i]) > BeetleControl.tolerance * BeetleControl.encoderResolution)
+                while (Math.Abs(Parameters.position[axis] - p[i]) > BeetleControl.tolerance * BeetleControl.encoderResolution && !Parameters.errorFlag)
                 {
                     BeetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
                     Parameters.position[axis] = p0 + (BeetleControl.countsReal[axis] - count0) * BeetleControl.encoderResolution;
@@ -197,8 +205,11 @@ namespace Beetle
                     if (unchange > 100)
                         break;
                 }
-
                 BeetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
+
+                if (Parameters.errorFlag)
+                    return false;
+
                 // if has max, go to the max position
                 if (trend == 1)
                 {
@@ -291,7 +302,7 @@ namespace Beetle
                 diff = loss[loss.Count - 1] - loss0;
                 if (diff <= -bound)
                 {
-                    // Sometimes during curing, going back will make the loss worse because the mim loss position 
+                    // Sometimes during curing, going back will make the loss worse because the best loss position 
                     // is drifting along the forwarding direction
                     if (!xyStepGoBackToLast && totalStep >= 2)
                         return true;
@@ -340,6 +351,9 @@ namespace Beetle
                     }
                 }
             }
+
+            if (Parameters.errorFlag)
+                return false;
 
             if (axis == 0)
                 BeetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
@@ -394,7 +408,7 @@ namespace Beetle
             else
                 pList = new List<double> { p0, p0 + 2 * step, p0 - step, p0 + step, p0 - 2 * step };
             
-            while (i < 6)
+            while (i < 6 && !Parameters.errorFlag)
             {
                 if (axis == 0)
                     BeetleControl.XMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
@@ -449,7 +463,10 @@ namespace Beetle
                     i = 5;
                 }
             }
-            
+
+            if (Parameters.errorFlag)
+                return false;
+
             if ((loss.Max() - loss.Min()) < 0.002)
             {
                 Console.WriteLine("Unchange, go back to original");
@@ -799,6 +816,140 @@ namespace Beetle
                 return LossBound(lossRef);
             else
                 return LossBoundSmall(lossRef);
+        }
+
+        // *************************************************************
+        // Piezo Search
+        // *************************************************************
+        // Need to reset the piezo to 0x800 for every run
+        // for axis: x is 0, y is 1, z is 2
+        protected bool PiezoSteppingSearch(byte axis)
+        {
+            if (axis == 0)
+            {
+                Console.WriteLine("Piezo Stepping Search X Started");
+                Parameters.Log("Piezo Stepping Search X Started");
+            }
+            else if (axis == 1)
+            {
+                Console.WriteLine("Piezo Stepping Search Y Started");
+                Parameters.Log("Piezo Stepping Search Y Started");
+            }
+            else
+            {
+                Console.WriteLine("Piezo Stepping Search Z Started");
+                Parameters.Log("Piezo Stepping Search Z Started");
+            }
+            loss.Clear();
+            pos.Clear();
+            double loss0, bound, diff;
+            ushort p = Parameters.piezoPosition[axis];
+            sbyte trend = 1, sameCount = 0;
+            bool directionChanged = false;
+            loss.Add(PowerMeter.Read());
+            pos.Add(Parameters.piezoPosition[axis]);
+            loss0 = loss[loss.Count - 1];
+            if (LossMeetCriteria())
+                return true;
+            while (!Parameters.errorFlag)
+            {
+                if (p > 0xfff)
+                {
+                    Console.WriteLine("Reach Piezo Range Limit");
+                    Parameters.Log("Reach Piezo Range Limit");
+                    return false;
+                    // TODO: add motor compensation
+                }
+
+                if (axis == 0)
+                    p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * xDirectionTrend);
+                else if (axis == 1)
+                    p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * yDirectionTrend);
+                else
+                    // z needs larger (3x) step size
+                    p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * 3 * zDirectionTrend);
+                PiezoControl.Send(axis, p);
+
+                // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
+                Thread.Sleep(50); // delay 50ms
+                loss.Add(PowerMeter.Read());
+                pos.Add(Parameters.piezoPosition[axis]);
+                if (LossMeetCriteria())
+                    return true;
+
+                bound = XYLossBound(loss0);
+                diff = loss[loss.Count - 1] - loss0;
+                if (diff <= -bound)
+                {
+                    if (axis == 0)
+                        p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * xDirectionTrend);
+                    else if (axis == 1)
+                        p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * yDirectionTrend);
+                    else
+                        p = (ushort)(Parameters.piezoPosition[axis] + piezoStepSize * 3 * zDirectionTrend);
+                    trend -= 1;
+                    if (trend != 0 || directionChanged)
+                    {
+                        Console.WriteLine("Over");
+                        Parameters.Log("Over");
+                        break;
+                    }
+                    if (axis == 0)
+                        xDirectionTrend = -xDirectionTrend;
+                    else if (axis == 1)
+                        yDirectionTrend = -yDirectionTrend;
+                    else
+                        zDirectionTrend = -zDirectionTrend;
+                    loss0 = loss[loss.Count - 1];
+                    Console.WriteLine("Change Direction");
+                    Parameters.Log("Change Direction");
+                    directionChanged = true;
+                    sameCount = 0;
+                }
+                else if (diff >= bound)
+                {
+                    trend = 2;
+                    loss0 = loss[loss.Count - 1];
+                    sameCount = 0;
+                }
+                else
+                {
+                    trend = 1;
+                    sameCount += 1;
+                    // same losss for about 0.4um which is about 48 DAC value
+                    if (sameCount >= 12)
+                    {
+                        if (axis == 0)
+                            p = (ushort)(Parameters.piezoPosition[axis] - piezoStepSize * xDirectionTrend * 6);
+                        else if (axis == 1)
+                            p = (ushort)(Parameters.piezoPosition[axis] - piezoStepSize * yDirectionTrend * 6);
+                        else
+                            p = (ushort)(Parameters.piezoPosition[axis] - piezoStepSize * 3 * zDirectionTrend * 6);
+                        Console.WriteLine("Exit Due to Same Loss");
+                        Parameters.Log("Exit Due to Same Loss");
+                        break;
+                    }
+                }
+            }
+
+            if (Parameters.errorFlag)
+                return false;
+
+            PiezoControl.Send(axis, p);
+            // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
+            Thread.Sleep(50); // delay 50ms
+            loss.Add(PowerMeter.Read());
+            pos.Add(Parameters.piezoPosition[axis]);
+            StatusCheck(loss.Max());
+            // if unchanged, return false
+            if (loss.Max() - loss.Min() < 0.002)
+                return false;
+            if (loss[loss.Count - 1] < (loss.Max() - 0.04))
+            {
+                Console.WriteLine("Failed to go to best");
+                Parameters.Log("Failed to go to best");
+            }
+            return true;
         }
 
 

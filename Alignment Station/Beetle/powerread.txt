@@ -1,17 +1,3 @@
-INFO:root:-5.7473
-INFO:root:-5.7264
-INFO:root:-5.7264
-INFO:root:-5.7316
-INFO:root:-5.7506
-INFO:root:-5.7663
-INFO:root:-5.7575
-INFO:root:-5.7198
-INFO:root:-5.4598
-INFO:root:-4.9955
-INFO:root:-4.5494
-INFO:root:-4.2562
-INFO:root:-3.9625
-INFO:root:-3.6547
 INFO:root:-2.9144
 INFO:root:-2.1831
 INFO:root:-1.9809

@@ -13,9 +13,9 @@ namespace Beetle
         private static float R = 50f;
         private static double r = R / Math.Cos(Math.PI / 6);
         private static float L = 78.5f;
-        // This is the height of the universal joint center point to the base + top moving part thickness, this is a fixture fixed parameter, find it from the 3D model. 
+        // This is the height of the universal joint center point to the base + top moving part top surface to its joint surface, this is a fixture fixed parameter, find it from the 3D model. 
         private static float baseZ = 65.9221f + 8f;
-        // Pivot point coordinates relative to the center (x,y,z,1) of moving plate
+        // Pivot point coordinates relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance.
         //Parameters.pivotPoint = { 0, 0, 0, 0 };
 
         public static float SetR
@@ -36,10 +36,11 @@ namespace Beetle
             set { baseZ = value + 8f; }
         }
 
+        // The Z input value should be the distance between pivot point to top moving part top surface
         public static double[] SetPivotPoint
         {
             //get { return pivotPoint; }
-            set { Parameters.pivotPoint = value; }
+            set { Parameters.pivotPoint = value; Parameters.pivotPoint[2] += 8; }
         }
 
         //Matrix multiply C = A.B, A and B can be any dimension

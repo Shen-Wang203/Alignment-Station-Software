@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Windows.Forms;
 
 namespace Beetle
 {
@@ -31,6 +32,11 @@ namespace Beetle
                 serialNum = SerialNumberIdentify(port);
                 if (serialNum != "")
                 {
+                    if (serialNum == "Arduino\r")
+                    {
+                        Parameters.arduinoComPortName = port;
+                        continue;
+                    }
                     //Console.WriteLine(serialNum);
                     beetleSerialNum[portCount] = serialNum;
                     beetlePorts[portCount] = port;
@@ -42,6 +48,7 @@ namespace Beetle
                 Console.WriteLine("Beetle Connection Failed");
                 return false;
             }
+            // get rid of \r char in the string end
             beetleSerialNum[0] = beetleSerialNum[0].Substring(0, beetleSerialNum[0].Length - 1);
             beetleSerialNum[1] = beetleSerialNum[1].Substring(0, beetleSerialNum[1].Length - 1);
             beetleSerialNum[2] = beetleSerialNum[2].Substring(0, beetleSerialNum[2].Length - 1);
@@ -106,7 +113,7 @@ namespace Beetle
                 return false;
         }
 
-        // Serial Number Identification, return serial number
+        // Serial Number Identification, return serial number + \r
         private static string SerialNumberIdentify(string portName)
         {
             SerialPort port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One)
@@ -126,12 +133,12 @@ namespace Beetle
             catch (Exception)
             {
                 //Console.WriteLine("Wrong Connection On " + portName);
+                //MessageBox.Show(e.Message + "\nFail to Connect COM Port");
                 return "";
             }
             port.Close();
             int found = x.IndexOf(": ");
             return x.Substring(found + 2);
         }
-
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Beetle
@@ -39,6 +37,7 @@ namespace Beetle
         private static void ParameterReset()
         {
             Parameters.errorFlag = false;
+            BeetleControl.globalErrorCount = 0;
             BeetleControl.tolerance = 2;
             // Father class parameter reset
             lossFailToImprove = 0;
@@ -73,22 +72,23 @@ namespace Beetle
             lowerCriteriaStep = 0.015;
             toleranceForNewCriteria = 0.003;
 
+            ProductSelect();
             switch (productCondition)
             {
                 case 1: // SM + larget gap
                     lossCriteria = Parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.001;
-                    xyStepSizeAmp = 3.0f; // 6 counts
+                    xyStepSizeAmp = 3.0f; // 6 encoder counts
                     break;
                 case 2: // SM + small gap
                     lossCriteria = Parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 3.0f; // 6 counts
+                    xyStepSizeAmp = 3.0f; // 6 encoder counts
                     break;
                 case 3: // MM + larget gap
                     lossCriteria = Parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 8.0f; // 16 counts
+                    xyStepSizeAmp = 8.0f; // 16 encoder counts
                     bufferBig = 0.007;
                     bufferSmall = 0.007;
                     lowerCriteriaStep = 0.01;
@@ -96,7 +96,7 @@ namespace Beetle
                 case 4: // MM + small gap
                     lossCriteria = Parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
-                    xyStepSizeAmp = 6.0f; // 12 counts
+                    xyStepSizeAmp = 6.0f; // 12 encoder counts
                     break;
             }
         }
@@ -298,12 +298,15 @@ namespace Beetle
         private bool XYSearch()
         {
             double[] P0 = new double[6], P1 = new double[6];
-            Parameters.position.CopyTo(P0, 0);
+            if (!Parameters.usePiezo)
+                Parameters.position.CopyTo(P0, 0);
+            else
+                Parameters.piezoPosition.CopyTo(P0, 0);
             for (int i = 0; i < 2; i ++)
             {
                 if (xSearchFirst)
                 {
-                    if (!xEpoxySolid && !AxisSteppingSearch(axis: 0))
+                    if (!xEpoxySolid && ((Parameters.usePiezo && !PiezoSteppingSearch(axis: 0)) || (!Parameters.usePiezo && !AxisSteppingSearch(axis: 0))))
                     {
                         Console.WriteLine("X step Unchange");
                         Parameters.Log("X step Unchange");
@@ -325,7 +328,7 @@ namespace Beetle
                     continue;
                 }
 
-                if (!yEpoxySolid && !AxisSteppingSearch(axis: 1))
+                if (!yEpoxySolid && ((Parameters.usePiezo && !PiezoSteppingSearch(axis: 1)) || (!Parameters.usePiezo && !AxisSteppingSearch(axis: 1))))
                 {
                     Console.WriteLine("Y step Unchange");
                     Parameters.Log("Y step Unchange");
@@ -346,7 +349,10 @@ namespace Beetle
                 xSearchFirst = true;
             }
 
-            Parameters.position.CopyTo(P1, 0);
+            if (!Parameters.usePiezo)
+                Parameters.position.CopyTo(P1, 0);
+            else
+                Parameters.piezoPosition.CopyTo(P1, 0);
             // Change x or y search priority based on which one has larger movements
             if (Math.Abs(P1[0] - P0[0]) > (Math.Abs(P1[1] - P0[1]) + 0.0001) && !xSearchFirst)
                 xSearchFirst = true;
@@ -360,16 +366,25 @@ namespace Beetle
         {
             Console.WriteLine("Z Steps Back");
             Parameters.Log("Z Steps Back");
-            BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+            if (Parameters.usePiezo)
+                PiezoControl.Send(2, (ushort)(Parameters.piezoPosition[2] + 70 * Parameters.piezoZvsGap)); // gap larger for about 0.5 um
+            else
+                BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
         }
 
         private void ZStepBidirection()
         {
+            if (Parameters.usePiezo)
+            {
+                PiezoSteppingSearch(axis: 2);
+                return;
+            }
             Console.WriteLine("Z Bidirection Stepping Start");
             Parameters.Log("Z Bidirection Stepping Start");
-            double z = Parameters.position[2], loss0, bound, diff;
+            double z, loss0, bound, diff;
+            z = Parameters.position[2];
             sbyte trend = 1, sameCount = 0;
-            int direc = -1;
+            int direc = 1; // go up or smaller the gap first
             loss.Clear();
             pos.Clear();
             loss.Add(PowerMeter.Read());
@@ -381,8 +396,8 @@ namespace Beetle
                 z += zStepSize * direc;
                 BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
                 Thread.Sleep(150); // delay 150ms
-                loss.Add(PowerMeter.Read());
                 pos.Add(Parameters.position[2]);
+                loss.Add(PowerMeter.Read());
                 if (LossMeetCriteria())
                     return;
 
