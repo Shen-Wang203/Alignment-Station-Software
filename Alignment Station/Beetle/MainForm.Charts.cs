@@ -9,14 +9,14 @@ namespace Beetle
 {
     public partial class MainForm
     {
-        private SeriesCollection seriesCollectionXY, seriesCollectionZ;
+        private SeriesCollection seriesXY, seriesZ, seriesA, seriesB, seriesC;
         private double[] oldPosition = { 0,0,0,0,0,0 };
         private byte weightValue = 12;
         private double oldLoss = -50;
 
         private void ChartsInit()
         {
-            seriesCollectionXY = new SeriesCollection
+            seriesXY = new SeriesCollection
             {
                 new ScatterSeries
                 {
@@ -31,8 +31,8 @@ namespace Beetle
                     Stroke = Brushes.RosyBrown
                 },
             };
-            seriesCollectionXY[0].Values.Add(new ScatterPoint(x: Parameters.position[0]*1000, y: Parameters.position[1]*1000, weight: weightValue));
-            cartesianChartXY.Series = seriesCollectionXY;
+            seriesXY[0].Values.Add(new ScatterPoint(x: Parameters.position[0]*1000, y: Parameters.position[1]*1000, weight: weightValue));
+            cartesianChartXY.Series = seriesXY;
             cartesianChartXY.LegendLocation = LegendLocation.Top;
             cartesianChartXY.BackColor = System.Drawing.Color.Transparent;
             cartesianChartXY.AxisX.Add(
@@ -57,7 +57,7 @@ namespace Beetle
             );
 
 
-            seriesCollectionZ = new SeriesCollection
+            seriesZ = new SeriesCollection
             {
                 new LineSeries
                 {
@@ -68,9 +68,9 @@ namespace Beetle
                     StrokeThickness = 2,
                     Stroke = Brushes.LightSkyBlue,
                     PointGeometrySize = 10
-                },
+                }
             };
-            cartesianChartZ.Series = seriesCollectionZ;
+            cartesianChartZ.Series = seriesZ;
             cartesianChartZ.LegendLocation = LegendLocation.Top;
             cartesianChartZ.AxisX.Add(
                 new Axis
@@ -90,6 +90,102 @@ namespace Beetle
             );
 
             Parameters.position.CopyTo(oldPosition, 0);
+
+            seriesA = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Real Time Motor Position", // TODo specify which motor
+                    FontSize = 20,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    Values = new ChartValues<double>(),
+                    StrokeThickness = 2,
+                    Stroke = Brushes.LightPink,
+                    PointGeometrySize = 10
+                }
+            };
+            cartesianChartMotorA.Series = seriesA;
+            cartesianChartMotorA.LegendLocation = LegendLocation.Top;
+            cartesianChartMotorA.AxisX.Add(
+                new Axis
+                {
+                    Title = "Series",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            ); ;
+            cartesianChartMotorA.AxisY.Add(
+                new Axis
+                {
+                    Title = "Encoder Counts",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            );
+
+            seriesB = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Real Time Motor Position", // TODo specify which motor
+                    FontSize = 20,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    Values = new ChartValues<double>(),
+                    StrokeThickness = 2,
+                    Stroke = Brushes.LightPink,
+                    PointGeometrySize = 10
+                }
+            };
+            cartesianChartMotorB.Series = seriesB;
+            cartesianChartMotorB.LegendLocation = LegendLocation.Top;
+            cartesianChartMotorB.AxisX.Add(
+                new Axis
+                {
+                    Title = "Series",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            ); ;
+            cartesianChartMotorB.AxisY.Add(
+                new Axis
+                {
+                    Title = "Encoder Counts",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            );
+
+            seriesC = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Real Time Motor Position", // TODo specify which motor
+                    FontSize = 20,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    Values = new ChartValues<double>(),
+                    StrokeThickness = 2,
+                    Stroke = Brushes.LightPink,
+                    PointGeometrySize = 10
+                }
+            };
+            cartesianChartMotorC.Series = seriesC;
+            cartesianChartMotorC.LegendLocation = LegendLocation.Top;
+            cartesianChartMotorC.AxisX.Add(
+                new Axis
+                {
+                    Title = "Series",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            ); ;
+            cartesianChartMotorC.AxisY.Add(
+                new Axis
+                {
+                    Title = "Encoder Counts",
+                    FontSize = 15,
+                    FontWeight = FontWeight.FromOpenTypeWeight(700)
+                }
+            );
         }
 
         private void ChartsDataUpdate()
@@ -98,11 +194,11 @@ namespace Beetle
             if (oldPosition[2] != Parameters.position[2] || oldPosition[3] != Parameters.position[3] || oldPosition[4] != Parameters.position[4] || 
                 oldPosition[5] != Parameters.position[5])
             {
-                if (seriesCollectionXY[0].Values.Count > 1)
+                if (seriesXY[0].Values.Count > 1)
                 {
                     weightValue = 8;
-                    seriesCollectionXY[0].Values.Clear();
-                    seriesCollectionXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
+                    seriesXY[0].Values.Clear();
+                    seriesXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
 
                     cartesianChartXY.AxisX[0].MaxValue = x * 1000 >= 0 ? (int)(x * 1000) + 1 : 0.1;
                     cartesianChartXY.AxisX[0].MinValue = x * 1000 < 0 ? (int)(x * 1000) - 1 : -0.1;
@@ -128,14 +224,19 @@ namespace Beetle
                 else if (y * 1000 > cartesianChartXY.AxisY[0].MaxValue)
                     cartesianChartXY.AxisY[0].MaxValue = (int)(y * 1000) + 1;
 
-                seriesCollectionXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
+                seriesXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
                 oldLoss = Parameters.loss;
             }
             Parameters.position.CopyTo(oldPosition, 0);
 
-            seriesCollectionZ[0].Values.Add(Parameters.position[2]);
-            if (seriesCollectionZ[0].Values.Count > 20)
-                seriesCollectionZ[0].Values.RemoveAt(0);
+            seriesZ[0].Values.Add(Parameters.position[2]);
+            if (seriesZ[0].Values.Count > 20)
+                seriesZ[0].Values.RemoveAt(0);
+        }
+
+        private void MotorChartsUpdate()
+        { 
+            
         }
 
     }

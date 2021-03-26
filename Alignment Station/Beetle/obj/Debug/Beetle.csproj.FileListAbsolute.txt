@@ -36,3 +36,30 @@ C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.xml
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.pdb
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.exe.config
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.exe
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.pdb
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\NationalInstruments.VisaNS.dll
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.pdb
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.pdb
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csprojAssemblyReference.cache
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.MainForm.resources
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.Properties.Resources.resources
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.GenerateResource.cache
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CoreCompileInputs.cache
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CopyComplete
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.exe
+C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.pdb

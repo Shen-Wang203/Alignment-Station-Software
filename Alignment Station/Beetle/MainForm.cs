@@ -44,7 +44,10 @@ namespace Beetle
                 ButtonAlignment.Enabled = false;
                 ButtonPreCuring.Enabled = false;
                 ButtonCuring.Enabled = false;
-                // TODO: disable buttons on stage tab
+                // disable buttons on stage tab
+                buttonSetPosition.Enabled = false;
+                buttonSetInitial.Enabled = false;
+                buttonClearErrorBC.Enabled = false;
             }
             // Find all available cameras
             filterInfoCollecion = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -306,7 +309,10 @@ namespace Beetle
                 ButtonAlignment.Enabled = true;
                 ButtonPreCuring.Enabled = true;
                 ButtonCuring.Enabled = true;
-                // TODO: disable buttons on stage tab
+                // disable buttons on stage tab
+                buttonSetPosition.Enabled = true;
+                buttonSetInitial.Enabled = true;
+                buttonClearErrorBC.Enabled = true;
             }
         }
 
@@ -404,5 +410,6 @@ namespace Beetle
             //BeetleControl.NormalTrajSpeed();
             //richTextBoxErrorMsg.Text += "Errors are Cleared\n";
         }
+
     }
 }
