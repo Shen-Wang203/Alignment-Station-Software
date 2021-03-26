@@ -23,6 +23,7 @@ namespace Beetle
                     Title = "Real Time XY",
                     FontSize = 20,
                     FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    Foreground = Brushes.Silver,
                     Values = new ChartValues<ScatterPoint>(),
                     //PointGeometry = DefaultGeometries.Diamond,
                     StrokeThickness = 5,
@@ -64,6 +65,7 @@ namespace Beetle
                     Title = "Real Time Z",
                     FontSize = 20,
                     FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    Foreground = Brushes.Silver,
                     Values = new ChartValues<double>(),
                     StrokeThickness = 2,
                     Stroke = Brushes.LightSkyBlue,
@@ -97,7 +99,7 @@ namespace Beetle
                 {
                     Title = "Real Time Motor Position", // TODo specify which motor
                     FontSize = 20,
-                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    //FontWeight = FontWeight.FromOpenTypeWeight(700),
                     Values = new ChartValues<double>(),
                     StrokeThickness = 2,
                     Stroke = Brushes.LightPink,
@@ -129,7 +131,7 @@ namespace Beetle
                 {
                     Title = "Real Time Motor Position", // TODo specify which motor
                     FontSize = 20,
-                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    //FontWeight = FontWeight.FromOpenTypeWeight(700),
                     Values = new ChartValues<double>(),
                     StrokeThickness = 2,
                     Stroke = Brushes.LightPink,
@@ -161,7 +163,7 @@ namespace Beetle
                 {
                     Title = "Real Time Motor Position", // TODo specify which motor
                     FontSize = 20,
-                    FontWeight = FontWeight.FromOpenTypeWeight(700),
+                    //FontWeight = FontWeight.FromOpenTypeWeight(700),
                     Values = new ChartValues<double>(),
                     StrokeThickness = 2,
                     Stroke = Brushes.LightPink,

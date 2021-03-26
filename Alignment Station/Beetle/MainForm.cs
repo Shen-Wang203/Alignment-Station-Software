@@ -155,6 +155,15 @@ namespace Beetle
                     labelStatusValue.ForeColor = Color.Red;
                 }
 
+                labelPositionXYZ.Text = Math.Round(Parameters.position[0], 3).ToString() + ", " + Math.Round(Parameters.position[1], 3).ToString() + 
+                                        ", " + Math.Round(Parameters.position[2], 3).ToString();
+                labelPositionAngles.Text = Math.Round(Parameters.position[3], 3).ToString() + ", " + Math.Round(Parameters.position[4], 3).ToString() + 
+                                        ", " + Math.Round(Parameters.position[5], 3).ToString();
+
+                if (Parameters.usePiezo)
+                    labelPiezoPositionValue.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() + 
+                                                    ", " + Parameters.piezoPosition[2].ToString();
+
                 if (chartsOn)
                     ChartsDataUpdate();
             }
@@ -377,9 +386,13 @@ namespace Beetle
             Parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
         }
 
-        private void buttonChart_Click(object sender, EventArgs e)
+        private void buttonChartOnOff_Click(object sender, EventArgs e)
         {
             chartsOn = !chartsOn;
+            if (chartsOn)
+                buttonChartOnOff.Text = "Live Chart On";
+            else
+                buttonChartOnOff.Text = "Live Chart Off";
         }
 
         private void buttonSetPosition_Click(object sender, EventArgs e)
