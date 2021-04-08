@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Beetle
 {
@@ -26,10 +27,10 @@ namespace Beetle
          * 2. lossStage1 ~ lossStage2: use InterpolationSerach method, change ZSteppingSearch parameters 
          * 3. lossStage2 ~ lossCriteria: use InterpolationSearch method, change ZSteppingSearch parameters 
         */
-        private static float lossStage1 = -4.0f;
-        private static float lossStage2 = -2.0f;
+        private float lossStage1 = -4.0f;
+        private float lossStage2 = -2.0f;
 
-        private static string searchMode = "scan"; // defaul scan mode
+        private string searchMode = "scan"; // defaul scan mode
 
         public double SetLossCriteria
         {
@@ -37,7 +38,7 @@ namespace Beetle
             set { Parameters.lossCriteria = value; }
         }
 
-        public void AlignmentRun() => Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
+        public void AlignmentRun() => Run(criteriaSelect: "global");
 
         public void PreCuringRun() => Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
 
@@ -52,8 +53,6 @@ namespace Beetle
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
         private void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
         {
-            if (Parameters.usePiezo)
-                PiezoControl.Reset();
             ProductSelect();
 
             if (criteriaSelect == "currentMax" && Parameters.lossCurrentMax != -50)
@@ -106,7 +105,7 @@ namespace Beetle
             BeetleControl.DisengageMotors();
         }
 
-        private static void ParameterReset()
+        private void ParameterReset()
         {
             lossFailToImprove = 0;
             secondTry = false;
@@ -133,7 +132,7 @@ namespace Beetle
         }
 
         // Return true when errorFlag is errected, which is meet criteria here.
-        private static bool ParameterUpdate(double lossRef)
+        private bool ParameterUpdate(double lossRef)
         {
             if (lossRef < lossStage1)
             {
@@ -224,7 +223,7 @@ namespace Beetle
                     Console.WriteLine("Y Scan Search Failed");
                     Parameters.Log("Y Scan Search Failed");
                     // if x and y scan search all failed, use square search one time
-                    if (loss.Max() < -40.0 && !AxisSquareSearch())
+                    if (Parameters.lossCurrentMax < -37.0 && !AxisSquareSearch())
                     {
                         Console.WriteLine("Square Search Failed");
                         Parameters.Log("Square Search Failed");
@@ -254,6 +253,18 @@ namespace Beetle
             return false;
         }
 
+        public void PiezoSearchRun()
+        {
+            Parameters.piezoRunning = true;
+            Parameters.errorFlag = false;
+            Parameters.errors = "";
+            PiezoSteppingSearch(0, targetLess: true);
+            PiezoSteppingSearch(1, targetLess: true);
+            PiezoSteppingSearch(0, targetLess: true);
+            PiezoSteppingSearch(1, targetLess: true);
+            PiezoSteppingSearch(2, targetLess: true);
+            Parameters.piezoRunning = false;
+        }
 
     }
 }

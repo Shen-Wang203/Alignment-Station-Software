@@ -1,31 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
 
 namespace Beetle
 {
-    static class BeetleConnection
+    class BeetleConnection
     {
+        private static BeetleConnection instance;
+
+        public static BeetleConnection GetInstance()
+        {
+            if (instance == null)
+                instance = new BeetleConnection();
+            return instance;
+        }
+
         // Those are all the Odrive board we used in control box
         // Need to extend if we ever build more control box
-        private static readonly string[] T1 = { "208739844D4D", "207339A04D4D", "207639684D4D", "20803880304E", "2067387E304E", "205D388E304E", "2063388F304E" };
-        private static readonly string[] T2 = { "208339834D4D", "2060388E304E", "2061397D4D4D", "2062388F304E", "204F388E304E", "20853881304E", "207B3880304E" };
-        private static readonly string[] T3 = { "205C39844D4D", "20813882304E", "207B396A4D4D", "207C397D4D4D", "2065387E304E", "2086388F304E", "2087388E304E" };
+        private readonly string[] T1 = { "208739844D4D", "207339A04D4D", "207639684D4D", "20803880304E", "2067387E304E", "205D388E304E", "2063388F304E" };
+        private readonly string[] T2 = { "208339834D4D", "2060388E304E", "2061397D4D4D", "2062388F304E", "204F388E304E", "20853881304E", "207B3880304E" };
+        private readonly string[] T3 = { "205C39844D4D", "20813882304E", "207B396A4D4D", "207C397D4D4D", "2065387E304E", "2086388F304E", "2087388E304E" };
 
         // port1 port2 and port3 should be the three ports connected to the Beetle control box
         // This method will automatically assign each port to its beetleTComPortName in Parameters.
         // return true if success
-        public static bool AssignPorts()
+        public bool AssignPorts()
         {
+            BeetleControl.ClosePorts();
+            PiezoControl.GetInstance().ClosePort();
+
             string[] ports = SerialPort.GetPortNames();
             string[] beetleSerialNum = new string[3];
             string[] beetlePorts = new string[3];
             sbyte portCount = 0;
             string serialNum;
+            byte totalPorts = 0;
             foreach (string port in ports)
             {
                 //Console.WriteLine(port);
@@ -35,17 +44,19 @@ namespace Beetle
                     if (serialNum == "Arduino\r")
                     {
                         Parameters.arduinoComPortName = port;
+                        totalPorts += 1;
                         continue;
                     }
                     //Console.WriteLine(serialNum);
                     beetleSerialNum[portCount] = serialNum;
                     beetlePorts[portCount] = port;
                     portCount += 1;
+                    totalPorts += 1;
                 }
             }
-            if (portCount != 3)
+            if (totalPorts != 4)
             {
-                Console.WriteLine("Beetle Connection Failed");
+                MessageBox.Show("Missing Beetle Control Box or Arduino for Piezo");
                 return false;
             }
             // get rid of \r char in the string end
@@ -114,7 +125,7 @@ namespace Beetle
         }
 
         // Serial Number Identification, return serial number + \r
-        private static string SerialNumberIdentify(string portName)
+        private string SerialNumberIdentify(string portName)
         {
             SerialPort port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One)
             {

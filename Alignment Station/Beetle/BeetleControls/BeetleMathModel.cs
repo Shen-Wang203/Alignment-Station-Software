@@ -1,50 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Beetle
 {
-    static class BeetleMathModel
+    class BeetleMathModel
     {
+        private static BeetleMathModel instance;
+        public static BeetleMathModel GetInstance()
+        {
+            if (instance == null)
+                instance = new BeetleMathModel();
+            return instance;
+        }
+
         // Rotation first, relative to the pivot point; Translate second
         // Pivot point is based on center of the moving plate
         // Angle is in degree. Rx Pitch; Ry Roll; Rz Yaw
         // r is the moving plate hex radius, L is the arm length
-        private static float R = 50f;
-        private static double r = R / Math.Cos(Math.PI / 6);
-        private static float L = 78.5f;
+        private float R = 50f;
+        //private double r = R / Math.Cos(Math.PI / 6);
+        private float L = 78.5f;
         // This is the height of the universal joint center point to the base + top moving part top surface to its joint surface, this is a fixture fixed parameter, find it from the 3D model. 
-        private static float baseZ = 65.9221f + 8f;
+        private float baseZ = 65.9221f + 8f;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance.
         //Parameters.pivotPoint = { 0, 0, 0, 0 };
 
-        public static float SetR
+        public float SetR
         {
             //get { return R; }
-            set { R = value; r = value / Math.Cos(Math.PI / 6); }
+            set { R = value; }
         }
 
-        public static float SetL
+        public float SetL
         {
             //get { return L; }
             set { L = value; }
         }
 
-        public static float SetBaseZ
+        public float SetBaseZ
         {
             //get { return baseZ; }
             set { baseZ = value + 8f; }
         }
 
         // The Z input value should be the distance between pivot point to top moving part top surface
-        public static double[] SetPivotPoint
+        public double[] SetPivotPoint
         {
             //get { return pivotPoint; }
-            set { Parameters.pivotPoint = value; Parameters.pivotPoint[2] += 8; }
+            set { value.CopyTo(Parameters.pivotPoint, 0); Parameters.pivotPoint[2] += 8; }
         }
 
         //Matrix multiply C = A.B, A and B can be any dimension
-        private static double[,] MxM(double[,] A, double[,] B)
+        private double[,] MxM(double[,] A, double[,] B)
         {
             int row = A.GetLength(0);
             int column = B.GetLength(1);
@@ -65,7 +71,7 @@ namespace Beetle
         }
 
         //Matrix times Array C = A.B, B is [n,1] array
-        private static double[] MxA(double[,] A, double[] B)
+        private double[] MxA(double[,] A, double[] B)
         {
             int row = A.GetLength(0);
             int element = A.GetLength(1);
@@ -81,7 +87,7 @@ namespace Beetle
             return C;
         }
 
-        private static double[,] MRz(double Rz)
+        private double[,] MRz(double Rz)
         {
             double angle = (Math.PI / 180) * Rz;
             double[,] mrz = { { Math.Cos(angle), -Math.Sin(angle), 0, 0 },
@@ -91,7 +97,7 @@ namespace Beetle
             return mrz;
         }
 
-        private static double[,] MRy(double Ry)
+        private double[,] MRy(double Ry)
         {
             double angle = (Math.PI / 180) * Ry;
             double[,] mry = { { Math.Cos(angle),  0, Math.Sin(angle), 0 },
@@ -101,7 +107,7 @@ namespace Beetle
             return mry;
         }
 
-        private static double[,] MRx(double Rx)
+        private double[,] MRx(double Rx)
         {
             double angle = (Math.PI / 180) * Rx;
             double[,] mrx = { { 1,               0, 0,                0 },
@@ -111,7 +117,7 @@ namespace Beetle
             return mrx;
         }
 
-        private static double[,] MT(double x, double y, double z)
+        private double[,] MT(double x, double y, double z)
         {
             double[,] mt = {{ 1, 0, 0, x },
                             { 0, 1, 0, y },
@@ -122,8 +128,9 @@ namespace Beetle
 
         // Find each axis's position in mm based on platform's target position
         // Angles are in degrees
-        public static double[] FindAxialPosition(double x, double y, double z, double Rx, double Ry, double Rz)
+        public double[] FindAxialPosition(double x, double y, double z, double Rx, double Ry, double Rz)
         {
+            double r = R / Math.Cos(Math.PI / 6);
             // The z in the model excludes the base height and top moving plate thickness
             z -= baseZ;
             // Coordinate center is in pivot point, let's name it pivot point coordinate
@@ -293,7 +300,7 @@ namespace Beetle
         }
 
         // Return the normal vector of the current platform face
-        public static double[] NormalVector(double Rx, double Ry, double Rz)
+        public double[] NormalVector(double Rx, double Ry, double Rz)
         {
             double[] a = {0, 0, 1, 1};
             return MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a)));

@@ -41,6 +41,8 @@
             this.buttonTest = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageAlignCuring = new System.Windows.Forms.TabPage();
+            this.comboBoxPMChl = new System.Windows.Forms.ComboBox();
+            this.labelPMChl = new System.Windows.Forms.Label();
             this.labelPiezoPositionValue = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.labelPiezoPosition = new System.Windows.Forms.Label();
@@ -74,44 +76,47 @@
             this.comboBoxCamSelect = new System.Windows.Forms.ComboBox();
             this.pictureBoxCam = new System.Windows.Forms.PictureBox();
             this.tabPageStageControl = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.comboBoxMotorSelectTop = new System.Windows.Forms.ComboBox();
+            this.buttonSetInitial = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
+            this.numericUpDownPx = new System.Windows.Forms.NumericUpDown();
+            this.buttonSetPivot = new System.Windows.Forms.Button();
+            this.numericUpDownPy = new System.Windows.Forms.NumericUpDown();
+            this.buttonClearErrorBC = new System.Windows.Forms.Button();
+            this.numericUpDownPz = new System.Windows.Forms.NumericUpDown();
+            this.buttonSetPosition = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
             this.comboBoxMotorSelectMid = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxMotorSelectBot = new System.Windows.Forms.ComboBox();
             this.cartesianChartMotorC = new LiveCharts.WinForms.CartesianChart();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonClearErrorBC = new System.Windows.Forms.Button();
+            this.labelILValueBC = new System.Windows.Forms.Label();
+            this.labelILBC = new System.Windows.Forms.Label();
+            this.labelPiezoPositionBC = new System.Windows.Forms.Label();
+            this.labelPiezoPositionValueBC = new System.Windows.Forms.Label();
+            this.buttonPiezoReset = new System.Windows.Forms.Button();
+            this.comboBoxPiezoStep = new System.Windows.Forms.ComboBox();
+            this.buttonPiezoSearch = new System.Windows.Forms.Button();
+            this.labelPiezoStep = new System.Windows.Forms.Label();
+            this.pictureBoxCamBC = new System.Windows.Forms.PictureBox();
             this.labelStatusValueBC = new System.Windows.Forms.Label();
             this.labelStatusBC = new System.Windows.Forms.Label();
-            this.buttonSetInitial = new System.Windows.Forms.Button();
-            this.numericUpDownPz = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPy = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPx = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.numericUpDownRz = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownRy = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownRx = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownZ = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.buttonSetPosition = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.buttonSetPivot = new System.Windows.Forms.Button();
+            this.numericUpDownRz = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
-            this.label_Z = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label_Y = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label_X = new System.Windows.Forms.Label();
             this.cartesianChartMotorB = new LiveCharts.WinForms.CartesianChart();
+            this.numericUpDownRy = new System.Windows.Forms.NumericUpDown();
             this.cartesianChartMotorA = new LiveCharts.WinForms.CartesianChart();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownZ = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRx = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.pictureBoxFigure = new System.Windows.Forms.PictureBox();
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
@@ -120,16 +125,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).BeginInit();
             this.tabPageStageControl.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCamBC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRz)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFigure)).BeginInit();
             this.SuspendLayout();
@@ -279,7 +285,7 @@
             this.tabControl1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tabControl1.Controls.Add(this.tabPageAlignCuring);
             this.tabControl1.Controls.Add(this.tabPageStageControl);
-            this.tabControl1.Font = new System.Drawing.Font("MS Reference Sans Serif", 14F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.ItemSize = new System.Drawing.Size(50, 30);
             this.tabControl1.Location = new System.Drawing.Point(-3, 0);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -288,11 +294,13 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1290, 720);
             this.tabControl1.TabIndex = 10;
-            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPageAlignCuring
             // 
             this.tabPageAlignCuring.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+            this.tabPageAlignCuring.Controls.Add(this.comboBoxPMChl);
+            this.tabPageAlignCuring.Controls.Add(this.labelPMChl);
             this.tabPageAlignCuring.Controls.Add(this.labelPiezoPositionValue);
             this.tabPageAlignCuring.Controls.Add(this.label13);
             this.tabPageAlignCuring.Controls.Add(this.labelPiezoPosition);
@@ -327,6 +335,33 @@
             this.tabPageAlignCuring.TabIndex = 2;
             this.tabPageAlignCuring.Text = "Alignment & Curing";
             // 
+            // comboBoxPMChl
+            // 
+            this.comboBoxPMChl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+            this.comboBoxPMChl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxPMChl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxPMChl.ForeColor = System.Drawing.Color.Silver;
+            this.comboBoxPMChl.FormattingEnabled = true;
+            this.comboBoxPMChl.Items.AddRange(new object[] {
+            "CH1",
+            "CH2",
+            "CH3"});
+            this.comboBoxPMChl.Location = new System.Drawing.Point(957, 23);
+            this.comboBoxPMChl.Name = "comboBoxPMChl";
+            this.comboBoxPMChl.Size = new System.Drawing.Size(58, 24);
+            this.comboBoxPMChl.TabIndex = 42;
+            this.comboBoxPMChl.SelectedIndexChanged += new System.EventHandler(this.comboBoxPMChl_SelectedIndexChanged);
+            // 
+            // labelPMChl
+            // 
+            this.labelPMChl.AutoSize = true;
+            this.labelPMChl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPMChl.Location = new System.Drawing.Point(828, 22);
+            this.labelPMChl.Name = "labelPMChl";
+            this.labelPMChl.Size = new System.Drawing.Size(132, 25);
+            this.labelPMChl.TabIndex = 41;
+            this.labelPMChl.Text = "PM Channel: ";
+            // 
             // labelPiezoPositionValue
             // 
             this.labelPiezoPositionValue.AutoSize = true;
@@ -352,9 +387,9 @@
             this.labelPiezoPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPiezoPosition.Location = new System.Drawing.Point(1024, 600);
             this.labelPiezoPosition.Name = "labelPiezoPosition";
-            this.labelPiezoPosition.Size = new System.Drawing.Size(233, 20);
+            this.labelPiezoPosition.Size = new System.Drawing.Size(229, 20);
             this.labelPiezoPosition.TabIndex = 38;
-            this.labelPiezoPosition.Text = "Piezo DAC Value (0 ~ 4096)";
+            this.labelPiezoPosition.Text = "Piezo DAC Value (0 - 4096)";
             // 
             // labelPositionAngles
             // 
@@ -430,7 +465,7 @@
             this.buttonChartOnOff.Name = "buttonChartOnOff";
             this.buttonChartOnOff.Size = new System.Drawing.Size(160, 56);
             this.buttonChartOnOff.TabIndex = 33;
-            this.buttonChartOnOff.Text = "Live Charts On";
+            this.buttonChartOnOff.Text = "Live Charts Off";
             this.buttonChartOnOff.UseVisualStyleBackColor = false;
             this.buttonChartOnOff.Click += new System.EventHandler(this.buttonChartOnOff_Click);
             // 
@@ -449,7 +484,7 @@
             // 
             this.comboBoxProductSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.comboBoxProductSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBoxProductSelect.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxProductSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxProductSelect.ForeColor = System.Drawing.Color.Silver;
             this.comboBoxProductSelect.FormattingEnabled = true;
             this.comboBoxProductSelect.Items.AddRange(new object[] {
@@ -502,7 +537,7 @@
             // 
             this.comboBoxUsePiezo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.comboBoxUsePiezo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBoxUsePiezo.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxUsePiezo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxUsePiezo.ForeColor = System.Drawing.Color.Silver;
             this.comboBoxUsePiezo.FormattingEnabled = true;
             this.comboBoxUsePiezo.Items.AddRange(new object[] {
@@ -518,6 +553,7 @@
             // 
             this.richTextBoxErrorMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(65)))), ((int)(((byte)(94)))));
             this.richTextBoxErrorMsg.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxErrorMsg.EnableAutoDragDrop = true;
             this.richTextBoxErrorMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxErrorMsg.ForeColor = System.Drawing.Color.LightGray;
             this.richTextBoxErrorMsg.Location = new System.Drawing.Point(2, 449);
@@ -644,9 +680,9 @@
             this.buttonDisconnectPM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(150)))));
             this.buttonDisconnectPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonDisconnectPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDisconnectPM.Location = new System.Drawing.Point(837, 10);
+            this.buttonDisconnectPM.Location = new System.Drawing.Point(1034, 10);
             this.buttonDisconnectPM.Name = "buttonDisconnectPM";
-            this.buttonDisconnectPM.Size = new System.Drawing.Size(180, 56);
+            this.buttonDisconnectPM.Size = new System.Drawing.Size(115, 56);
             this.buttonDisconnectPM.TabIndex = 18;
             this.buttonDisconnectPM.Text = "Disconnect PM";
             this.buttonDisconnectPM.UseVisualStyleBackColor = false;
@@ -677,9 +713,9 @@
             this.buttonConnectPM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(150)))));
             this.buttonConnectPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConnectPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonConnectPM.Location = new System.Drawing.Point(1090, 10);
+            this.buttonConnectPM.Location = new System.Drawing.Point(1155, 10);
             this.buttonConnectPM.Name = "buttonConnectPM";
-            this.buttonConnectPM.Size = new System.Drawing.Size(180, 56);
+            this.buttonConnectPM.Size = new System.Drawing.Size(115, 56);
             this.buttonConnectPM.TabIndex = 19;
             this.buttonConnectPM.Text = "Connect PM";
             this.buttonConnectPM.UseVisualStyleBackColor = false;
@@ -689,7 +725,7 @@
             // 
             this.comboBoxCamSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
             this.comboBoxCamSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBoxCamSelect.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxCamSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxCamSelect.ForeColor = System.Drawing.Color.Silver;
             this.comboBoxCamSelect.FormattingEnabled = true;
             this.comboBoxCamSelect.Location = new System.Drawing.Point(492, 10);
@@ -703,22 +739,41 @@
             this.pictureBoxCam.Location = new System.Drawing.Point(322, 37);
             this.pictureBoxCam.Name = "pictureBoxCam";
             this.pictureBoxCam.Size = new System.Drawing.Size(500, 375);
+            this.pictureBoxCam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxCam.TabIndex = 10;
             this.pictureBoxCam.TabStop = false;
             // 
             // tabPageStageControl
             // 
-            this.tabPageStageControl.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPageStageControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(245)))));
+            this.tabPageStageControl.Controls.Add(this.label1);
+            this.tabPageStageControl.Controls.Add(this.label14);
             this.tabPageStageControl.Controls.Add(this.label12);
             this.tabPageStageControl.Controls.Add(this.comboBoxMotorSelectTop);
+            this.tabPageStageControl.Controls.Add(this.buttonSetInitial);
             this.tabPageStageControl.Controls.Add(this.label11);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownPx);
+            this.tabPageStageControl.Controls.Add(this.buttonSetPivot);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownPy);
+            this.tabPageStageControl.Controls.Add(this.buttonClearErrorBC);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownPz);
+            this.tabPageStageControl.Controls.Add(this.buttonSetPosition);
+            this.tabPageStageControl.Controls.Add(this.label8);
             this.tabPageStageControl.Controls.Add(this.comboBoxMotorSelectMid);
             this.tabPageStageControl.Controls.Add(this.label10);
             this.tabPageStageControl.Controls.Add(this.comboBoxMotorSelectBot);
             this.tabPageStageControl.Controls.Add(this.cartesianChartMotorC);
             this.tabPageStageControl.Controls.Add(this.panel1);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownY);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownRz);
+            this.tabPageStageControl.Controls.Add(this.label7);
             this.tabPageStageControl.Controls.Add(this.cartesianChartMotorB);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownRy);
             this.tabPageStageControl.Controls.Add(this.cartesianChartMotorA);
+            this.tabPageStageControl.Controls.Add(this.label6);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownZ);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownRx);
+            this.tabPageStageControl.Controls.Add(this.numericUpDownX);
             this.tabPageStageControl.Controls.Add(this.pictureBoxFigure);
             this.tabPageStageControl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.tabPageStageControl.Location = new System.Drawing.Point(4, 34);
@@ -728,12 +783,35 @@
             this.tabPageStageControl.TabIndex = 1;
             this.tabPageStageControl.Text = "Stage Control";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.Location = new System.Drawing.Point(1023, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(218, 24);
+            this.label1.TabIndex = 44;
+            this.label1.Text = "Real && Target Position";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.Black;
+            this.label14.Location = new System.Drawing.Point(879, 72);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(89, 20);
+            this.label14.TabIndex = 43;
+            this.label14.Text = "Unit: mm / °";
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label12.Location = new System.Drawing.Point(967, 6);
+            this.label12.Location = new System.Drawing.Point(971, 31);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(107, 20);
             this.label12.TabIndex = 42;
@@ -741,224 +819,61 @@
             // 
             // comboBoxMotorSelectTop
             // 
-            this.comboBoxMotorSelectTop.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxMotorSelectTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxMotorSelectTop.FormattingEnabled = true;
             this.comboBoxMotorSelectTop.Items.AddRange(new object[] {
-            "OFF",
             "T1x",
             "T1y",
             "T2x",
             "T2y",
             "T3x",
-            "T3y"});
-            this.comboBoxMotorSelectTop.Location = new System.Drawing.Point(1083, 3);
+            "T3y",
+            "OFF"});
+            this.comboBoxMotorSelectTop.Location = new System.Drawing.Point(1079, 28);
             this.comboBoxMotorSelectTop.Name = "comboBoxMotorSelectTop";
-            this.comboBoxMotorSelectTop.Size = new System.Drawing.Size(121, 24);
+            this.comboBoxMotorSelectTop.Size = new System.Drawing.Size(52, 24);
             this.comboBoxMotorSelectTop.TabIndex = 41;
+            this.comboBoxMotorSelectTop.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectTop_SelectedIndexChanged);
+            // 
+            // buttonSetInitial
+            // 
+            this.buttonSetInitial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.buttonSetInitial.FlatAppearance.BorderSize = 0;
+            this.buttonSetInitial.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.buttonSetInitial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSetInitial.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetInitial.ForeColor = System.Drawing.Color.Black;
+            this.buttonSetInitial.Location = new System.Drawing.Point(462, 85);
+            this.buttonSetInitial.Name = "buttonSetInitial";
+            this.buttonSetInitial.Size = new System.Drawing.Size(123, 38);
+            this.buttonSetInitial.TabIndex = 34;
+            this.buttonSetInitial.Text = "Set Initial";
+            this.buttonSetInitial.UseVisualStyleBackColor = false;
+            this.buttonSetInitial.Click += new System.EventHandler(this.buttonSetInitial_Click);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label11.Location = new System.Drawing.Point(967, 230);
+            this.label11.Location = new System.Drawing.Point(971, 246);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(107, 20);
             this.label11.TabIndex = 40;
             this.label11.Text = "Motor Select: ";
             // 
-            // comboBoxMotorSelectMid
-            // 
-            this.comboBoxMotorSelectMid.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxMotorSelectMid.FormattingEnabled = true;
-            this.comboBoxMotorSelectMid.Items.AddRange(new object[] {
-            "OFF",
-            "T1x",
-            "T1y",
-            "T2x",
-            "T2y",
-            "T3x",
-            "T3y"});
-            this.comboBoxMotorSelectMid.Location = new System.Drawing.Point(1081, 228);
-            this.comboBoxMotorSelectMid.Name = "comboBoxMotorSelectMid";
-            this.comboBoxMotorSelectMid.Size = new System.Drawing.Size(121, 24);
-            this.comboBoxMotorSelectMid.TabIndex = 39;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label10.Location = new System.Drawing.Point(967, 458);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(107, 20);
-            this.label10.TabIndex = 38;
-            this.label10.Text = "Motor Select: ";
-            // 
-            // comboBoxMotorSelectBot
-            // 
-            this.comboBoxMotorSelectBot.Font = new System.Drawing.Font("MS Reference Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxMotorSelectBot.FormattingEnabled = true;
-            this.comboBoxMotorSelectBot.Items.AddRange(new object[] {
-            "OFF",
-            "T1x",
-            "T1y",
-            "T2x",
-            "T2y",
-            "T3x",
-            "T3y"});
-            this.comboBoxMotorSelectBot.Location = new System.Drawing.Point(1080, 454);
-            this.comboBoxMotorSelectBot.Name = "comboBoxMotorSelectBot";
-            this.comboBoxMotorSelectBot.Size = new System.Drawing.Size(121, 24);
-            this.comboBoxMotorSelectBot.TabIndex = 27;
-            // 
-            // cartesianChartMotorC
-            // 
-            this.cartesianChartMotorC.Location = new System.Drawing.Point(956, 485);
-            this.cartesianChartMotorC.Name = "cartesianChartMotorC";
-            this.cartesianChartMotorC.Size = new System.Drawing.Size(318, 186);
-            this.cartesianChartMotorC.TabIndex = 26;
-            this.cartesianChartMotorC.Text = "cartesianChart4";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel1.Controls.Add(this.buttonClearErrorBC);
-            this.panel1.Controls.Add(this.labelStatusValueBC);
-            this.panel1.Controls.Add(this.labelStatusBC);
-            this.panel1.Controls.Add(this.buttonSetInitial);
-            this.panel1.Controls.Add(this.numericUpDownPz);
-            this.panel1.Controls.Add(this.numericUpDownPy);
-            this.panel1.Controls.Add(this.numericUpDownPx);
-            this.panel1.Controls.Add(this.label9);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.numericUpDownRz);
-            this.panel1.Controls.Add(this.numericUpDownRy);
-            this.panel1.Controls.Add(this.numericUpDownRx);
-            this.panel1.Controls.Add(this.numericUpDownZ);
-            this.panel1.Controls.Add(this.numericUpDownY);
-            this.panel1.Controls.Add(this.numericUpDownX);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.buttonSetPosition);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.buttonSetPivot);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label_Z);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label_Y);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.label_X);
-            this.panel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(448, 679);
-            this.panel1.TabIndex = 25;
-            // 
-            // buttonClearErrorBC
-            // 
-            this.buttonClearErrorBC.BackColor = System.Drawing.Color.Silver;
-            this.buttonClearErrorBC.FlatAppearance.BorderSize = 0;
-            this.buttonClearErrorBC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
-            this.buttonClearErrorBC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonClearErrorBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonClearErrorBC.Location = new System.Drawing.Point(305, 622);
-            this.buttonClearErrorBC.Name = "buttonClearErrorBC";
-            this.buttonClearErrorBC.Size = new System.Drawing.Size(115, 46);
-            this.buttonClearErrorBC.TabIndex = 37;
-            this.buttonClearErrorBC.Text = "Clear Error";
-            this.buttonClearErrorBC.UseVisualStyleBackColor = false;
-            this.buttonClearErrorBC.Click += new System.EventHandler(this.buttonClearErrorBC_Click);
-            // 
-            // labelStatusValueBC
-            // 
-            this.labelStatusValueBC.AutoSize = true;
-            this.labelStatusValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatusValueBC.ForeColor = System.Drawing.Color.Lime;
-            this.labelStatusValueBC.Location = new System.Drawing.Point(167, 622);
-            this.labelStatusValueBC.Name = "labelStatusValueBC";
-            this.labelStatusValueBC.Size = new System.Drawing.Size(112, 46);
-            this.labelStatusValueBC.TabIndex = 36;
-            this.labelStatusValueBC.Text = "IDLE";
-            // 
-            // labelStatusBC
-            // 
-            this.labelStatusBC.AutoSize = true;
-            this.labelStatusBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatusBC.Location = new System.Drawing.Point(9, 622);
-            this.labelStatusBC.Name = "labelStatusBC";
-            this.labelStatusBC.Size = new System.Drawing.Size(163, 46);
-            this.labelStatusBC.TabIndex = 35;
-            this.labelStatusBC.Text = "Status: ";
-            // 
-            // buttonSetInitial
-            // 
-            this.buttonSetInitial.BackColor = System.Drawing.Color.Silver;
-            this.buttonSetInitial.FlatAppearance.BorderSize = 0;
-            this.buttonSetInitial.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
-            this.buttonSetInitial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSetInitial.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSetInitial.Location = new System.Drawing.Point(290, 209);
-            this.buttonSetInitial.Name = "buttonSetInitial";
-            this.buttonSetInitial.Size = new System.Drawing.Size(143, 39);
-            this.buttonSetInitial.TabIndex = 34;
-            this.buttonSetInitial.Text = "Set Initial";
-            this.buttonSetInitial.UseVisualStyleBackColor = false;
-            this.buttonSetInitial.Click += new System.EventHandler(this.buttonSetInitial_Click);
-            // 
-            // numericUpDownPz
-            // 
-            this.numericUpDownPz.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownPz.DecimalPlaces = 1;
-            this.numericUpDownPz.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownPz.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownPz.Location = new System.Drawing.Point(309, 566);
-            this.numericUpDownPz.Name = "numericUpDownPz";
-            this.numericUpDownPz.Size = new System.Drawing.Size(97, 44);
-            this.numericUpDownPz.TabIndex = 33;
-            // 
-            // numericUpDownPy
-            // 
-            this.numericUpDownPy.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownPy.DecimalPlaces = 1;
-            this.numericUpDownPy.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownPy.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownPy.Location = new System.Drawing.Point(162, 566);
-            this.numericUpDownPy.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownPy.Minimum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownPy.Name = "numericUpDownPy";
-            this.numericUpDownPy.Size = new System.Drawing.Size(97, 44);
-            this.numericUpDownPy.TabIndex = 32;
-            // 
             // numericUpDownPx
             // 
-            this.numericUpDownPx.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.numericUpDownPx.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.numericUpDownPx.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDownPx.DecimalPlaces = 1;
-            this.numericUpDownPx.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownPx.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDownPx.Location = new System.Drawing.Point(17, 566);
+            this.numericUpDownPx.Location = new System.Drawing.Point(462, 31);
             this.numericUpDownPx.Maximum = new decimal(new int[] {
             50,
             0,
@@ -970,17 +885,338 @@
             0,
             -2147483648});
             this.numericUpDownPx.Name = "numericUpDownPx";
-            this.numericUpDownPx.Size = new System.Drawing.Size(97, 44);
+            this.numericUpDownPx.Size = new System.Drawing.Size(62, 28);
             this.numericUpDownPx.TabIndex = 31;
+            // 
+            // buttonSetPivot
+            // 
+            this.buttonSetPivot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.buttonSetPivot.FlatAppearance.BorderSize = 0;
+            this.buttonSetPivot.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Violet;
+            this.buttonSetPivot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSetPivot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetPivot.ForeColor = System.Drawing.Color.Black;
+            this.buttonSetPivot.Location = new System.Drawing.Point(676, 1);
+            this.buttonSetPivot.Name = "buttonSetPivot";
+            this.buttonSetPivot.Size = new System.Drawing.Size(99, 58);
+            this.buttonSetPivot.TabIndex = 22;
+            this.buttonSetPivot.Text = "Set Pivot Point";
+            this.buttonSetPivot.UseVisualStyleBackColor = false;
+            this.buttonSetPivot.Click += new System.EventHandler(this.buttonSetPivot_Click);
+            // 
+            // numericUpDownPy
+            // 
+            this.numericUpDownPy.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.numericUpDownPy.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownPy.DecimalPlaces = 1;
+            this.numericUpDownPy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPy.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownPy.Location = new System.Drawing.Point(535, 31);
+            this.numericUpDownPy.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownPy.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownPy.Name = "numericUpDownPy";
+            this.numericUpDownPy.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownPy.TabIndex = 32;
+            // 
+            // buttonClearErrorBC
+            // 
+            this.buttonClearErrorBC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.buttonClearErrorBC.FlatAppearance.BorderSize = 0;
+            this.buttonClearErrorBC.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Violet;
+            this.buttonClearErrorBC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClearErrorBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonClearErrorBC.ForeColor = System.Drawing.Color.Black;
+            this.buttonClearErrorBC.Location = new System.Drawing.Point(781, 1);
+            this.buttonClearErrorBC.Name = "buttonClearErrorBC";
+            this.buttonClearErrorBC.Size = new System.Drawing.Size(99, 58);
+            this.buttonClearErrorBC.TabIndex = 37;
+            this.buttonClearErrorBC.Text = "Clear Error";
+            this.buttonClearErrorBC.UseVisualStyleBackColor = false;
+            this.buttonClearErrorBC.Click += new System.EventHandler(this.buttonClearErrorBC_Click);
+            // 
+            // numericUpDownPz
+            // 
+            this.numericUpDownPz.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.numericUpDownPz.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownPz.DecimalPlaces = 1;
+            this.numericUpDownPz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPz.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownPz.Location = new System.Drawing.Point(608, 31);
+            this.numericUpDownPz.Name = "numericUpDownPz";
+            this.numericUpDownPz.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownPz.TabIndex = 33;
+            // 
+            // buttonSetPosition
+            // 
+            this.buttonSetPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.buttonSetPosition.FlatAppearance.BorderSize = 0;
+            this.buttonSetPosition.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.buttonSetPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSetPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetPosition.ForeColor = System.Drawing.Color.Black;
+            this.buttonSetPosition.Location = new System.Drawing.Point(462, 150);
+            this.buttonSetPosition.Name = "buttonSetPosition";
+            this.buttonSetPosition.Size = new System.Drawing.Size(123, 52);
+            this.buttonSetPosition.TabIndex = 13;
+            this.buttonSetPosition.Text = "Go";
+            this.buttonSetPosition.UseVisualStyleBackColor = false;
+            this.buttonSetPosition.Click += new System.EventHandler(this.buttonSetPosition_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(457, 4);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(40, 26);
+            this.label8.TabIndex = 16;
+            this.label8.Text = "Px";
+            // 
+            // comboBoxMotorSelectMid
+            // 
+            this.comboBoxMotorSelectMid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxMotorSelectMid.FormattingEnabled = true;
+            this.comboBoxMotorSelectMid.Items.AddRange(new object[] {
+            "T1x",
+            "T1y",
+            "T2x",
+            "T2y",
+            "T3x",
+            "T3y",
+            "OFF"});
+            this.comboBoxMotorSelectMid.Location = new System.Drawing.Point(1079, 244);
+            this.comboBoxMotorSelectMid.Name = "comboBoxMotorSelectMid";
+            this.comboBoxMotorSelectMid.Size = new System.Drawing.Size(52, 24);
+            this.comboBoxMotorSelectMid.TabIndex = 39;
+            this.comboBoxMotorSelectMid.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectMid_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label10.Location = new System.Drawing.Point(971, 463);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(107, 20);
+            this.label10.TabIndex = 38;
+            this.label10.Text = "Motor Select: ";
+            // 
+            // comboBoxMotorSelectBot
+            // 
+            this.comboBoxMotorSelectBot.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxMotorSelectBot.FormattingEnabled = true;
+            this.comboBoxMotorSelectBot.Items.AddRange(new object[] {
+            "T1x",
+            "T1y",
+            "T2x",
+            "T2y",
+            "T3x",
+            "T3y",
+            "OFF"});
+            this.comboBoxMotorSelectBot.Location = new System.Drawing.Point(1079, 459);
+            this.comboBoxMotorSelectBot.Name = "comboBoxMotorSelectBot";
+            this.comboBoxMotorSelectBot.Size = new System.Drawing.Size(52, 24);
+            this.comboBoxMotorSelectBot.TabIndex = 27;
+            this.comboBoxMotorSelectBot.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectBot_SelectedIndexChanged);
+            // 
+            // cartesianChartMotorC
+            // 
+            this.cartesianChartMotorC.Location = new System.Drawing.Point(971, 485);
+            this.cartesianChartMotorC.Name = "cartesianChartMotorC";
+            this.cartesianChartMotorC.Size = new System.Drawing.Size(303, 186);
+            this.cartesianChartMotorC.TabIndex = 26;
+            this.cartesianChartMotorC.Text = "cartesianChart4";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(35)))), ((int)(((byte)(64)))));
+            this.panel1.Controls.Add(this.labelILValueBC);
+            this.panel1.Controls.Add(this.labelILBC);
+            this.panel1.Controls.Add(this.labelPiezoPositionBC);
+            this.panel1.Controls.Add(this.labelPiezoPositionValueBC);
+            this.panel1.Controls.Add(this.buttonPiezoReset);
+            this.panel1.Controls.Add(this.comboBoxPiezoStep);
+            this.panel1.Controls.Add(this.buttonPiezoSearch);
+            this.panel1.Controls.Add(this.labelPiezoStep);
+            this.panel1.Controls.Add(this.pictureBoxCamBC);
+            this.panel1.Controls.Add(this.labelStatusValueBC);
+            this.panel1.Controls.Add(this.labelStatusBC);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.panel1.Location = new System.Drawing.Point(-1, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(452, 679);
+            this.panel1.TabIndex = 25;
+            // 
+            // labelILValueBC
+            // 
+            this.labelILValueBC.AutoSize = true;
+            this.labelILValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelILValueBC.ForeColor = System.Drawing.Color.Yellow;
+            this.labelILValueBC.Location = new System.Drawing.Point(328, 622);
+            this.labelILValueBC.Name = "labelILValueBC";
+            this.labelILValueBC.Size = new System.Drawing.Size(113, 31);
+            this.labelILValueBC.TabIndex = 50;
+            this.labelILValueBC.Text = "-50.000";
+            // 
+            // labelILBC
+            // 
+            this.labelILBC.AutoSize = true;
+            this.labelILBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelILBC.ForeColor = System.Drawing.Color.Silver;
+            this.labelILBC.Location = new System.Drawing.Point(218, 622);
+            this.labelILBC.Name = "labelILBC";
+            this.labelILBC.Size = new System.Drawing.Size(119, 31);
+            this.labelILBC.TabIndex = 49;
+            this.labelILBC.Text = "IL (dB): ";
+            // 
+            // labelPiezoPositionBC
+            // 
+            this.labelPiezoPositionBC.AutoSize = true;
+            this.labelPiezoPositionBC.BackColor = System.Drawing.Color.Transparent;
+            this.labelPiezoPositionBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPiezoPositionBC.ForeColor = System.Drawing.Color.Silver;
+            this.labelPiezoPositionBC.Location = new System.Drawing.Point(13, 593);
+            this.labelPiezoPositionBC.Name = "labelPiezoPositionBC";
+            this.labelPiezoPositionBC.Size = new System.Drawing.Size(186, 17);
+            this.labelPiezoPositionBC.TabIndex = 48;
+            this.labelPiezoPositionBC.Text = "Piezo DAC Value (0 - 4096):";
+            // 
+            // labelPiezoPositionValueBC
+            // 
+            this.labelPiezoPositionValueBC.AutoSize = true;
+            this.labelPiezoPositionValueBC.BackColor = System.Drawing.Color.Transparent;
+            this.labelPiezoPositionValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPiezoPositionValueBC.ForeColor = System.Drawing.Color.Silver;
+            this.labelPiezoPositionValueBC.Location = new System.Drawing.Point(205, 593);
+            this.labelPiezoPositionValueBC.Name = "labelPiezoPositionValueBC";
+            this.labelPiezoPositionValueBC.Size = new System.Drawing.Size(120, 17);
+            this.labelPiezoPositionValueBC.TabIndex = 47;
+            this.labelPiezoPositionValueBC.Text = "2048, 2048, 2048";
+            // 
+            // buttonPiezoReset
+            // 
+            this.buttonPiezoReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.buttonPiezoReset.FlatAppearance.BorderSize = 0;
+            this.buttonPiezoReset.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
+            this.buttonPiezoReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPiezoReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPiezoReset.ForeColor = System.Drawing.Color.Silver;
+            this.buttonPiezoReset.Location = new System.Drawing.Point(4, 554);
+            this.buttonPiezoReset.Name = "buttonPiezoReset";
+            this.buttonPiezoReset.Size = new System.Drawing.Size(136, 36);
+            this.buttonPiezoReset.TabIndex = 46;
+            this.buttonPiezoReset.Text = "Piezo Reset";
+            this.buttonPiezoReset.UseVisualStyleBackColor = false;
+            this.buttonPiezoReset.Click += new System.EventHandler(this.buttonPiezoReset_Click);
+            // 
+            // comboBoxPiezoStep
+            // 
+            this.comboBoxPiezoStep.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.comboBoxPiezoStep.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxPiezoStep.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxPiezoStep.ForeColor = System.Drawing.Color.Silver;
+            this.comboBoxPiezoStep.FormattingEnabled = true;
+            this.comboBoxPiezoStep.Items.AddRange(new object[] {
+            "2",
+            "4",
+            "6",
+            "8",
+            "10",
+            "12"});
+            this.comboBoxPiezoStep.Location = new System.Drawing.Point(396, 560);
+            this.comboBoxPiezoStep.Name = "comboBoxPiezoStep";
+            this.comboBoxPiezoStep.Size = new System.Drawing.Size(45, 24);
+            this.comboBoxPiezoStep.TabIndex = 44;
+            this.comboBoxPiezoStep.SelectedIndexChanged += new System.EventHandler(this.comboBoxPiezoStep_SelectedIndexChanged);
+            // 
+            // buttonPiezoSearch
+            // 
+            this.buttonPiezoSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.buttonPiezoSearch.FlatAppearance.BorderSize = 0;
+            this.buttonPiezoSearch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
+            this.buttonPiezoSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPiezoSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPiezoSearch.ForeColor = System.Drawing.Color.Silver;
+            this.buttonPiezoSearch.Location = new System.Drawing.Point(138, 554);
+            this.buttonPiezoSearch.Name = "buttonPiezoSearch";
+            this.buttonPiezoSearch.Size = new System.Drawing.Size(136, 36);
+            this.buttonPiezoSearch.TabIndex = 45;
+            this.buttonPiezoSearch.Text = "Piezo Search";
+            this.buttonPiezoSearch.UseVisualStyleBackColor = false;
+            this.buttonPiezoSearch.Click += new System.EventHandler(this.buttonPiezoSearch_Click);
+            // 
+            // labelPiezoStep
+            // 
+            this.labelPiezoStep.AutoSize = true;
+            this.labelPiezoStep.BackColor = System.Drawing.Color.Transparent;
+            this.labelPiezoStep.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPiezoStep.ForeColor = System.Drawing.Color.Silver;
+            this.labelPiezoStep.Location = new System.Drawing.Point(280, 560);
+            this.labelPiezoStep.Name = "labelPiezoStep";
+            this.labelPiezoStep.Size = new System.Drawing.Size(110, 24);
+            this.labelPiezoStep.TabIndex = 44;
+            this.labelPiezoStep.Text = "Piezo Step: ";
+            // 
+            // pictureBoxCamBC
+            // 
+            this.pictureBoxCamBC.Location = new System.Drawing.Point(1, 200);
+            this.pictureBoxCamBC.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBoxCamBC.Name = "pictureBoxCamBC";
+            this.pictureBoxCamBC.Size = new System.Drawing.Size(450, 337);
+            this.pictureBoxCamBC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxCamBC.TabIndex = 38;
+            this.pictureBoxCamBC.TabStop = false;
+            // 
+            // labelStatusValueBC
+            // 
+            this.labelStatusValueBC.AutoSize = true;
+            this.labelStatusValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatusValueBC.ForeColor = System.Drawing.Color.Lime;
+            this.labelStatusValueBC.Location = new System.Drawing.Point(106, 622);
+            this.labelStatusValueBC.Name = "labelStatusValueBC";
+            this.labelStatusValueBC.Size = new System.Drawing.Size(79, 31);
+            this.labelStatusValueBC.TabIndex = 36;
+            this.labelStatusValueBC.Text = "IDLE";
+            // 
+            // labelStatusBC
+            // 
+            this.labelStatusBC.AutoSize = true;
+            this.labelStatusBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatusBC.ForeColor = System.Drawing.Color.Silver;
+            this.labelStatusBC.Location = new System.Drawing.Point(9, 622);
+            this.labelStatusBC.Name = "labelStatusBC";
+            this.labelStatusBC.Size = new System.Drawing.Size(115, 31);
+            this.labelStatusBC.TabIndex = 35;
+            this.labelStatusBC.Text = "Status: ";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Agency FB", 40F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F, System.Drawing.FontStyle.Bold);
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label9.Location = new System.Drawing.Point(77, 135);
+            this.label9.Location = new System.Drawing.Point(37, 135);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(286, 64);
+            this.label9.Size = new System.Drawing.Size(384, 63);
             this.label9.TabIndex = 30;
             this.label9.Text = "Beetle Control";
             // 
@@ -989,129 +1225,25 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(56, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(66, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(319, 132);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
             // 
-            // numericUpDownRz
-            // 
-            this.numericUpDownRz.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownRz.DecimalPlaces = 1;
-            this.numericUpDownRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownRz.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownRz.Location = new System.Drawing.Point(290, 392);
-            this.numericUpDownRz.Maximum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.numericUpDownRz.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownRz.Name = "numericUpDownRz";
-            this.numericUpDownRz.Size = new System.Drawing.Size(123, 44);
-            this.numericUpDownRz.TabIndex = 28;
-            // 
-            // numericUpDownRy
-            // 
-            this.numericUpDownRy.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownRy.DecimalPlaces = 1;
-            this.numericUpDownRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownRy.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownRy.Location = new System.Drawing.Point(156, 392);
-            this.numericUpDownRy.Maximum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.numericUpDownRy.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownRy.Name = "numericUpDownRy";
-            this.numericUpDownRy.Size = new System.Drawing.Size(123, 44);
-            this.numericUpDownRy.TabIndex = 27;
-            // 
-            // numericUpDownRx
-            // 
-            this.numericUpDownRx.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownRx.DecimalPlaces = 1;
-            this.numericUpDownRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownRx.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownRx.Location = new System.Drawing.Point(22, 392);
-            this.numericUpDownRx.Maximum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.numericUpDownRx.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownRx.Name = "numericUpDownRx";
-            this.numericUpDownRx.Size = new System.Drawing.Size(123, 44);
-            this.numericUpDownRx.TabIndex = 26;
-            // 
-            // numericUpDownZ
-            // 
-            this.numericUpDownZ.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.numericUpDownZ.DecimalPlaces = 4;
-            this.numericUpDownZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownZ.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-            this.numericUpDownZ.Location = new System.Drawing.Point(281, 293);
-            this.numericUpDownZ.Maximum = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
-            this.numericUpDownZ.Minimum = new decimal(new int[] {
-            132,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownZ.Name = "numericUpDownZ";
-            this.numericUpDownZ.Size = new System.Drawing.Size(166, 44);
-            this.numericUpDownZ.TabIndex = 25;
-            this.numericUpDownZ.Value = new decimal(new int[] {
-            140,
-            0,
-            0,
-            0});
-            // 
             // numericUpDownY
             // 
-            this.numericUpDownY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.numericUpDownY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.numericUpDownY.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDownY.DecimalPlaces = 4;
-            this.numericUpDownY.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownY.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownY.Increment = new decimal(new int[] {
             1,
             0,
             0,
             196608});
-            this.numericUpDownY.Location = new System.Drawing.Point(143, 293);
+            this.numericUpDownY.Location = new System.Drawing.Point(868, 244);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1123,20 +1255,170 @@
             0,
             -2147483648});
             this.numericUpDownY.Name = "numericUpDownY";
-            this.numericUpDownY.Size = new System.Drawing.Size(135, 44);
+            this.numericUpDownY.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownY.TabIndex = 24;
+            // 
+            // numericUpDownRz
+            // 
+            this.numericUpDownRz.BackColor = System.Drawing.Color.Cyan;
+            this.numericUpDownRz.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownRz.DecimalPlaces = 1;
+            this.numericUpDownRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRz.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRz.Location = new System.Drawing.Point(836, 171);
+            this.numericUpDownRz.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numericUpDownRz.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRz.Name = "numericUpDownRz";
+            this.numericUpDownRz.Size = new System.Drawing.Size(61, 28);
+            this.numericUpDownRz.TabIndex = 28;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.Transparent;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.Black;
+            this.label7.Location = new System.Drawing.Point(530, 4);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(40, 26);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Py";
+            // 
+            // cartesianChartMotorB
+            // 
+            this.cartesianChartMotorB.Location = new System.Drawing.Point(971, 270);
+            this.cartesianChartMotorB.Name = "cartesianChartMotorB";
+            this.cartesianChartMotorB.Size = new System.Drawing.Size(303, 186);
+            this.cartesianChartMotorB.TabIndex = 24;
+            this.cartesianChartMotorB.Text = "cartesianChart4";
+            // 
+            // numericUpDownRy
+            // 
+            this.numericUpDownRy.BackColor = System.Drawing.Color.Cyan;
+            this.numericUpDownRy.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownRy.DecimalPlaces = 1;
+            this.numericUpDownRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRy.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRy.Location = new System.Drawing.Point(903, 335);
+            this.numericUpDownRy.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numericUpDownRy.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRy.Name = "numericUpDownRy";
+            this.numericUpDownRy.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownRy.TabIndex = 27;
+            // 
+            // cartesianChartMotorA
+            // 
+            this.cartesianChartMotorA.Location = new System.Drawing.Point(971, 53);
+            this.cartesianChartMotorA.Name = "cartesianChartMotorA";
+            this.cartesianChartMotorA.Size = new System.Drawing.Size(303, 186);
+            this.cartesianChartMotorA.TabIndex = 23;
+            this.cartesianChartMotorA.Text = "cartesianChart3";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.Black;
+            this.label6.Location = new System.Drawing.Point(604, 4);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(40, 26);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "Pz";
+            // 
+            // numericUpDownZ
+            // 
+            this.numericUpDownZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.numericUpDownZ.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownZ.DecimalPlaces = 4;
+            this.numericUpDownZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.numericUpDownZ.Location = new System.Drawing.Point(626, 85);
+            this.numericUpDownZ.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownZ.Minimum = new decimal(new int[] {
+            132,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownZ.Name = "numericUpDownZ";
+            this.numericUpDownZ.Size = new System.Drawing.Size(108, 28);
+            this.numericUpDownZ.TabIndex = 25;
+            this.numericUpDownZ.Value = new decimal(new int[] {
+            140,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownRx
+            // 
+            this.numericUpDownRx.BackColor = System.Drawing.Color.Cyan;
+            this.numericUpDownRx.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.numericUpDownRx.DecimalPlaces = 1;
+            this.numericUpDownRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRx.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRx.Location = new System.Drawing.Point(708, 406);
+            this.numericUpDownRx.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numericUpDownRx.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRx.Name = "numericUpDownRx";
+            this.numericUpDownRx.Size = new System.Drawing.Size(61, 28);
+            this.numericUpDownRx.TabIndex = 26;
             // 
             // numericUpDownX
             // 
-            this.numericUpDownX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.numericUpDownX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.numericUpDownX.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDownX.DecimalPlaces = 4;
-            this.numericUpDownX.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownX.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownX.Increment = new decimal(new int[] {
             1,
             0,
             0,
             196608});
-            this.numericUpDownX.Location = new System.Drawing.Point(3, 293);
+            this.numericUpDownX.Location = new System.Drawing.Point(509, 406);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1148,173 +1430,17 @@
             0,
             -2147483648});
             this.numericUpDownX.Name = "numericUpDownX";
-            this.numericUpDownX.Size = new System.Drawing.Size(137, 44);
+            this.numericUpDownX.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownX.TabIndex = 23;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 485);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(198, 39);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Pivot Point: ";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(10, 524);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(118, 39);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "X(mm)";
-            // 
-            // buttonSetPosition
-            // 
-            this.buttonSetPosition.BackColor = System.Drawing.Color.Silver;
-            this.buttonSetPosition.FlatAppearance.BorderSize = 0;
-            this.buttonSetPosition.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
-            this.buttonSetPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSetPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSetPosition.Location = new System.Drawing.Point(157, 209);
-            this.buttonSetPosition.Name = "buttonSetPosition";
-            this.buttonSetPosition.Size = new System.Drawing.Size(107, 39);
-            this.buttonSetPosition.TabIndex = 13;
-            this.buttonSetPosition.Text = "Go";
-            this.buttonSetPosition.UseVisualStyleBackColor = false;
-            this.buttonSetPosition.Click += new System.EventHandler(this.buttonSetPosition_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(5, 209);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 39);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Position: ";
-            // 
-            // buttonSetPivot
-            // 
-            this.buttonSetPivot.BackColor = System.Drawing.Color.Silver;
-            this.buttonSetPivot.FlatAppearance.BorderSize = 0;
-            this.buttonSetPivot.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gray;
-            this.buttonSetPivot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSetPivot.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSetPivot.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.buttonSetPivot.Location = new System.Drawing.Point(200, 485);
-            this.buttonSetPivot.Name = "buttonSetPivot";
-            this.buttonSetPivot.Size = new System.Drawing.Size(220, 39);
-            this.buttonSetPivot.TabIndex = 22;
-            this.buttonSetPivot.Text = "Set Pivot Point";
-            this.buttonSetPivot.UseVisualStyleBackColor = false;
-            this.buttonSetPivot.Click += new System.EventHandler(this.buttonSetPivot_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(154, 524);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(117, 39);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "Y(mm)";
-            // 
-            // label_Z
-            // 
-            this.label_Z.AutoSize = true;
-            this.label_Z.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Z.Location = new System.Drawing.Point(298, 251);
-            this.label_Z.Name = "label_Z";
-            this.label_Z.Size = new System.Drawing.Size(122, 37);
-            this.label_Z.TabIndex = 3;
-            this.label_Z.Text = "Z (mm)";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(28, 352);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 37);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "θx ( °)";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(163, 352);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(101, 37);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "θy ( °)";
-            // 
-            // label_Y
-            // 
-            this.label_Y.AutoSize = true;
-            this.label_Y.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Y.Location = new System.Drawing.Point(149, 251);
-            this.label_Y.Name = "label_Y";
-            this.label_Y.Size = new System.Drawing.Size(124, 37);
-            this.label_Y.TabIndex = 2;
-            this.label_Y.Text = "Y (mm)";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(297, 352);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(102, 37);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "θz ( °)";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(302, 524);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(116, 39);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "Z(mm)";
-            // 
-            // label_X
-            // 
-            this.label_X.AutoSize = true;
-            this.label_X.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_X.Location = new System.Drawing.Point(9, 251);
-            this.label_X.Name = "label_X";
-            this.label_X.Size = new System.Drawing.Size(123, 37);
-            this.label_X.TabIndex = 1;
-            this.label_X.Text = "X (mm)";
-            // 
-            // cartesianChartMotorB
-            // 
-            this.cartesianChartMotorB.Location = new System.Drawing.Point(956, 258);
-            this.cartesianChartMotorB.Name = "cartesianChartMotorB";
-            this.cartesianChartMotorB.Size = new System.Drawing.Size(318, 186);
-            this.cartesianChartMotorB.TabIndex = 24;
-            this.cartesianChartMotorB.Text = "cartesianChart4";
-            // 
-            // cartesianChartMotorA
-            // 
-            this.cartesianChartMotorA.Location = new System.Drawing.Point(956, 33);
-            this.cartesianChartMotorA.Name = "cartesianChartMotorA";
-            this.cartesianChartMotorA.Size = new System.Drawing.Size(318, 186);
-            this.cartesianChartMotorA.TabIndex = 23;
-            this.cartesianChartMotorA.Text = "cartesianChart3";
             // 
             // pictureBoxFigure
             // 
             this.pictureBoxFigure.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxFigure.Image = global::Beetle.Properties.Resources.Beetle_Indicate;
-            this.pictureBoxFigure.Location = new System.Drawing.Point(445, 0);
+            this.pictureBoxFigure.Location = new System.Drawing.Point(455, 72);
+            this.pictureBoxFigure.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxFigure.Name = "pictureBoxFigure";
-            this.pictureBoxFigure.Size = new System.Drawing.Size(505, 686);
+            this.pictureBoxFigure.Size = new System.Drawing.Size(513, 607);
             this.pictureBoxFigure.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxFigure.TabIndex = 0;
             this.pictureBoxFigure.TabStop = false;
@@ -1348,17 +1474,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).EndInit();
             this.tabPageStageControl.ResumeLayout(false);
             this.tabPageStageControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCamBC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRz)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFigure)).EndInit();
             this.ResumeLayout(false);
@@ -1388,20 +1515,12 @@
         private System.Windows.Forms.RichTextBox richTextBoxErrorMsg;
         private LiveCharts.WinForms.CartesianChart cartesianChartZ;
         private System.Windows.Forms.PictureBox pictureBoxFigure;
-        private System.Windows.Forms.Label label_Y;
-        private System.Windows.Forms.Label label_X;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label_Z;
         private LiveCharts.WinForms.CartesianChart cartesianChartMotorB;
         private LiveCharts.WinForms.CartesianChart cartesianChartMotorA;
         private System.Windows.Forms.Button buttonSetPivot;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSetPosition;
         private System.Windows.Forms.Button buttonCancleRun;
         private System.Windows.Forms.Button buttonClose;
@@ -1451,6 +1570,19 @@
         private System.Windows.Forms.Label labelPiezoPosition;
         private System.Windows.Forms.Label labelPositionAngles;
         private System.Windows.Forms.Label labelPositionXYZ;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.PictureBox pictureBoxCamBC;
+        private System.Windows.Forms.ComboBox comboBoxPiezoStep;
+        private System.Windows.Forms.Button buttonPiezoSearch;
+        private System.Windows.Forms.Label labelPiezoStep;
+        private System.Windows.Forms.Button buttonPiezoReset;
+        private System.Windows.Forms.Label labelPiezoPositionBC;
+        private System.Windows.Forms.Label labelPiezoPositionValueBC;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelILValueBC;
+        private System.Windows.Forms.Label labelILBC;
+        private System.Windows.Forms.ComboBox comboBoxPMChl;
+        private System.Windows.Forms.Label labelPMChl;
     }
 }
 

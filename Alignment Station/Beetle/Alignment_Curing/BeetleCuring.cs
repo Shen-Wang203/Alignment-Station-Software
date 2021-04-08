@@ -15,26 +15,27 @@ namespace Beetle
             return instance;
         }
 
-        private static readonly int totalMinutes = 16;
-        private static bool xEpoxySolid = false;
-        private static bool yEpoxySolid = false;
-        private static sbyte xySearchCount = 0;
-        private static sbyte zSearchCount = 0;
-        private static sbyte zSearchCountLoop = 0;
-        private static bool laterTimeFlag = false;
-        private static bool epoxyWillSolidFlag = false;
-        private static bool xSearchFirst = true;
-        private static double zStepSize = 0.001; // in mm
-        private static bool zStepOff = false;
-        private static bool beginLowerCriteria = false;
+        private readonly int totalMinutes = 16;
+        private bool xEpoxySolid = false;
+        private bool yEpoxySolid = false;
+        private sbyte xySearchCount = 0;
+        private sbyte zSearchCount = 0;
+        private sbyte zSearchCountLoop = 0;
+        private bool laterTimeFlag = false;
+        private bool epoxyWillSolidFlag = false;
+        private bool xSearchFirst = true;
+        private double zStepSize = 0.001; // in mm
+        private bool zStepOff = false;
+        private bool beginLowerCriteria = false;
+        private bool piezoStart = false;
 
-        private static double buffer = 0.03;
-        private static double bufferBig = 0.03;
-        private static double bufferSmall = 0.015;
-        private static double lowerCriteriaStep = 0.015;
-        private static double toleranceForNewCriteria = 0.003;
+        private double buffer = 0.03;
+        private double bufferBig = 0.03;
+        private double bufferSmall = 0.015;
+        private double lowerCriteriaStep = 0.015;
+        private double toleranceForNewCriteria = 0.003;
 
-        private static void ParameterReset()
+        private void ParameterReset()
         {
             Parameters.errorFlag = false;
             BeetleControl.globalErrorCount = 0;
@@ -65,6 +66,7 @@ namespace Beetle
             zStepSize = 0.001; // in mm
             zStepOff = false;
             beginLowerCriteria = false;
+            piezoStart = false;
 
             buffer = 0.03;
             bufferBig = 0.03;
@@ -245,6 +247,7 @@ namespace Beetle
             Console.WriteLine("Program Stopped");
             Parameters.Log("Program Stopped");
             BeetleControl.DisengageMotors();
+            Parameters.piezoRunning = false;
         }
 
         private bool TimeBasedUpdates(DateTime sT)
@@ -271,6 +274,14 @@ namespace Beetle
                 }
                 if (Parameters.highestAccuracy)
                     BeetleControl.tolerance = 1;
+
+                piezoStart = Parameters.usePiezo;
+                Parameters.piezoRunning = piezoStart;
+                if (piezoStart)
+                {
+                    Console.WriteLine("Start Piezo");
+                    Parameters.Log("Start Piezo");
+                }
             }
             else if (!laterTimeFlag && timeElapsed.TotalSeconds > 150)
             {
@@ -298,7 +309,7 @@ namespace Beetle
         private bool XYSearch()
         {
             double[] P0 = new double[6], P1 = new double[6];
-            if (!Parameters.usePiezo)
+            if (!piezoStart)
                 Parameters.position.CopyTo(P0, 0);
             else
                 Parameters.piezoPosition.CopyTo(P0, 0);
@@ -306,7 +317,7 @@ namespace Beetle
             {
                 if (xSearchFirst)
                 {
-                    if (!xEpoxySolid && ((Parameters.usePiezo && !PiezoSteppingSearch(axis: 0)) || (!Parameters.usePiezo && !AxisSteppingSearch(axis: 0))))
+                    if (!xEpoxySolid && ((piezoStart && !PiezoSteppingSearch(axis: 0)) || (!piezoStart && !AxisSteppingSearch(axis: 0))))
                     {
                         Console.WriteLine("X step Unchange");
                         Parameters.Log("X step Unchange");
@@ -328,7 +339,7 @@ namespace Beetle
                     continue;
                 }
 
-                if (!yEpoxySolid && ((Parameters.usePiezo && !PiezoSteppingSearch(axis: 1)) || (!Parameters.usePiezo && !AxisSteppingSearch(axis: 1))))
+                if (!yEpoxySolid && ((piezoStart && !PiezoSteppingSearch(axis: 1)) || (!piezoStart && !AxisSteppingSearch(axis: 1))))
                 {
                     Console.WriteLine("Y step Unchange");
                     Parameters.Log("Y step Unchange");
@@ -349,7 +360,7 @@ namespace Beetle
                 xSearchFirst = true;
             }
 
-            if (!Parameters.usePiezo)
+            if (!piezoStart)
                 Parameters.position.CopyTo(P1, 0);
             else
                 Parameters.piezoPosition.CopyTo(P1, 0);
@@ -366,15 +377,14 @@ namespace Beetle
         {
             Console.WriteLine("Z Steps Back");
             Parameters.Log("Z Steps Back");
-            if (Parameters.usePiezo)
-                PiezoControl.Send(2, (ushort)(Parameters.piezoPosition[2] + 70 * Parameters.piezoZvsGap)); // gap larger for about 0.5 um
-            else
+            if (!piezoStart)
                 BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+            //PiezoControl.GetInstance().Send(2, (ushort)(Parameters.piezoPosition[2] + 70 * Parameters.piezoZvsGap)); // gap larger for about 0.5 um
         }
 
         private void ZStepBidirection()
         {
-            if (Parameters.usePiezo)
+            if (piezoStart)
             {
                 PiezoSteppingSearch(axis: 2);
                 return;
@@ -487,7 +497,7 @@ namespace Beetle
             return false;
         }
 
-        private static new double LossBound(double lossRef)
+        private new double LossBound(double lossRef)
         {
             lossRef = Math.Abs(lossRef);
             if (lossRef < 0.7)

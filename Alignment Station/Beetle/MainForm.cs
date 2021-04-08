@@ -9,31 +9,30 @@ namespace Beetle
 {
     public partial class MainForm : Form
     {
-        private static BeetleAlignment BA;
-        private static BeetleCuring BC;
-        private static Thread runThread;
-        private static bool stopReadPM = false;
-        private static int timerCount = 0;
-        private static bool chartsOn = true;
+        private Thread runThread;
+        private bool stopReadPM = false;
+        private bool chartsOn = false;
+        private bool tabBC = false; // whether on Beetle Control tab
+        private DateTime thisTime, startTime;
+        private TimeSpan timeElapsed;
 
-        private static FilterInfoCollection filterInfoCollecion;
-        private static VideoCaptureDevice videoCaptureDevice;
+        private FilterInfoCollection filterInfoCollecion;
+        private VideoCaptureDevice videoCaptureDevice;
 
         public MainForm()
         {
             InitializeComponent();
-            BA = BeetleAlignment.GetInstance();
-            BC = BeetleCuring.GetInstance();
 
             ChartsInit();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // Load PowerMeter
+            //PowerMeter.Open();
+
             Parameters.LoadAll();
-            if (Parameters.usePiezo)
-                PiezoControl.Connection();
-            if (!BeetleControl.Connection())
+            if (!BeetleControl.Connection() || !PiezoControl.GetInstance().Connection())
             {
                 buttonCalibration.Enabled = false;
                 buttonClearError.Enabled = false;
@@ -48,6 +47,8 @@ namespace Beetle
                 buttonSetPosition.Enabled = false;
                 buttonSetInitial.Enabled = false;
                 buttonClearErrorBC.Enabled = false;
+                buttonPiezoReset.Enabled = false;
+                buttonPiezoSearch.Enabled = false;
             }
             // Find all available cameras
             filterInfoCollecion = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -55,9 +56,16 @@ namespace Beetle
                 comboBoxCamSelect.Items.Add(filterInfo.Name);
             comboBoxCamSelect.SelectedIndex = 0; // this will triger comboBoxCamSelect_SelectedIndexChanged function
 
+            // comboBox Initial index
             comboBoxProductSelect.SelectedIndex = 0;
             comboBoxUsePiezo.SelectedIndex = 1;
+            comboBoxPiezoStep.SelectedIndex = 2;
+            comboBoxMotorSelectTop.SelectedIndex = 6;
+            comboBoxMotorSelectMid.SelectedIndex = 6;
+            comboBoxMotorSelectBot.SelectedIndex = 6;
+            comboBoxPMChl.SelectedIndex = 0;
 
+            // load inital positions on the GUI
             numericUpDownX.Value = (decimal)Parameters.initialPosition[0];
             numericUpDownY.Value = (decimal)Parameters.initialPosition[1];
             numericUpDownZ.Value = (decimal)Parameters.initialPosition[2];
@@ -73,8 +81,19 @@ namespace Beetle
         {
             Bitmap pic = (Bitmap)eventArgs.Frame.Clone();
             // Rotate or flip. Other options include Rotate180FlipX, Rotate180FlipXY etc.
-            pic.RotateFlip(RotateFlipType.RotateNoneFlipX); 
-            pictureBoxCam.Image = pic;
+            pic.RotateFlip(RotateFlipType.Rotate180FlipX);
+            if (tabBC)
+                pictureBoxCamBC.Image = pic;
+            else
+                pictureBoxCam.Image = pic;
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 0)
+                tabBC = false;
+            else
+                tabBC = true;
         }
 
         private void comboBoxCamSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -98,20 +117,6 @@ namespace Beetle
             videoCaptureDevice.Start();
         }
 
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
-        {
-            if (e.TabPageIndex == 0)
-            {
-                if (videoCaptureDevice != null && !videoCaptureDevice.IsRunning)
-                    videoCaptureDevice.Start();
-            }
-            else
-            {
-                if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
-                    videoCaptureDevice.Stop();
-            }
-        }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Parameters.Save();
@@ -119,11 +124,8 @@ namespace Beetle
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 0)
+            if (!tabBC)
             {
-                labelTargetValue.Text = Math.Round(Parameters.lossCurrentMax, 4).ToString();
-                labelILValue.Text = Math.Round(Parameters.loss, 4).ToString();
-
                 if (Parameters.errors != "")
                 {
                     richTextBoxErrorMsg.Text += Parameters.errors;
@@ -132,36 +134,43 @@ namespace Beetle
 
                 // if thread is running then start the time count on the GUI
                 if (runThread != null && runThread.IsAlive)
-                    timerCount += 1;
-                //else if (!stopReadPM)
-                //    PowerMeter.ReadNoPrint();
+                {
+                    thisTime = DateTime.Now;
+                    labelTargetValue.Text = Math.Round(Parameters.lossCurrentMax, 4).ToString();
+                    labelILValue.Text = Math.Round(Parameters.loss, 4).ToString();
+                }
+                else if (!stopReadPM)
+                    labelILValue.Text = PowerMeter.ReadNoPrint().ToString();
 
-                int second = timerCount / 4; // 250ms interval
-                int minutes = second / 60;
-
-                labelTimeValue.Text = minutes.ToString() + "min " + second.ToString() + "s";
+                timeElapsed = thisTime - startTime;
+                labelTimeValue.Text = timeElapsed.Minutes.ToString() + "min " + timeElapsed.Seconds.ToString() + "s";
 
                 sbyte sum = 0;
                 foreach (var i in BeetleControl.motorEngageFlag)
                     sum += i;
-                if (sum == 0)
+                if (sum == 0 && !Parameters.piezoRunning)
                 {
                     labelStatusValue.Text = "IDLE";
                     labelStatusValue.ForeColor = Color.Lime;
                 }
-                else
+                else if (sum == 0 && Parameters.piezoRunning)
+                {
+                    labelStatusValue.Text = "BUSY";
+                    labelStatusValue.ForeColor = Color.Yellow;
+                }
+                else if (sum != 0)
                 {
                     labelStatusValue.Text = "BUSY";
                     labelStatusValue.ForeColor = Color.Red;
                 }
+                
 
                 labelPositionXYZ.Text = Math.Round(Parameters.position[0], 3).ToString() + ", " + Math.Round(Parameters.position[1], 3).ToString() + 
                                         ", " + Math.Round(Parameters.position[2], 3).ToString();
                 labelPositionAngles.Text = Math.Round(Parameters.position[3], 3).ToString() + ", " + Math.Round(Parameters.position[4], 3).ToString() + 
                                         ", " + Math.Round(Parameters.position[5], 3).ToString();
 
-                if (Parameters.usePiezo)
-                    labelPiezoPositionValue.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() + 
+                labelPiezoPositionValue.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() + 
                                                     ", " + Parameters.piezoPosition[2].ToString();
 
                 if (chartsOn)
@@ -169,10 +178,18 @@ namespace Beetle
             }
             else
             {
+                // if thread is running then start the time count on the GUI
+                if (runThread != null && runThread.IsAlive)
+                {
+                    labelILValueBC.Text = Math.Round(Parameters.loss, 4).ToString();
+                }
+                else if (!stopReadPM)
+                    labelILValueBC.Text = PowerMeter.ReadNoPrint().ToString();
+
                 sbyte sum = 0;
                 foreach (sbyte i in BeetleControl.motorEngageFlag)
                     sum += i;
-                if (sum == 0 && !Parameters.errorFlag)
+                if (sum == 0)
                 {
                     labelStatusValueBC.Text = "IDLE";
                     labelStatusValueBC.ForeColor = Color.Lime;
@@ -182,11 +199,21 @@ namespace Beetle
                     labelStatusValueBC.Text = "BUSY";
                     labelStatusValueBC.ForeColor = Color.Red;
                 }
-                else
+                else if (Parameters.errorFlag && Parameters.errors != "")
                 {
                     labelStatusValueBC.Text = "ERROR";
                     labelStatusValueBC.ForeColor = Color.Red;
                 }
+
+                if (Parameters.piezoRunning)
+                {
+                    labelStatusValueBC.Text = "BUSY";
+                    labelStatusValueBC.ForeColor = Color.Yellow;
+                }
+                labelPiezoPositionValueBC.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() +
+                                ", " + Parameters.piezoPosition[2].ToString();
+
+                MotorChartsUpdate();
             }
 
         }
@@ -194,6 +221,11 @@ namespace Beetle
 
         private void ButtonReset_Click(object sender, EventArgs e)
         {
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
             richTextBoxErrorMsg.Text += "Reset\n";
             Parameters.Log(" ");
             Parameters.Log("Reset");
@@ -207,7 +239,10 @@ namespace Beetle
             ButtonAlignment.Enabled = true;
 
             stopReadPM = false;
-            timerCount = 0;
+            startTime = DateTime.Now;
+
+            PiezoControl.GetInstance().Reset();
+            Thread.Sleep(500);
 
             runThread = new Thread(BeetleControl.GotoReset);
             runThread.Start();
@@ -224,9 +259,12 @@ namespace Beetle
                 richTextBoxErrorMsg.Text += "Alignment Running\n";
 
                 stopReadPM = false;
-                timerCount = 0;
+                startTime = DateTime.Now;
 
-                runThread = new Thread(BA.AlignmentRun);
+                PiezoControl.GetInstance().Reset();
+                Thread.Sleep(500);
+
+                runThread = new Thread(BeetleAlignment.GetInstance().AlignmentRun);
                 runThread.Start();
 
                 ButtonAlignment.BackColor = Color.Yellow;
@@ -240,6 +278,12 @@ namespace Beetle
         {
             if (Parameters.loss > -8)
             {
+                if (runThread != null && runThread.IsAlive)
+                {
+                    MessageBox.Show("Another Process Runing");
+                    return;
+                }
+
                 Parameters.Log("\r\n");
                 Parameters.Log("***************************");
                 Parameters.Log("PreAligment Starts");
@@ -247,9 +291,9 @@ namespace Beetle
                 richTextBoxErrorMsg.Text += "PreCuring Running\n";
 
                 stopReadPM = false;
-                timerCount = 0;
+                startTime = DateTime.Now;
 
-                runThread = new Thread(BA.PreCuringRun);
+                runThread = new Thread(BeetleAlignment.GetInstance().PreCuringRun);
                 runThread.Start();
 
                 ButtonAlignment.BackColor = Color.Green;
@@ -263,6 +307,12 @@ namespace Beetle
 
         private void ButtonCuring_Click(object sender, EventArgs e)
         {
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
+
             Parameters.Log("\r\n");
             Parameters.Log("***************************");
             Parameters.Log("Curing Starts");
@@ -270,9 +320,9 @@ namespace Beetle
             richTextBoxErrorMsg.Text += "Curing Running\n";
 
             stopReadPM = false;
-            timerCount = 0;
+            startTime = DateTime.Now;
             
-            runThread = new Thread(BC.Run);
+            runThread = new Thread(BeetleCuring.GetInstance().Run);
             runThread.Start();
 
             ButtonPreCuring.BackColor = Color.Green;
@@ -289,6 +339,12 @@ namespace Beetle
 
         private void ButtonCalibration_Click(object sender, EventArgs e)
         {
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
+
             runThread = new Thread(BeetleControl.Calibration);
             runThread.Start();
             richTextBoxErrorMsg.Text += "Calibrating\n";
@@ -302,12 +358,12 @@ namespace Beetle
 
         private void ControlBoxDetection_Click(object sender, EventArgs e)
         {
-            if (BeetleConnection.AssignPorts())
+            if (BeetleConnection.GetInstance().AssignPorts())
             {
                 Parameters.SaveCOMPorts();
                 richTextBoxErrorMsg.Text += "COM Ports Saved\n";
             }
-            if (BeetleControl.Connection() && PiezoControl.Connection())
+            if (BeetleControl.Connection() && PiezoControl.GetInstance().Connection())
             {
                 buttonCalibration.Enabled = true;
                 buttonClearError.Enabled = true;
@@ -322,6 +378,8 @@ namespace Beetle
                 buttonSetPosition.Enabled = true;
                 buttonSetInitial.Enabled = true;
                 buttonClearErrorBC.Enabled = true;
+                buttonPiezoReset.Enabled = true;
+                buttonPiezoSearch.Enabled = true;
             }
         }
 
@@ -329,11 +387,18 @@ namespace Beetle
         {
             Parameters.lossReference = PowerMeter.Read("dBm");
             richTextBoxErrorMsg.Text += "Reference Set\n";
+            Parameters.SaveReference();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
-            timerCount = 0;
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
+
+            startTime = DateTime.Now;
             runThread = new Thread(BeetleControl.GotoClose);
             runThread.Start();
             richTextBoxErrorMsg.Text += "Closing\n";
@@ -369,11 +434,9 @@ namespace Beetle
 
         private void Test_Click(object sender, EventArgs e)
         {
-            timerCount = 0;
-            runThread = new Thread(PiezoControl.Test);
             ////runThread = new Thread(BA.Test);
             //runThread = new Thread(PiezoControl.TestRun);
-            runThread.Start();
+            //runThread.Start();
         }
 
         private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -397,6 +460,12 @@ namespace Beetle
 
         private void buttonSetPosition_Click(object sender, EventArgs e)
         {
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
+
             BeetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value, 
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
             runThread = new Thread(BeetleControl.GotoTemp);
@@ -408,12 +477,14 @@ namespace Beetle
             double[] p = { (double)numericUpDownPx.Value, (double)numericUpDownPy.Value, (double)numericUpDownPz.Value, 0 };
             p.CopyTo(Parameters.pivotPoint, 0);
             Parameters.SavePivotPoint();
+            MessageBox.Show("Pivot Point Saved");
         }
 
         private void buttonSetInitial_Click(object sender, EventArgs e)
         {
             Parameters.position.CopyTo(Parameters.initialPosition, 0);
             Parameters.SaveInitialPosition();
+            MessageBox.Show("Initial Position Saved");
         }
 
         private void buttonClearErrorBC_Click(object sender, EventArgs e)
@@ -424,5 +495,33 @@ namespace Beetle
             //richTextBoxErrorMsg.Text += "Errors are Cleared\n";
         }
 
+        private void buttonPiezoReset_Click(object sender, EventArgs e)
+        {
+            PiezoControl.GetInstance().Reset();
+        }
+
+        private void buttonPiezoSearch_Click(object sender, EventArgs e)
+        {
+            if (runThread != null && runThread.IsAlive)
+            {
+                MessageBox.Show("Another Process Runing");
+                return;
+            }
+
+            runThread = new Thread(BeetleAlignment.GetInstance().PiezoSearchRun);
+            runThread.Start();
+        }
+
+        private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
+        }
+
+        private void comboBoxPMChl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Parameters.channel = (byte)(comboBoxPMChl.SelectedIndex + 1);
+            PowerMeter.Open();
+            Parameters.SavePMChl();
+        }
     }
 }

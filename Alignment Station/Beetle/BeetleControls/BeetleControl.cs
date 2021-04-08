@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.IO.Ports;
 using System.Windows.Forms;
@@ -20,8 +18,8 @@ namespace Beetle
         private static sbyte xDirectionOld = 0;
         private static sbyte yDirectionOld = 0;
         private static sbyte zDirectionOld = 0;
-        private static sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move
         
+        public static sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move, 1 means on target, 0 means not yet
         public static byte globalErrorCount = 0;
         public static sbyte[] motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 };
         public static double xBacklashMM = 0; // in mm
@@ -29,7 +27,8 @@ namespace Beetle
         public static double zBacklashMM = 0.0002; // in mm
         public static sbyte tolerance = 2; // in encoder counts
         public static double encoderResolution = 50e-6; // in mm/counts
-        public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0}; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
+        public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
+        public static int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
         public static double[] tempP;
 
         static BeetleControl()
@@ -123,9 +122,20 @@ namespace Beetle
             }
         }
 
+        public static void ClosePorts()
+        {
+            if (T1Port != null)
+                T1Port.Close();
+            if (T2Port != null)
+                T2Port.Close();
+            if (T3Port != null)
+                T3Port.Close();
+        }
+
         public static void ClearErrors()
         {
             Parameters.errors = "";
+            Parameters.errorFlag = false;
             string xstr = "w axis0.error 0";
             string ystr = "w axis1.error 0";
             T123SendOnly(xstr, ystr);
@@ -276,7 +286,7 @@ namespace Beetle
         // will update Parameters.position
         public static void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
-            double[] Tmm = BeetleMathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
+            double[] Tmm = BeetleMathModel.GetInstance().FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
             position.CopyTo(Parameters.position, 0);
             GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
@@ -369,7 +379,7 @@ namespace Beetle
             if (normToFace)
             {
                 double deltaZ = targetPosition[2] - Parameters.position[2];
-                double[] normVector = BeetleMathModel.NormalVector(Parameters.position[3], Parameters.position[4], Parameters.position[5]);
+                double[] normVector = BeetleMathModel.GetInstance().NormalVector(Parameters.position[3], Parameters.position[4], Parameters.position[5]);
                 targetPosition[0] = deltaZ * normVector[0] + Parameters.position[0];
                 targetPosition[1] = deltaZ * normVector[1] + Parameters.position[1];
                 targetPosition[2] = deltaZ * normVector[2] + Parameters.position[2];
@@ -421,6 +431,7 @@ namespace Beetle
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
         private static bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
+            targetCounts.CopyTo(countsTarget, 0);
             if (!SafetyCheck(targetCounts))
             { 
                 DisengageMotors();
@@ -536,23 +547,28 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private static string T1Talk(string str)
         {
-            string message;
+            string message = "";
             try
             { 
                 T1Port.WriteLine(str);
             }
-            catch(TimeoutException)
+            catch(Exception e)
             {
-                Console.WriteLine("T1 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
+                return "";
+                // TODO: exit this threading directly
             }
             try
             {
                 message = T1Port.ReadLine();
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                message = "";
-                Console.WriteLine("T1 Serial Read Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
@@ -561,23 +577,28 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private static string T2Talk(string str)
         {
-            string message;
+            string message = "";
             try
             {
                 T2Port.WriteLine(str);
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                Console.WriteLine("T2 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
+                return "";
             }
             try
             {
                 message = T2Port.ReadLine();
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
                 message = "";
-                Console.WriteLine("T2 Serial Read Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
@@ -586,23 +607,28 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private static string T3Talk(string str)
         {
-            string message;
+            string message = "";
             try
             {
                 T3Port.WriteLine(str);
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                Console.WriteLine("T3 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
+                return "";
             }
             try
             {
                 message = T3Port.ReadLine();
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
                 message = "";
-                Console.WriteLine("T3 Serial Read Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
@@ -613,9 +639,11 @@ namespace Beetle
             {
                 T1Port.WriteLine(str);
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                Console.WriteLine("T1 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
         } 
 
@@ -626,9 +654,11 @@ namespace Beetle
             {
                 T2Port.WriteLine(str);
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                Console.WriteLine("T2 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
         }
 
@@ -638,9 +668,11 @@ namespace Beetle
             {
                 T3Port.WriteLine(str);
             }
-            catch (TimeoutException)
+            catch (Exception e)
             {
-                Console.WriteLine("T3 Serial Write Timeout");
+                MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
+                Parameters.errorFlag = true;
+                Parameters.errors = "Beetle COM Port Failed";
             }
         }
 

@@ -26,9 +26,9 @@ namespace Beetle.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public string Channel {
+        public byte Channel {
             get {
-                return ((string)(this["Channel"]));
+                return ((byte)(this["Channel"]));
             }
             set {
                 this["Channel"] = value;
@@ -38,9 +38,9 @@ namespace Beetle.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12")]
-        public string Addr {
+        public byte Addr {
             get {
-                return ((string)(this["Addr"]));
+                return ((byte)(this["Addr"]));
             }
             set {
                 this["Addr"] = value;
@@ -49,7 +49,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-12.8781")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-18.591")]
         public double Reference {
             get {
                 return ((double)(this["Reference"]));

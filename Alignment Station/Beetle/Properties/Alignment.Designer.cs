@@ -12,7 +12,7 @@ namespace Beetle.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Alignment : global::System.Configuration.ApplicationSettingsBase {
         
         private static Alignment defaultInstance = ((Alignment)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Alignment())));
@@ -25,7 +25,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-0.2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-0.1")]
         public double LossCriteria {
             get {
                 return ((double)(this["LossCriteria"]));

@@ -2,14 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Beetle.Properties" GeneratedClassName="Powermeter">
   <Profiles />
   <Settings>
-    <Setting Name="Channel" Type="System.String" Scope="User">
+    <Setting Name="Channel" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="Addr" Type="System.String" Scope="User">
+    <Setting Name="Addr" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="Reference" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">-12.8781</Value>
+      <Value Profile="(Default)">-18.591</Value>
     </Setting>
   </Settings>
 </SettingsFile>
