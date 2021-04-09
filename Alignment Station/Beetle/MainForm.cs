@@ -54,7 +54,8 @@ namespace Beetle
             filterInfoCollecion = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo filterInfo in filterInfoCollecion)
                 comboBoxCamSelect.Items.Add(filterInfo.Name);
-            comboBoxCamSelect.SelectedIndex = 0; // this will triger comboBoxCamSelect_SelectedIndexChanged function
+            if (comboBoxCamSelect.Items.Count != 0)
+                comboBoxCamSelect.SelectedIndex = 0; // this will triger comboBoxCamSelect_SelectedIndexChanged function
 
             // comboBox Initial index
             comboBoxProductSelect.SelectedIndex = 0;
@@ -74,7 +75,7 @@ namespace Beetle
             numericUpDownRz.Value = (decimal)Parameters.initialPosition[5];
             numericUpDownPx.Value = (decimal)Parameters.pivotPoint[0];
             numericUpDownPy.Value = (decimal)Parameters.pivotPoint[1];
-            numericUpDownPz.Value = (decimal)Parameters.pivotPoint[2];
+            numericUpDownPz.Value = (decimal)Parameters.pivotPoint[2] - 8;
         }
 
         private void VideoCaptureDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -472,10 +473,12 @@ namespace Beetle
             runThread.Start();
         }
 
+        // The pivot point Z input value should be the distance between pivot point to top moving part top surface
         private void buttonSetPivot_Click(object sender, EventArgs e)
         {
             double[] p = { (double)numericUpDownPx.Value, (double)numericUpDownPy.Value, (double)numericUpDownPz.Value, 0 };
-            p.CopyTo(Parameters.pivotPoint, 0);
+            //p.CopyTo(Parameters.pivotPoint, 0);
+            BeetleMathModel.GetInstance().SetPivotPoint = p;
             Parameters.SavePivotPoint();
             MessageBox.Show("Pivot Point Saved");
         }
@@ -515,6 +518,14 @@ namespace Beetle
         private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)
         {
             Parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
+        }
+
+        private void richTextBoxErrorMsg_TextChanged(object sender, EventArgs e)
+        {
+            // set the current caret position to the end
+            richTextBoxErrorMsg.SelectionStart = richTextBoxErrorMsg.Text.Length;
+            // scroll it automatically
+            richTextBoxErrorMsg.ScrollToCaret();
         }
 
         private void comboBoxPMChl_SelectedIndexChanged(object sender, EventArgs e)

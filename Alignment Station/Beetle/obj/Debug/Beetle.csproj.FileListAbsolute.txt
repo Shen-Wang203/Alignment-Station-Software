@@ -89,3 +89,34 @@ C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetl
 C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.exe.manifest
 C:\Users\wdm7120\source\repos\Alignment-Station-Software\Alignment Station\Beetle\obj\Debug\Beetle.application
 C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csprojAssemblyReference.cache
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.exe.config
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.exe.manifest
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.application
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.exe
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\Beetle.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\NationalInstruments.VisaNS.dll
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.WinForms.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.MainForm.resources
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.Properties.Resources.resources
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.GenerateResource.cache
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CoreCompileInputs.cache
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.TrustInfo.xml
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.exe.manifest
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.application
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CopyComplete
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.exe
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.pdb

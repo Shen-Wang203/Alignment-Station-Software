@@ -119,6 +119,12 @@
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.pictureBoxFigure = new System.Windows.Forms.PictureBox();
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
+            this.labelX = new System.Windows.Forms.Label();
+            this.labelT = new System.Windows.Forms.Label();
+            this.labelZ = new System.Windows.Forms.Label();
+            this.labelRx = new System.Windows.Forms.Label();
+            this.labelRz = new System.Windows.Forms.Label();
+            this.labelRy = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageAlignCuring.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -283,9 +289,11 @@
             // tabControl1
             // 
             this.tabControl1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl1.Controls.Add(this.tabPageAlignCuring);
             this.tabControl1.Controls.Add(this.tabPageStageControl);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.HotTrack = true;
             this.tabControl1.ItemSize = new System.Drawing.Size(50, 30);
             this.tabControl1.Location = new System.Drawing.Point(-3, 0);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -447,10 +455,10 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(2, 3);
+            this.pictureBox2.Location = new System.Drawing.Point(15, 10);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(319, 132);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox2.Size = new System.Drawing.Size(292, 118);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 34;
             this.pictureBox2.TabStop = false;
             // 
@@ -562,6 +570,7 @@
             this.richTextBoxErrorMsg.TabIndex = 15;
             this.richTextBoxErrorMsg.Text = "";
             this.richTextBoxErrorMsg.WordWrap = false;
+            this.richTextBoxErrorMsg.TextChanged += new System.EventHandler(this.richTextBoxErrorMsg_TextChanged);
             // 
             // buttonCancleRun
             // 
@@ -745,7 +754,13 @@
             // 
             // tabPageStageControl
             // 
-            this.tabPageStageControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(245)))));
+            this.tabPageStageControl.BackColor = System.Drawing.Color.White;
+            this.tabPageStageControl.Controls.Add(this.labelRy);
+            this.tabPageStageControl.Controls.Add(this.labelRz);
+            this.tabPageStageControl.Controls.Add(this.labelRx);
+            this.tabPageStageControl.Controls.Add(this.labelZ);
+            this.tabPageStageControl.Controls.Add(this.labelT);
+            this.tabPageStageControl.Controls.Add(this.labelX);
             this.tabPageStageControl.Controls.Add(this.label1);
             this.tabPageStageControl.Controls.Add(this.label14);
             this.tabPageStageControl.Controls.Add(this.label12);
@@ -964,6 +979,7 @@
             // 
             // buttonSetPosition
             // 
+            this.buttonSetPosition.AutoSize = true;
             this.buttonSetPosition.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.buttonSetPosition.FlatAppearance.BorderSize = 0;
             this.buttonSetPosition.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
@@ -1225,10 +1241,10 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(66, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(72, 20);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(319, 132);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.Size = new System.Drawing.Size(295, 110);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
             // 
@@ -1243,7 +1259,7 @@
             0,
             0,
             196608});
-            this.numericUpDownY.Location = new System.Drawing.Point(868, 244);
+            this.numericUpDownY.Location = new System.Drawing.Point(555, 295);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1269,7 +1285,7 @@
             0,
             0,
             65536});
-            this.numericUpDownRz.Location = new System.Drawing.Point(836, 171);
+            this.numericUpDownRz.Location = new System.Drawing.Point(787, 138);
             this.numericUpDownRz.Maximum = new decimal(new int[] {
             6,
             0,
@@ -1315,7 +1331,7 @@
             0,
             0,
             65536});
-            this.numericUpDownRy.Location = new System.Drawing.Point(903, 335);
+            this.numericUpDownRy.Location = new System.Drawing.Point(593, 327);
             this.numericUpDownRy.Maximum = new decimal(new int[] {
             6,
             0,
@@ -1352,6 +1368,7 @@
             // 
             // numericUpDownZ
             // 
+            this.numericUpDownZ.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numericUpDownZ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.numericUpDownZ.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.numericUpDownZ.DecimalPlaces = 4;
@@ -1361,7 +1378,7 @@
             0,
             0,
             196608});
-            this.numericUpDownZ.Location = new System.Drawing.Point(626, 85);
+            this.numericUpDownZ.Location = new System.Drawing.Point(740, 105);
             this.numericUpDownZ.Maximum = new decimal(new int[] {
             150,
             0,
@@ -1392,7 +1409,7 @@
             0,
             0,
             65536});
-            this.numericUpDownRx.Location = new System.Drawing.Point(708, 406);
+            this.numericUpDownRx.Location = new System.Drawing.Point(904, 302);
             this.numericUpDownRx.Maximum = new decimal(new int[] {
             6,
             0,
@@ -1418,7 +1435,7 @@
             0,
             0,
             196608});
-            this.numericUpDownX.Location = new System.Drawing.Point(509, 406);
+            this.numericUpDownX.Location = new System.Drawing.Point(865, 270);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1436,12 +1453,12 @@
             // pictureBoxFigure
             // 
             this.pictureBoxFigure.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxFigure.Image = global::Beetle.Properties.Resources.Beetle_Indicate;
+            this.pictureBoxFigure.Image = global::Beetle.Properties.Resources.Beetle_3D;
             this.pictureBoxFigure.Location = new System.Drawing.Point(455, 72);
             this.pictureBoxFigure.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxFigure.Name = "pictureBoxFigure";
             this.pictureBoxFigure.Size = new System.Drawing.Size(513, 607);
-            this.pictureBoxFigure.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxFigure.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxFigure.TabIndex = 0;
             this.pictureBoxFigure.TabStop = false;
             // 
@@ -1451,15 +1468,88 @@
             this.refreshTimer.Interval = 250;
             this.refreshTimer.Tick += new System.EventHandler(this.RefreshTimer_Tick);
             // 
+            // labelX
+            // 
+            this.labelX.AutoSize = true;
+            this.labelX.BackColor = System.Drawing.Color.Transparent;
+            this.labelX.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelX.ForeColor = System.Drawing.Color.Black;
+            this.labelX.Location = new System.Drawing.Point(860, 242);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(28, 26);
+            this.labelX.TabIndex = 45;
+            this.labelX.Text = "X";
+            // 
+            // labelT
+            // 
+            this.labelT.AutoSize = true;
+            this.labelT.BackColor = System.Drawing.Color.Transparent;
+            this.labelT.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelT.ForeColor = System.Drawing.Color.Black;
+            this.labelT.Location = new System.Drawing.Point(525, 295);
+            this.labelT.Name = "labelT";
+            this.labelT.Size = new System.Drawing.Size(29, 26);
+            this.labelT.TabIndex = 46;
+            this.labelT.Text = "Y";
+            // 
+            // labelZ
+            // 
+            this.labelZ.AutoSize = true;
+            this.labelZ.BackColor = System.Drawing.Color.Transparent;
+            this.labelZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelZ.ForeColor = System.Drawing.Color.Black;
+            this.labelZ.Location = new System.Drawing.Point(711, 106);
+            this.labelZ.Name = "labelZ";
+            this.labelZ.Size = new System.Drawing.Size(26, 26);
+            this.labelZ.TabIndex = 47;
+            this.labelZ.Text = "Z";
+            // 
+            // labelRx
+            // 
+            this.labelRx.AutoSize = true;
+            this.labelRx.BackColor = System.Drawing.Color.Transparent;
+            this.labelRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRx.ForeColor = System.Drawing.Color.Black;
+            this.labelRx.Location = new System.Drawing.Point(861, 301);
+            this.labelRx.Name = "labelRx";
+            this.labelRx.Size = new System.Drawing.Size(41, 26);
+            this.labelRx.TabIndex = 48;
+            this.labelRx.Text = "Rx";
+            // 
+            // labelRz
+            // 
+            this.labelRz.AutoSize = true;
+            this.labelRz.BackColor = System.Drawing.Color.Transparent;
+            this.labelRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRz.ForeColor = System.Drawing.Color.Black;
+            this.labelRz.Location = new System.Drawing.Point(743, 138);
+            this.labelRz.Name = "labelRz";
+            this.labelRz.Size = new System.Drawing.Size(41, 26);
+            this.labelRz.TabIndex = 49;
+            this.labelRz.Text = "Rz";
+            // 
+            // labelRy
+            // 
+            this.labelRy.AutoSize = true;
+            this.labelRy.BackColor = System.Drawing.Color.Transparent;
+            this.labelRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRy.ForeColor = System.Drawing.Color.Black;
+            this.labelRy.Location = new System.Drawing.Point(550, 326);
+            this.labelRy.Name = "labelRy";
+            this.labelRy.Size = new System.Drawing.Size(41, 26);
+            this.labelRy.TabIndex = 50;
+            this.labelRy.Text = "Ry";
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1284, 711);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Beetle";
@@ -1583,6 +1673,12 @@
         private System.Windows.Forms.Label labelILBC;
         private System.Windows.Forms.ComboBox comboBoxPMChl;
         private System.Windows.Forms.Label labelPMChl;
+        private System.Windows.Forms.Label labelRy;
+        private System.Windows.Forms.Label labelRz;
+        private System.Windows.Forms.Label labelRx;
+        private System.Windows.Forms.Label labelZ;
+        private System.Windows.Forms.Label labelT;
+        private System.Windows.Forms.Label labelX;
     }
 }
 

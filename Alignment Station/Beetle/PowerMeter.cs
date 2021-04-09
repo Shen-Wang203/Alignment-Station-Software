@@ -40,7 +40,10 @@ namespace Beetle
         {
             try
             {
-                loss = double.Parse(mSession.Query(readcmd));
+                if (mSession != null)
+                    loss = double.Parse(mSession.Query(readcmd));
+                else
+                    loss = -90;
             }
             catch (Exception)
             {
@@ -54,7 +57,10 @@ namespace Beetle
                 Thread.Sleep(50);
                 try
                 {
-                    loss = double.Parse(mSession.Query(readcmd));
+                    if (mSession != null)
+                        loss = double.Parse(mSession.Query(readcmd));
+                    else
+                        loss = -90;
                 }
                 catch (Exception)
                 {
@@ -82,7 +88,10 @@ namespace Beetle
         {
             try
             {
-                loss = double.Parse(mSession.Query(readcmd));
+                if (mSession != null)
+                    loss = double.Parse(mSession.Query(readcmd));
+                else
+                    loss = -90;
             }
             catch (Exception)
             {
