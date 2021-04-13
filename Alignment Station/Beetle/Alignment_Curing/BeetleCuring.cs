@@ -6,14 +6,9 @@ namespace Beetle
 {
     class BeetleCuring : BeetleSearch
     {
-        private static BeetleCuring instance;
 
-        public static BeetleCuring GetInstance()
-        {
-            if (instance == null)
-                instance = new BeetleCuring();
-            return instance;
-        }
+        public BeetleCuring(Parameters prmts, BeetleControl bc, PiezoControl pc) : base(prmts, bc, pc)
+        { }
 
         private readonly int totalMinutes = 16;
         private bool xEpoxySolid = false;
@@ -37,21 +32,21 @@ namespace Beetle
 
         private void ParameterReset()
         {
-            Parameters.errorFlag = false;
-            BeetleControl.globalErrorCount = 0;
-            BeetleControl.tolerance = 2;
+            parameters.errorFlag = false;
+            beetleControl.globalErrorCount = 0;
+            beetleControl.tolerance = 2;
             // Father class parameter reset
             lossFailToImprove = 0;
             xyStepCountsLimit = false;
             xyStepGoBackToLast = false;
             xyStepSizeAmp = 2.0f;
-            doubleCheckFlag = Parameters.doublecheckFlag;
-            stopInBetweenFlag = Parameters.stopInBetweenFlag;
-            if (Parameters.lossCurrentMax <= -10)
+            doubleCheckFlag = parameters.doublecheckFlag;
+            stopInBetweenFlag = parameters.stopInBetweenFlag;
+            if (parameters.lossCurrentMax <= -10)
             {
                 Console.WriteLine("Run Alignment first");
                 // TODO: Display on the GUI
-                Parameters.errorFlag = true;
+                parameters.errorFlag = true;
             }
 
             // this class parameter reset
@@ -78,17 +73,17 @@ namespace Beetle
             switch (productCondition)
             {
                 case 1: // SM + larget gap
-                    lossCriteria = Parameters.lossCurrentMax - 0.01;
+                    lossCriteria = parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.001;
                     xyStepSizeAmp = 3.0f; // 6 encoder counts
                     break;
                 case 2: // SM + small gap
-                    lossCriteria = Parameters.lossCurrentMax - 0.01;
+                    lossCriteria = parameters.lossCurrentMax - 0.01;
                     zStepSize = 0.0005;
                     xyStepSizeAmp = 3.0f; // 6 encoder counts
                     break;
                 case 3: // MM + larget gap
-                    lossCriteria = Parameters.lossCurrentMax - 0.005;
+                    lossCriteria = parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
                     xyStepSizeAmp = 8.0f; // 16 encoder counts
                     bufferBig = 0.007;
@@ -96,7 +91,7 @@ namespace Beetle
                     lowerCriteriaStep = 0.01;
                     break;
                 case 4: // MM + small gap
-                    lossCriteria = Parameters.lossCurrentMax - 0.005;
+                    lossCriteria = parameters.lossCurrentMax - 0.005;
                     zStepSize = 0.0005;
                     xyStepSizeAmp = 6.0f; // 12 encoder counts
                     break;
@@ -110,7 +105,7 @@ namespace Beetle
             bool curingActive = true;
 
             loss.Clear();
-            while (!Parameters.errorFlag)
+            while (!parameters.errorFlag)
             {
                 // Curing phase control by time
                 if (!TimeBasedUpdates(startTime))
@@ -191,7 +186,7 @@ namespace Beetle
                             Parameters.Log("Pause Program because X and Y are solid");
                             curingActive = false;
                         }
-                        Parameters.errorFlag = false;
+                        parameters.errorFlag = false;
                     }
                     loss.Clear();
 
@@ -246,8 +241,8 @@ namespace Beetle
             }
             Console.WriteLine("Program Stopped");
             Parameters.Log("Program Stopped");
-            BeetleControl.DisengageMotors();
-            Parameters.piezoRunning = false;
+            beetleControl.DisengageMotors();
+            parameters.piezoRunning = false;
         }
 
         private bool TimeBasedUpdates(DateTime sT)
@@ -267,16 +262,16 @@ namespace Beetle
                 Parameters.Log("XY Step Go Back To Last is On");
                 // Change step size smaller at this moment
                 xyStepSizeAmp -= 2;
-                if (xyStepSizeAmp < 2 && !Parameters.smallestResolution)
+                if (xyStepSizeAmp < 2 && !parameters.smallestResolution)
                 {
                     xyStepSizeAmp = 2;
-                    BeetleControl.tolerance = 1;
+                    beetleControl.tolerance = 1;
                 }
-                if (Parameters.highestAccuracy)
-                    BeetleControl.tolerance = 1;
+                if (parameters.highestAccuracy)
+                    beetleControl.tolerance = 1;
 
-                piezoStart = Parameters.usePiezo;
-                Parameters.piezoRunning = piezoStart;
+                piezoStart = parameters.usePiezo;
+                parameters.piezoRunning = piezoStart;
                 if (piezoStart)
                 {
                     Console.WriteLine("Start Piezo");
@@ -310,9 +305,9 @@ namespace Beetle
         {
             double[] P0 = new double[6], P1 = new double[6];
             if (!piezoStart)
-                Parameters.position.CopyTo(P0, 0);
+                parameters.position.CopyTo(P0, 0);
             else
-                Parameters.piezoPosition.CopyTo(P0, 0);
+                parameters.piezoPosition.CopyTo(P0, 0);
             for (int i = 0; i < 2; i ++)
             {
                 if (xSearchFirst)
@@ -323,12 +318,12 @@ namespace Beetle
                         Parameters.Log("X step Unchange");
                         if (laterTimeFlag)
                         {
-                            Parameters.errorFlag = true;
+                            parameters.errorFlag = true;
                             xEpoxySolid = true;
                             return false;
                         }
                     }
-                    if (!xEpoxySolid && (LossMeetCriteria() || Parameters.errorFlag))
+                    if (!xEpoxySolid && (LossMeetCriteria() || parameters.errorFlag))
                     {
                         // if meet target on x, then x first
                         if (!xSearchFirst)
@@ -345,12 +340,12 @@ namespace Beetle
                     Parameters.Log("Y step Unchange");
                     if (laterTimeFlag)
                     {
-                        Parameters.errorFlag = true;
+                        parameters.errorFlag = true;
                         yEpoxySolid = true;
                         return false;
                     }
                 }
-                if (!yEpoxySolid && (LossMeetCriteria() || Parameters.errorFlag))
+                if (!yEpoxySolid && (LossMeetCriteria() || parameters.errorFlag))
                 {
                     // Change x or y search priority based on which one has larger movements
                     if (xSearchFirst)
@@ -361,9 +356,9 @@ namespace Beetle
             }
 
             if (!piezoStart)
-                Parameters.position.CopyTo(P1, 0);
+                parameters.position.CopyTo(P1, 0);
             else
-                Parameters.piezoPosition.CopyTo(P1, 0);
+                parameters.piezoPosition.CopyTo(P1, 0);
             // Change x or y search priority based on which one has larger movements
             if (Math.Abs(P1[0] - P0[0]) > (Math.Abs(P1[1] - P0[1]) + 0.0001) && !xSearchFirst)
                 xSearchFirst = true;
@@ -378,8 +373,8 @@ namespace Beetle
             Console.WriteLine("Z Steps Back");
             Parameters.Log("Z Steps Back");
             if (!piezoStart)
-                BeetleControl.ZMoveTo(Parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
-            //PiezoControl.GetInstance().Send(2, (ushort)(Parameters.piezoPosition[2] + 70 * Parameters.piezoZvsGap)); // gap larger for about 0.5 um
+                beetleControl.ZMoveTo(parameters.position[2] - zStepSize, ignoreError: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+            //PiezoControl.GetInstance().Send(2, (ushort)(parameters.piezoPosition[2] + 70 * parameters.piezoZvsGap)); // gap larger for about 0.5 um
         }
 
         private void ZStepBidirection()
@@ -392,7 +387,7 @@ namespace Beetle
             Console.WriteLine("Z Bidirection Stepping Start");
             Parameters.Log("Z Bidirection Stepping Start");
             double z, loss0, bound, diff;
-            z = Parameters.position[2];
+            z = parameters.position[2];
             sbyte trend = 1, sameCount = 0;
             int direc = 1; // go up or smaller the gap first
             loss.Clear();
@@ -401,12 +396,12 @@ namespace Beetle
             pos.Add(z);
             loss0 = loss[loss.Count - 1];
 
-            while (!Parameters.errorFlag)
+            while (!parameters.errorFlag)
             {
                 z += zStepSize * direc;
-                BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
                 Thread.Sleep(150); // delay 150ms
-                pos.Add(Parameters.position[2]);
+                pos.Add(parameters.position[2]);
                 loss.Add(PowerMeter.Read());
                 if (LossMeetCriteria())
                     return;
@@ -441,7 +436,7 @@ namespace Beetle
                     sameCount += 1;
                     if (sameCount >= 5)
                     {
-                        z = z - zStepSize * direc * 5 - BeetleControl.zBacklashMM * direc;
+                        z = z - zStepSize * direc * 5 - beetleControl.zBacklashMM * direc;
                         Console.WriteLine("Loss doesn't Change in Z");
                         Parameters.Log("Loss doesn't Change in Z");
                         break;
@@ -449,7 +444,7 @@ namespace Beetle
                 }
             }
 
-            BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+            beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: false, stopInBetween: stopInBetweenFlag);
             Thread.Sleep(150);
             StatusCheck(loss.Max());
         }
@@ -457,23 +452,23 @@ namespace Beetle
 
         protected override void StatusCheck(double loss0)
         {
-            if (loss0 > Parameters.lossCurrentMax)
+            if (loss0 > parameters.lossCurrentMax)
             {
-                Parameters.lossCurrentMax = loss0;
-                lossCriteria = Parameters.lossCurrentMax - toleranceForNewCriteria;
+                parameters.lossCurrentMax = loss0;
+                lossCriteria = parameters.lossCurrentMax - toleranceForNewCriteria;
             }
             else if (loss0 < -20)
             {
                 Console.WriteLine("Unexpected High Loss");
                 Parameters.Log("Unexpected High Loss");
-                BeetleControl.NormalTrajSpeed();
-                Parameters.errorFlag = true;
+                beetleControl.NormalTrajSpeed();
+                parameters.errorFlag = true;
             }
         }
 
         protected override bool LossMeetCriteria()
         {
-            if (Parameters.loss >= lossCriteria)
+            if (PowerMeter.loss >= lossCriteria)
             {
                 Console.WriteLine($"Meet Criteria {Math.Round(lossCriteria, 4)}");
                 Parameters.Log($"Meet Criteria {Math.Round(lossCriteria, 4)}");
@@ -484,12 +479,12 @@ namespace Beetle
                     buffer = bufferSmall;
                 else
                     buffer = bufferBig;
-                if (Parameters.loss > (lossCriteria + toleranceForNewCriteria))
-                    lossCriteria = Parameters.loss - toleranceForNewCriteria;
-                if (Parameters.loss > Parameters.lossCurrentMax)
+                if (PowerMeter.loss > (lossCriteria + toleranceForNewCriteria))
+                    lossCriteria = PowerMeter.loss - toleranceForNewCriteria;
+                if (PowerMeter.loss > parameters.lossCurrentMax)
                 {
-                    Parameters.lossCurrentMax = Parameters.loss;
-                    lossCriteria = Parameters.lossCurrentMax - toleranceForNewCriteria;
+                    parameters.lossCurrentMax = PowerMeter.loss;
+                    lossCriteria = parameters.lossCurrentMax - toleranceForNewCriteria;
                 }
 
                 return true;

@@ -7,7 +7,11 @@ namespace Beetle
 {
     static class PowerMeter
     {
-        private static double loss;
+        // Power Meter paramters
+        public static double loss = -50.0f;
+        public static double lossReference = -19.4588f;
+        public static byte addr = 12;
+        public static byte channel = 2;
 
         private static MessageBasedSession mSession;
         private static string readcmd;
@@ -26,8 +30,8 @@ namespace Beetle
             try
             {
                 if (mSession == null)
-                    mSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open("GPIB0::" + Parameters.addr.ToString() + "::INSTR");
-                readcmd = "READ" + Parameters.channel.ToString() + ":POW?";
+                    mSession = (MessageBasedSession)ResourceManager.GetLocalManager().Open("GPIB0::" + addr.ToString() + "::INSTR");
+                readcmd = "READ" + channel.ToString() + ":POW?";
             }
             catch (Exception e)
             {
@@ -47,9 +51,9 @@ namespace Beetle
             }
             catch (Exception)
             {
-                if (Parameters.errors == "")
-                    Parameters.errors = "Power Meter Error\n";
-                Parameters.errorFlag = true;
+                //if (Parameters.errors == "")
+                //    Parameters.errors = "Power Meter Error\n";
+                //Parameters.errorFlag = true;
                 loss = -90;
             }
             if (loss > 10)
@@ -64,9 +68,9 @@ namespace Beetle
                 }
                 catch (Exception)
                 {
-                    if (Parameters.errors == "")
-                        Parameters.errors = "Power Meter Error\n";
-                    Parameters.errorFlag = true;
+                    //if (Parameters.errors == "")
+                    //    Parameters.errors = "Power Meter Error\n";
+                    //Parameters.errorFlag = true;
                     loss = -90;
                 }
                 if (loss > 10)
@@ -76,11 +80,10 @@ namespace Beetle
                 loss = -90;
             if (unit == "dBm")
                 return loss;
-            loss -= Parameters.lossReference;
+            loss -= lossReference;
             loss = Math.Round(loss, 4);
             Console.WriteLine($"Loss: {loss}");
             Parameters.Log($"Loss: {loss}");
-            Parameters.loss = loss;
             return loss;
         }
 
@@ -95,16 +98,15 @@ namespace Beetle
             }
             catch (Exception)
             {
-                if (Parameters.errors == "")
-                    Parameters.errors = "Power Meter Error\n";
-                Parameters.errorFlag = true;
+                //if (Parameters.errors == "")
+                //    Parameters.errors = "Power Meter Error\n";
+                //Parameters.errorFlag = true;
                 loss = -90;
             }
             if (loss < -90 || loss > 10)
                 loss = -90;
-            loss -= Parameters.lossReference;
+            loss -= lossReference;
             loss = Math.Round(loss, 4);
-            Parameters.loss = loss;
             return loss;
         }
 

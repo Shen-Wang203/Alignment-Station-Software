@@ -6,36 +6,42 @@ using System.Windows.Forms;
 
 namespace Beetle
 {
-    static class BeetleControl
+    class BeetleControl
     {
-        private static SerialPort T1Port;
-        private static SerialPort T2Port;
-        private static SerialPort T3Port;
-        private static int[] limit; //this limit is the max counts for each axis for the version where 0 count is at middle; or min for the version where 0 counts is at end  
-        private static double[] countsOffset;
-        private static readonly float rangePerAxis = 17.7f; //range in mm, default full range 17.7mm
-        private static int countsPerMM = 20000; // counts per mm
-        private static sbyte xDirectionOld = 0;
-        private static sbyte yDirectionOld = 0;
-        private static sbyte zDirectionOld = 0;
-        
-        public static sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move, 1 means on target, 0 means not yet
-        public static byte globalErrorCount = 0;
-        public static sbyte[] motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 };
-        public static double xBacklashMM = 0; // in mm
-        public static double yBacklashMM = 0; // in mm
-        public static double zBacklashMM = 0.0002; // in mm
-        public static sbyte tolerance = 2; // in encoder counts
-        public static double encoderResolution = 50e-6; // in mm/counts
-        public static int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
-        public static int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
-        public static double[] tempP;
+        private Parameters parameters;
+        private BeetleMathModel mathModel;
 
-        static BeetleControl()
+        private SerialPort T1Port;
+        private SerialPort T2Port;
+        private SerialPort T3Port;
+        private int[] limit; //this limit is the max counts for each axis for the version where 0 count is at middle; or min for the version where 0 counts is at end  
+        private double[] countsOffset;
+        private readonly float rangePerAxis = 17.7f; //range in mm, default full range 17.7mm
+        private int countsPerMM = 20000; // counts per mm
+        private sbyte xDirectionOld = 0;
+        private sbyte yDirectionOld = 0;
+        private sbyte zDirectionOld = 0;
+        
+        public sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move, 1 means on target, 0 means not yet
+        public byte globalErrorCount = 0;
+        public sbyte[] motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 };
+        public double xBacklashMM = 0; // in mm
+        public double yBacklashMM = 0; // in mm
+        public double zBacklashMM = 0.0002; // in mm
+        public sbyte tolerance = 2; // in encoder counts
+        public double encoderResolution = 50e-6; // in mm/counts
+        public int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
+        public int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
+        public double[] tempP;
+
+        public BeetleControl(Parameters prmts, BeetleMathModel mm)
         {
+            parameters = prmts;
+            mathModel = mm; 
+
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
             double A1x, A1y, A2x, A2y, A3x, A3y;
-            switch(Parameters.beetleFixtureNumber)
+            switch(parameters.beetleFixtureNumber)
             {
                 case 1:
                     x1 = 193050;
@@ -97,13 +103,13 @@ namespace Beetle
             countsOffset = new double[] { A1x, A1y, A2x, A2y, A3x, A3y };
         }
 
-        public static bool Connection()
+        public bool Connection()
         {
             try
             {
-                T1Port = new SerialPort(Parameters.beetleT1ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T2Port = new SerialPort(Parameters.beetleT2ComPortName, 115200, Parity.None, 8, StopBits.One);
-                T3Port = new SerialPort(Parameters.beetleT3ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T1Port = new SerialPort(parameters.beetleT1ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T2Port = new SerialPort(parameters.beetleT2ComPortName, 115200, Parity.None, 8, StopBits.One);
+                T3Port = new SerialPort(parameters.beetleT3ComPortName, 115200, Parity.None, 8, StopBits.One);
                 T1Port.ReadTimeout = 200;
                 T1Port.WriteTimeout = 200;
                 T2Port.ReadTimeout = 200;
@@ -122,7 +128,7 @@ namespace Beetle
             }
         }
 
-        public static void ClosePorts()
+        public void ClosePorts()
         {
             if (T1Port != null)
                 T1Port.Close();
@@ -132,10 +138,10 @@ namespace Beetle
                 T3Port.Close();
         }
 
-        public static void ClearErrors()
+        public void ClearErrors()
         {
-            Parameters.errors = "";
-            Parameters.errorFlag = false;
+            parameters.errors = "";
+            parameters.errorFlag = false;
             string xstr = "w axis0.error 0";
             string ystr = "w axis1.error 0";
             T123SendOnly(xstr, ystr);
@@ -150,7 +156,7 @@ namespace Beetle
             T123SendOnly(xstr, ystr);
         }
 
-        public static void Calibration()
+        public void Calibration()
         {
             string xstr = "w axis0.requested_state 3";
             string ystr = "w axis1.requested_state 3";
@@ -162,7 +168,7 @@ namespace Beetle
         }
 
         // axial can be 0(all axis) or 0-5 axis
-        public static void EngageMotors(sbyte axial = 6)
+        public void EngageMotors(sbyte axial = 6)
         {
             //string xstr = "w axis0.requested_state 8";
             //string ystr = "w axis1.requested_state 8";
@@ -205,7 +211,7 @@ namespace Beetle
             }
         }
 
-        public static void DisengageMotors()
+        public void DisengageMotors()
         {
             //string xstr = "w axis0.requested_state 1";
             //string ystr = "w axis1.requested_state 1";
@@ -243,7 +249,7 @@ namespace Beetle
             }
         }
 
-        public static void SlowTrajSpeed()
+        public void SlowTrajSpeed()
         {
             string xstr1 = "w axis0.trap_traj.config.accel_limit 1000";
             string xstr2 = "w axis0.trap_traj.config.decel_limit 1000";
@@ -256,7 +262,7 @@ namespace Beetle
             T123SendOnly(xstr3, ystr3);
         }
 
-        public static void SlowTrajSpeed2()
+        public void SlowTrajSpeed2()
         {
             string xstr1 = "w axis0.trap_traj.config.accel_limit 80";
             string xstr2 = "w axis0.trap_traj.config.decel_limit 80";
@@ -269,7 +275,7 @@ namespace Beetle
             T123SendOnly(xstr3, ystr3);
         }
 
-        public static void NormalTrajSpeed()
+        public void NormalTrajSpeed()
         {
             string xstr1 = "w axis0.trap_traj.config.accel_limit 70000";
             string xstr2 = "w axis0.trap_traj.config.decel_limit 70000";
@@ -284,11 +290,11 @@ namespace Beetle
 
         // position is the platform position
         // will update Parameters.position
-        public static void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
-            double[] Tmm = BeetleMathModel.GetInstance().FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
+            double[] Tmm = mathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
-            position.CopyTo(Parameters.position, 0);
+            position.CopyTo(parameters.position, 0);
             GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
 
@@ -296,13 +302,13 @@ namespace Beetle
         // will update Parameters.position if checkOnTarget is true
         // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial. 
         // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
-        public static void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte xDirec;
             double counter = 0;
-            if (XAbs > Parameters.position[0])
+            if (XAbs > parameters.position[0])
                 xDirec = 1;
-            else if (XAbs < Parameters.position[0])
+            else if (XAbs < parameters.position[0])
                 xDirec = -1;
             else
                 xDirec = xDirectionOld;
@@ -312,13 +318,13 @@ namespace Beetle
 
             int[] targetCounts = new int[6];
             countsReal.CopyTo(targetCounts, 0);
-            int deltacounts = (int)Math.Round((XAbs + counter - Parameters.position[0]) / encoderResolution);
+            int deltacounts = (int)Math.Round((XAbs + counter - parameters.position[0]) / encoderResolution);
             targetCounts[0] = countsReal[0] + deltacounts;
             targetCounts[2] = countsReal[2] - deltacounts;
             targetCounts[4] = countsReal[4] - deltacounts;
 
             if (checkOnTarget)
-                Parameters.position[0] = XAbs;
+                parameters.position[0] = XAbs;
 
             GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
@@ -327,13 +333,13 @@ namespace Beetle
         // will update Parameters.position if checkOnTarget is true
         // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
         // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
-        public static void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             sbyte yDirec;
             double counter = 0;
-            if (YAbs > Parameters.position[1])
+            if (YAbs > parameters.position[1])
                 yDirec = 1;
-            else if (YAbs < Parameters.position[1])
+            else if (YAbs < parameters.position[1])
                 yDirec = -1;
             else
                 yDirec = yDirectionOld;
@@ -343,26 +349,26 @@ namespace Beetle
 
             int[] targetCounts = new int[6];
             countsReal.CopyTo(targetCounts, 0);
-            int deltacounts = (int)Math.Round((YAbs + counter - Parameters.position[1]) / encoderResolution);
+            int deltacounts = (int)Math.Round((YAbs + counter - parameters.position[1]) / encoderResolution);
             targetCounts[1] = countsReal[1] + deltacounts;
             targetCounts[3] = countsReal[3] + deltacounts;
             targetCounts[5] = countsReal[5] + deltacounts;
 
             if (checkOnTarget)
-                Parameters.position[1] = YAbs;
+                parameters.position[1] = YAbs;
 
             GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
         }
 
         // ZAbs is the platform z absolute position in mm
         // will update Parameters.position
-        public static void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true)
+        public void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true)
         {
             sbyte zDirec;
             double counter = 0;
-            if (ZAbs > Parameters.position[2])
+            if (ZAbs > parameters.position[2])
                 zDirec = 1;
-            else if (ZAbs < Parameters.position[2])
+            else if (ZAbs < parameters.position[2])
                 zDirec = -1;
             else
                 zDirec = zDirectionOld;
@@ -371,18 +377,18 @@ namespace Beetle
             zDirectionOld = zDirec;
 
             double[] targetPosition = new double[6];
-            Parameters.position.CopyTo(targetPosition, 0);
+            parameters.position.CopyTo(targetPosition, 0);
             targetPosition[2] = ZAbs + counter;
 
             // Move along Z direction that's norm to current platform face, instead of along world coordicate Z direciton
             // This will take angles into consideration
             if (normToFace)
             {
-                double deltaZ = targetPosition[2] - Parameters.position[2];
-                double[] normVector = BeetleMathModel.GetInstance().NormalVector(Parameters.position[3], Parameters.position[4], Parameters.position[5]);
-                targetPosition[0] = deltaZ * normVector[0] + Parameters.position[0];
-                targetPosition[1] = deltaZ * normVector[1] + Parameters.position[1];
-                targetPosition[2] = deltaZ * normVector[2] + Parameters.position[2];
+                double deltaZ = targetPosition[2] - parameters.position[2];
+                double[] normVector = BeetleMathModel.NormalVector(parameters.position[3], parameters.position[4], parameters.position[5]);
+                targetPosition[0] = deltaZ * normVector[0] + parameters.position[0];
+                targetPosition[1] = deltaZ * normVector[1] + parameters.position[1];
+                targetPosition[2] = deltaZ * normVector[2] + parameters.position[2];
             }
 
             GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
@@ -390,10 +396,10 @@ namespace Beetle
 
         // RxAbs is the absolute Rx value in degree
         // will update Parameters.position
-        public static void RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
-            Parameters.position.CopyTo(targetPosition, 0);
+            parameters.position.CopyTo(targetPosition, 0);
             targetPosition[3] = RxAbs;
 
             GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
@@ -401,10 +407,10 @@ namespace Beetle
 
         // RyAbs is the absolute Ry value in degree
         // will update Parameters.position
-        public static void RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
-            Parameters.position.CopyTo(targetPosition, 0);
+            parameters.position.CopyTo(targetPosition, 0);
             targetPosition[4] = RyAbs;
 
             GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
@@ -412,32 +418,32 @@ namespace Beetle
 
         // RzAbs is the absolute Rz value in degree
         // will update Parameters.position
-        public static void RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             double[] targetPosition = new double[6];
-            Parameters.position.CopyTo(targetPosition, 0);
+            parameters.position.CopyTo(targetPosition, 0);
             targetPosition[5] = RzAbs;
 
             GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
         }
 
-        public static void GotoReset() => GotoPosition(Parameters.initialPosition, stopInBetween:true);
+        public void GotoReset() => GotoPosition(parameters.initialPosition, stopInBetween:true);
 
-        public static void GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 }, stopInBetween:true);
+        public void GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 }, stopInBetween:true);
 
-        public static void GotoTemp() => GotoPosition(tempP, stopInBetween: true);
+        public void GotoTemp() => GotoPosition(tempP, stopInBetween: true);
 
         // return false when timeout or driver board errors or out of range
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
-        private static bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             targetCounts.CopyTo(countsTarget, 0);
             if (!SafetyCheck(targetCounts))
             { 
                 DisengageMotors();
-                Parameters.errors = "Out of Range\n";
-                Parameters.errorFlag = true;
-                Console.WriteLine(Parameters.errors);
+                parameters.errors = "Out of Range\n";
+                parameters.errorFlag = true;
+                Console.WriteLine(parameters.errors);
                 return false;
             }
             int timeoutloop, timeout = 50;
@@ -473,12 +479,12 @@ namespace Beetle
                             for (int j = 0; j < 6; j++)
                             {
                                 if (Math.Abs(targetCounts[i] - countsReal[i]) > tolerance)
-                                    Parameters.errors = string.Concat(Parameters.errors, "Axis ", j + 1, " Timeout Error\n");
+                                    parameters.errors = string.Concat(parameters.errors, "Axis ", j + 1, " Timeout Error\n");
                             }
                         }
-                        Console.WriteLine(Parameters.errors);
-                        Parameters.Log(Parameters.errors);
-                        Parameters.errorFlag = true;
+                        Console.WriteLine(parameters.errors);
+                        Parameters.Log(parameters.errors);
+                        parameters.errorFlag = true;
                         return false;
                     }
                 }
@@ -500,7 +506,7 @@ namespace Beetle
             return true;
         }
 
-        private static void SetOnTargetFlag(char freedom)
+        private void SetOnTargetFlag(char freedom)
         {
             if (freedom == 'x')
             {
@@ -531,7 +537,7 @@ namespace Beetle
             }
         }
 
-        private static int[] TranslateToCounts(double[] Tmm)
+        private int[] TranslateToCounts(double[] Tmm)
         {
             int[] counts = { 0, 0, 0, 0, 0, 0};
             counts[0] = (int)Math.Round( Tmm[0] / encoderResolution + countsOffset[0]);
@@ -545,7 +551,7 @@ namespace Beetle
 
         // If the return is a number, it can be convert to int or float directly , no line feed sign
         // If the return is a description, print it out using WriteLine(), don't use Write()
-        private static string T1Talk(string str)
+        private string T1Talk(string str)
         {
             string message = "";
             try
@@ -555,8 +561,8 @@ namespace Beetle
             catch(Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
                 return "";
                 // TODO: exit this threading directly
             }
@@ -567,15 +573,15 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
 
         // If the return is a number, it can be convert to int or float directly , no line feed sign
         // If the return is a description, print it out using WriteLine(), don't use Write()
-        private static string T2Talk(string str)
+        private string T2Talk(string str)
         {
             string message = "";
             try
@@ -585,8 +591,8 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
                 return "";
             }
             try
@@ -597,15 +603,15 @@ namespace Beetle
             {
                 message = "";
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
 
         // If the return is a number, it can be convert to int or float directly , no line feed sign
         // If the return is a description, print it out using WriteLine(), don't use Write()
-        private static string T3Talk(string str)
+        private string T3Talk(string str)
         {
             string message = "";
             try
@@ -615,8 +621,8 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
                 return "";
             }
             try
@@ -627,13 +633,13 @@ namespace Beetle
             {
                 message = "";
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
             return message;
         }
 
-        private static void T1SendOnly(string str)
+        private void T1SendOnly(string str)
         {
             try
             {
@@ -642,13 +648,13 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
         } 
 
 
-        private static void T2SendOnly(string str)
+        private void T2SendOnly(string str)
         {
             try
             {
@@ -657,12 +663,12 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
         }
 
-        private static void T3SendOnly(string str)
+        private void T3SendOnly(string str)
         {
             try
             {
@@ -671,12 +677,12 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Beetle COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Beetle COM Port Failed";
             }
         }
 
-        private static void T123SendOnly(string xstr, string ystr)
+        private void T123SendOnly(string xstr, string ystr)
         {
             T1SendOnly(xstr);
             T2SendOnly(xstr);
@@ -688,7 +694,7 @@ namespace Beetle
 
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
         // mode can be 't' or 'p' meaning trajectory or stepping method
-        private static void SendCounts(int[] counts, char mode = 'p')
+        private void SendCounts(int[] counts, char mode = 'p')
         {
             int trajectoryThreshold = 10000;
             string xstrp = "p 0 ";
@@ -766,7 +772,7 @@ namespace Beetle
 
         // Fetch each axis's real counts. axis = 6 fetch all 6 axis
         // 0 - 5 will fetch motor 1 - 6 individually
-        public static void RealCountsFetch(sbyte axis)
+        public void RealCountsFetch(sbyte axis)
         {
             //string strx = "r axis0.encoder.shadow_count";
             //string stry = "r axis1.encoder.shadow_count";
@@ -838,7 +844,7 @@ namespace Beetle
         }
 
         // Check if x or y or all (freedom = 'x' or 'y' or 'a') motors are at target counts 
-        private static bool OnTarget(int[] counts)
+        private bool OnTarget(int[] counts)
         {
             for (sbyte i = 0; i < 6; i++)
             { 
@@ -859,7 +865,7 @@ namespace Beetle
         }
 
         // if error exists return true, else return false
-        private static bool CheckErrors()
+        private bool CheckErrors()
         {
             string xstr = "r axis0.error";
             string ystr = "r axis1.error";
@@ -874,23 +880,23 @@ namespace Beetle
             {
                 ErrorCodeExplain(errorCodes);
                 //DisengageMotors();
-                Parameters.errorFlag = true;
+                parameters.errorFlag = true;
                 return true;
             }
             else
             {
-                Parameters.errors = "";
-                Parameters.errorFlag = false;
+                parameters.errors = "";
+                parameters.errorFlag = false;
                 return false;
             }
         }
 
-        private static void ErrorCodeExplain(int[] codes)
+        private void ErrorCodeExplain(int[] codes)
         {
             string xstr = "r axis0.";
             string ystr = "r axis1.";
             string str0;
-            Parameters.errors = "";
+            parameters.errors = "";
             for (int i = 0; i < 6; i++)
             {
                 if (codes[i] == 0x_00)
@@ -918,7 +924,7 @@ namespace Beetle
                 }
                 else
                 {
-                    Parameters.errors = string.Concat(Parameters.errors, "Axis ", i + 1, " error: ", AxisErrorCode(codes[i]), "\n");
+                    parameters.errors = string.Concat(parameters.errors, "Axis ", i + 1, " error: ", AxisErrorCode(codes[i]), "\n");
                     continue;
                 }
 
@@ -930,32 +936,32 @@ namespace Beetle
                     codes[i] = int.Parse(T3Talk(str0));
 
                 if (str0[8] == 'm')
-                    Parameters.errors = string.Concat(Parameters.errors, "Motor ", i + 1, " error: ", MotorErrorCode(codes[i]), "\n");
+                    parameters.errors = string.Concat(parameters.errors, "Motor ", i + 1, " error: ", MotorErrorCode(codes[i]), "\n");
                 else if (str0[8] == 'e')
-                    Parameters.errors = string.Concat(Parameters.errors, "Encoder ", i + 1, " error: ", EncoderErrorCode(codes[i]), "\n");
+                    parameters.errors = string.Concat(parameters.errors, "Encoder ", i + 1, " error: ", EncoderErrorCode(codes[i]), "\n");
                 else if (str0[8] == 'c')
-                    Parameters.errors = string.Concat(Parameters.errors, "Controller ", i + 1, " error: ", ControllerErrorCode(codes[i]), "\n");
+                    parameters.errors = string.Concat(parameters.errors, "Controller ", i + 1, " error: ", ControllerErrorCode(codes[i]), "\n");
             }
         }
 
-        private static bool SafetyCheck(int[] counts)
+        private bool SafetyCheck(int[] counts)
         {
-            Parameters.errors = "";
+            parameters.errors = "";
             // for version where 0 counts is at middle
             if (limit[0] > 150000)
             {
                 if (counts[0] > (limit[0] - 3000) || counts[0] < (limit[0] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T1x Out of Range\n";
+                    parameters.errors = "T1x Out of Range\n";
                 else if (counts[1] > (limit[1] - 3000) || counts[1] < (limit[1] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T1y Out of Range\n";
+                    parameters.errors = "T1y Out of Range\n";
                 else if (counts[2] > (limit[2] - 3000) || counts[2] < (limit[2] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T2x Out of Range\n";
+                    parameters.errors = "T2x Out of Range\n";
                 else if (counts[3] > (limit[3] - 3000) || counts[3] < (limit[3] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T2y Out of Range\n";
+                    parameters.errors = "T2y Out of Range\n";
                 else if (counts[4] > (limit[4] - 3000) || counts[4] < (limit[4] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T3x Out of Range\n";
+                    parameters.errors = "T3x Out of Range\n";
                 else if (counts[5] > (limit[5] - 3000) || counts[5] < (limit[5] - rangePerAxis * countsPerMM))
-                    Parameters.errors = "T3y Out of Range\n";
+                    parameters.errors = "T3y Out of Range\n";
                 else
                     return true;
                 return false;
@@ -963,17 +969,17 @@ namespace Beetle
             else // for version where 0 counts is at the end
             {
                 if (counts[0] < (limit[0] + 3000) || counts[0] > (limit[0] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T1x Out of Range\n";
+                    parameters.errors = "T1x Out of Range\n";
                 else if (counts[1] < (limit[1] + 3000) || counts[1] > (limit[1] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T1y Out of Range\n";
+                    parameters.errors = "T1y Out of Range\n";
                 else if (counts[2] < (limit[2] + 3000) || counts[2] > (limit[2] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T2x Out of Range\n";
+                    parameters.errors = "T2x Out of Range\n";
                 else if (counts[3] < (limit[3] + 3000) || counts[3] > (limit[3] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T2y Out of Range\n";
+                    parameters.errors = "T2y Out of Range\n";
                 else if (counts[4] < (limit[4] + 3000) || counts[4] > (limit[4] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T3x Out of Range\n";
+                    parameters.errors = "T3x Out of Range\n";
                 else if (counts[5] < (limit[5] + 3000) || counts[5] > (limit[5] + rangePerAxis * countsPerMM))
-                    Parameters.errors = "T3y Out of Range\n";
+                    parameters.errors = "T3y Out of Range\n";
                 else
                     return true;
                 return false;

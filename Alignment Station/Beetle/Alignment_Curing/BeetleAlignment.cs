@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Beetle
 {
     class BeetleAlignment : BeetleSearch
     {
-        private static BeetleAlignment instance;
-        
-        public static BeetleAlignment GetInstance()
-        {
-            if (instance == null)
-                instance = new BeetleAlignment();
-            return instance;
-        }
+        public BeetleAlignment(Parameters prmts, BeetleControl bc, PiezoControl pc) : base(prmts, bc, pc)
+        {}
 
-        //Parameters.errorflag will be used as program stop flag as well.Intance like meet criteria, unexpected high loss, failed
+        //parameters.errorflag will be used as program stop flag as well.Intance like meet criteria, unexpected high loss, failed
         //      to find better loss and motor errors will errect this flag.
 
 
@@ -35,7 +24,7 @@ namespace Beetle
         public double SetLossCriteria
         {
             get { return lossCriteria; }
-            set { Parameters.lossCriteria = value; }
+            set { parameters.lossCriteria = value; }
         }
 
         public void AlignmentRun() => Run(criteriaSelect: "global");
@@ -46,7 +35,7 @@ namespace Beetle
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
-        //      "global": use Parameters.lossCriteria as criteria
+        //      "global": use parameters.lossCriteria as criteria
         //      "currentMax": use lossCurentMax as criteria
         // runFromContact: start searching from the current position where ferrule and lens cap are very close to each other
         // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
@@ -55,17 +44,17 @@ namespace Beetle
         {
             ProductSelect();
 
-            if (criteriaSelect == "currentMax" && Parameters.lossCurrentMax != -50)
+            if (criteriaSelect == "currentMax" && parameters.lossCurrentMax != -50)
             {
                 if (productCondition >= 3)
-                    lossCriteria = Parameters.lossCurrentMax - 0.006;
+                    lossCriteria = parameters.lossCurrentMax - 0.006;
                 else
-                    lossCriteria = Parameters.lossCurrentMax - 0.02;
+                    lossCriteria = parameters.lossCurrentMax - 0.02;
             }
             else if (criteriaSelect == "global")
             {
-                lossCriteria = Parameters.lossCriteria;
-                Parameters.lossCurrentMax = -50;
+                lossCriteria = parameters.lossCriteria;
+                parameters.lossCurrentMax = -50;
             }
 
             ParameterReset();
@@ -76,15 +65,15 @@ namespace Beetle
             if (runFromContact)
             {
                 // Assume the starting position is at contact, need to go back for some distance first based on focal length
-                limitZ = Parameters.position[2] + 0.03;
-                BeetleControl.ZMoveTo(limitZ - Parameters.productGap[Parameters.productName]);
+                limitZ = parameters.position[2] + 0.03;
+                beetleControl.ZMoveTo(limitZ - parameters.productGap[parameters.productName]);
             }
 
-            BeetleControl.SlowTrajSpeed();
+            beetleControl.SlowTrajSpeed();
 
             loss.Add(PowerMeter.Read());
-            Parameters.position.CopyTo(posCurrentMax, 0);
-            while (!Parameters.errorFlag)
+            parameters.position.CopyTo(posCurrentMax, 0);
+            while (!parameters.errorFlag)
             {
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
@@ -95,30 +84,30 @@ namespace Beetle
                 ZSteppingSearch();
             }
 
-            BeetleControl.NormalTrajSpeed();
-            Console.WriteLine($"Alignment Finished. Best Loss {Parameters.lossCurrentMax}");
-            Parameters.Log($"Alignment Finished. Best Loss {Parameters.lossCurrentMax}");
+            beetleControl.NormalTrajSpeed();
+            Console.WriteLine($"Alignment Finished. Best Loss {parameters.lossCurrentMax}");
+            Parameters.Log($"Alignment Finished. Best Loss {parameters.lossCurrentMax}");
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
-                BeetleControl.ZMoveTo(Parameters.position[2] - backDistanceAfterSearching);
-            BeetleControl.DisengageMotors();
+                beetleControl.ZMoveTo(parameters.position[2] - backDistanceAfterSearching);
+            beetleControl.DisengageMotors();
         }
 
         private void ParameterReset()
         {
             lossFailToImprove = 0;
             secondTry = false;
-            doubleCheckFlag = Parameters.doublecheckFlag;
-            stopInBetweenFlag = Parameters.stopInBetweenFlag;
+            doubleCheckFlag = parameters.doublecheckFlag;
+            stopInBetweenFlag = parameters.stopInBetweenFlag;
 
             lossStage1 = -4.0f;
             lossStage2 = -2.0f;
             //searchMode = "scan";
 
-            Parameters.errorFlag = false;
+            parameters.errorFlag = false;
 
-            BeetleControl.globalErrorCount = 0;
+            beetleControl.globalErrorCount = 0;
 
             // for multimmode step size is larger
             if (productCondition >= 3)
@@ -143,8 +132,8 @@ namespace Beetle
             else if (lossRef < lossStage2)
             {
                 searchMode = "interpolation";
-                if (Parameters.highestAccuracy)
-                    BeetleControl.tolerance = 1;
+                if (parameters.highestAccuracy)
+                    beetleControl.tolerance = 1;
                 switch(productCondition)
                 {
                     case 1: // SM + larget gap
@@ -169,8 +158,8 @@ namespace Beetle
             {
                 searchMode = "interpolation";
                 zMode = "normal";
-                if (Parameters.highestAccuracy)
-                    BeetleControl.tolerance = 1;
+                if (parameters.highestAccuracy)
+                    beetleControl.tolerance = 1;
                 switch (productCondition)
                 {
                     case 1:
@@ -191,7 +180,7 @@ namespace Beetle
             {
                 Console.WriteLine($"Meet Criteria {lossCriteria}");
                 Parameters.Log($"Meet Criteria {lossCriteria}");
-                Parameters.errorFlag = true;
+                parameters.errorFlag = true;
                 return true;
             }
             return false;
@@ -214,7 +203,7 @@ namespace Beetle
                     Console.WriteLine("X Scan Search Failed");
                     Parameters.Log("X Scan Search Failed");
                     // for scan mode don't set errorFlag until y is complited
-                    //Parameters.errorFlag = true;
+                    //parameters.errorFlag = true;
                 }
                 if (LossMeetCriteria())
                     return true;
@@ -223,11 +212,11 @@ namespace Beetle
                     Console.WriteLine("Y Scan Search Failed");
                     Parameters.Log("Y Scan Search Failed");
                     // if x and y scan search all failed, use square search one time
-                    if (Parameters.lossCurrentMax < -37.0 && !AxisSquareSearch())
+                    if (parameters.lossCurrentMax < -37.0 && !AxisSquareSearch())
                     {
                         Console.WriteLine("Square Search Failed");
                         Parameters.Log("Square Search Failed");
-                        Parameters.errorFlag = true;
+                        parameters.errorFlag = true;
                         return true;
                     }
                 }
@@ -238,15 +227,15 @@ namespace Beetle
                 {
                     Console.WriteLine("X Interpolation Search Failed");
                     Parameters.Log("X Interpolation Search Failed");
-                    Parameters.errorFlag = true;
+                    parameters.errorFlag = true;
                 }
-                if (Parameters.errorFlag || LossMeetCriteria())
+                if (parameters.errorFlag || LossMeetCriteria())
                     return true;
                 if (!AxisInterpolationSearch(axis: 1))
                 {
                     Console.WriteLine("Y Interpolation Search Failed");
                     Parameters.Log("Y Interpolation Search Failed");
-                    Parameters.errorFlag = true;
+                    parameters.errorFlag = true;
                     return true;
                 }
             }
@@ -255,15 +244,15 @@ namespace Beetle
 
         public void PiezoSearchRun()
         {
-            Parameters.piezoRunning = true;
-            Parameters.errorFlag = false;
-            Parameters.errors = "";
+            parameters.piezoRunning = true;
+            parameters.errorFlag = false;
+            parameters.errors = "";
             PiezoSteppingSearch(0, targetLess: true);
             PiezoSteppingSearch(1, targetLess: true);
             PiezoSteppingSearch(0, targetLess: true);
             PiezoSteppingSearch(1, targetLess: true);
             PiezoSteppingSearch(2, targetLess: true);
-            Parameters.piezoRunning = false;
+            parameters.piezoRunning = false;
         }
 
     }

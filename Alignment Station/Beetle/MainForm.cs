@@ -19,6 +19,8 @@ namespace Beetle
         private FilterInfoCollection filterInfoCollecion;
         private VideoCaptureDevice videoCaptureDevice;
 
+        private BeetleSystemObject beetle1 = new BeetleSystemObject();
+
         public MainForm()
         {
             InitializeComponent();
@@ -28,11 +30,8 @@ namespace Beetle
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            // Load PowerMeter
-            //PowerMeter.Open();
-
-            Parameters.LoadAll();
-            if (!BeetleControl.Connection() || !PiezoControl.GetInstance().Connection())
+            beetle1.parameters.LoadAll();
+            if (!beetle1.Connection())
             {
                 buttonCalibration.Enabled = false;
                 buttonClearError.Enabled = false;
@@ -67,15 +66,15 @@ namespace Beetle
             comboBoxPMChl.SelectedIndex = 0;
 
             // load inital positions on the GUI
-            numericUpDownX.Value = (decimal)Parameters.initialPosition[0];
-            numericUpDownY.Value = (decimal)Parameters.initialPosition[1];
-            numericUpDownZ.Value = (decimal)Parameters.initialPosition[2];
-            numericUpDownRx.Value = (decimal)Parameters.initialPosition[3];
-            numericUpDownRy.Value = (decimal)Parameters.initialPosition[4];
-            numericUpDownRz.Value = (decimal)Parameters.initialPosition[5];
-            numericUpDownPx.Value = (decimal)Parameters.pivotPoint[0];
-            numericUpDownPy.Value = (decimal)Parameters.pivotPoint[1];
-            numericUpDownPz.Value = (decimal)Parameters.pivotPoint[2] - 8;
+            numericUpDownX.Value = (decimal)beetle1.parameters.initialPosition[0];
+            numericUpDownY.Value = (decimal)beetle1.parameters.initialPosition[1];
+            numericUpDownZ.Value = (decimal)beetle1.parameters.initialPosition[2];
+            numericUpDownRx.Value = (decimal)beetle1.parameters.initialPosition[3];
+            numericUpDownRy.Value = (decimal)beetle1.parameters.initialPosition[4];
+            numericUpDownRz.Value = (decimal)beetle1.parameters.initialPosition[5];
+            numericUpDownPx.Value = (decimal)beetle1.parameters.pivotPoint[0];
+            numericUpDownPy.Value = (decimal)beetle1.parameters.pivotPoint[1];
+            numericUpDownPz.Value = (decimal)beetle1.parameters.pivotPoint[2] - 8;
         }
 
         private void VideoCaptureDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -118,27 +117,24 @@ namespace Beetle
             videoCaptureDevice.Start();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Parameters.Save();
-        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) => beetle1.parameters.Save();
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
             if (!tabBC)
             {
-                if (Parameters.errors != "")
+                if (beetle1.parameters.errors != "")
                 {
-                    richTextBoxErrorMsg.Text += Parameters.errors;
-                    Parameters.errors = "";
+                    richTextBoxErrorMsg.Text += beetle1.parameters.errors;
+                    beetle1.parameters.errors = "";
                 }
 
                 // if thread is running then start the time count on the GUI
                 if (runThread != null && runThread.IsAlive)
                 {
                     thisTime = DateTime.Now;
-                    labelTargetValue.Text = Math.Round(Parameters.lossCurrentMax, 4).ToString();
-                    labelILValue.Text = Math.Round(Parameters.loss, 4).ToString();
+                    labelTargetValue.Text = Math.Round(beetle1.parameters.lossCurrentMax, 4).ToString();
+                    labelILValue.Text = Math.Round(PowerMeter.loss, 4).ToString();
                 }
                 else if (!stopReadPM)
                     labelILValue.Text = PowerMeter.ReadNoPrint().ToString();
@@ -147,14 +143,14 @@ namespace Beetle
                 labelTimeValue.Text = timeElapsed.Minutes.ToString() + "min " + timeElapsed.Seconds.ToString() + "s";
 
                 sbyte sum = 0;
-                foreach (var i in BeetleControl.motorEngageFlag)
+                foreach (var i in beetle1.beetleControl.motorEngageFlag)
                     sum += i;
-                if (sum == 0 && !Parameters.piezoRunning)
+                if (sum == 0 && !beetle1.parameters.piezoRunning)
                 {
                     labelStatusValue.Text = "IDLE";
                     labelStatusValue.ForeColor = Color.Lime;
                 }
-                else if (sum == 0 && Parameters.piezoRunning)
+                else if (sum == 0 && beetle1.parameters.piezoRunning)
                 {
                     labelStatusValue.Text = "BUSY";
                     labelStatusValue.ForeColor = Color.Yellow;
@@ -166,13 +162,13 @@ namespace Beetle
                 }
                 
 
-                labelPositionXYZ.Text = Math.Round(Parameters.position[0], 3).ToString() + ", " + Math.Round(Parameters.position[1], 3).ToString() + 
-                                        ", " + Math.Round(Parameters.position[2], 3).ToString();
-                labelPositionAngles.Text = Math.Round(Parameters.position[3], 3).ToString() + ", " + Math.Round(Parameters.position[4], 3).ToString() + 
-                                        ", " + Math.Round(Parameters.position[5], 3).ToString();
+                labelPositionXYZ.Text = Math.Round(beetle1.parameters.position[0], 3).ToString() + ", " + Math.Round(beetle1.parameters.position[1], 3).ToString() + 
+                                        ", " + Math.Round(beetle1.parameters.position[2], 3).ToString();
+                labelPositionAngles.Text = Math.Round(beetle1.parameters.position[3], 3).ToString() + ", " + Math.Round(beetle1.parameters.position[4], 3).ToString() + 
+                                        ", " + Math.Round(beetle1.parameters.position[5], 3).ToString();
 
-                labelPiezoPositionValue.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() + 
-                                                    ", " + Parameters.piezoPosition[2].ToString();
+                labelPiezoPositionValue.Text = beetle1.parameters.piezoPosition[0].ToString() + ", " + beetle1.parameters.piezoPosition[1].ToString() + 
+                                                    ", " + beetle1.parameters.piezoPosition[2].ToString();
 
                 if (chartsOn)
                     ChartsDataUpdate();
@@ -182,37 +178,37 @@ namespace Beetle
                 // if thread is running then start the time count on the GUI
                 if (runThread != null && runThread.IsAlive)
                 {
-                    labelILValueBC.Text = Math.Round(Parameters.loss, 4).ToString();
+                    labelILValueBC.Text = Math.Round(PowerMeter.loss, 4).ToString();
                 }
                 else if (!stopReadPM)
                     labelILValueBC.Text = PowerMeter.ReadNoPrint().ToString();
 
                 sbyte sum = 0;
-                foreach (sbyte i in BeetleControl.motorEngageFlag)
+                foreach (sbyte i in beetle1.beetleControl.motorEngageFlag)
                     sum += i;
                 if (sum == 0)
                 {
                     labelStatusValueBC.Text = "IDLE";
                     labelStatusValueBC.ForeColor = Color.Lime;
                 }
-                else if (sum != 0 && !Parameters.errorFlag)
+                else if (sum != 0 && !beetle1.parameters.errorFlag)
                 {
                     labelStatusValueBC.Text = "BUSY";
                     labelStatusValueBC.ForeColor = Color.Red;
                 }
-                else if (Parameters.errorFlag && Parameters.errors != "")
+                else if (beetle1.parameters.errorFlag && beetle1.parameters.errors != "")
                 {
                     labelStatusValueBC.Text = "ERROR";
                     labelStatusValueBC.ForeColor = Color.Red;
                 }
 
-                if (Parameters.piezoRunning)
+                if (beetle1.parameters.piezoRunning)
                 {
                     labelStatusValueBC.Text = "BUSY";
                     labelStatusValueBC.ForeColor = Color.Yellow;
                 }
-                labelPiezoPositionValueBC.Text = Parameters.piezoPosition[0].ToString() + ", " + Parameters.piezoPosition[1].ToString() +
-                                ", " + Parameters.piezoPosition[2].ToString();
+                labelPiezoPositionValueBC.Text = beetle1.parameters.piezoPosition[0].ToString() + ", " + beetle1.parameters.piezoPosition[1].ToString() +
+                                ", " + beetle1.parameters.piezoPosition[2].ToString();
 
                 MotorChartsUpdate();
             }
@@ -242,16 +238,16 @@ namespace Beetle
             stopReadPM = false;
             startTime = DateTime.Now;
 
-            PiezoControl.GetInstance().Reset();
+            beetle1.piezoControl.Reset();
             Thread.Sleep(500);
 
-            runThread = new Thread(BeetleControl.GotoReset);
+            runThread = new Thread(beetle1.beetleControl.GotoReset);
             runThread.Start();
         }
 
         private void ButtonAlignment_Click(object sender, EventArgs e)
         {
-            if (Parameters.loss > -40)
+            if (PowerMeter.loss > -40)
             {
                 Parameters.Log("\r\n");
                 Parameters.Log("***************************");
@@ -262,10 +258,12 @@ namespace Beetle
                 stopReadPM = false;
                 startTime = DateTime.Now;
 
-                PiezoControl.GetInstance().Reset();
+                beetle1.piezoControl.Reset();
                 Thread.Sleep(500);
 
-                runThread = new Thread(BeetleAlignment.GetInstance().AlignmentRun);
+                if (beetle1.ba == null)
+                    beetle1.AlignCuringInit();
+                runThread = new Thread(beetle1.ba.AlignmentRun);
                 runThread.Start();
 
                 ButtonAlignment.BackColor = Color.Yellow;
@@ -277,7 +275,7 @@ namespace Beetle
 
         private void ButtonPreCuring_Click(object sender, EventArgs e)
         {
-            if (Parameters.loss > -8)
+            if (PowerMeter.loss > -8)
             {
                 if (runThread != null && runThread.IsAlive)
                 {
@@ -294,7 +292,9 @@ namespace Beetle
                 stopReadPM = false;
                 startTime = DateTime.Now;
 
-                runThread = new Thread(BeetleAlignment.GetInstance().PreCuringRun);
+                if (beetle1.ba == null)
+                    beetle1.AlignCuringInit();
+                runThread = new Thread(beetle1.ba.PreCuringRun);
                 runThread.Start();
 
                 ButtonAlignment.BackColor = Color.Green;
@@ -322,8 +322,10 @@ namespace Beetle
 
             stopReadPM = false;
             startTime = DateTime.Now;
-            
-            runThread = new Thread(BeetleCuring.GetInstance().Run);
+
+            if (beetle1.bc == null)
+                beetle1.AlignCuringInit();
+            runThread = new Thread(beetle1.bc.Run);
             runThread.Start();
 
             ButtonPreCuring.BackColor = Color.Green;
@@ -333,8 +335,8 @@ namespace Beetle
 
         private void ButtonClearError_Click(object sender, EventArgs e)
         {
-            BeetleControl.ClearErrors();
-            BeetleControl.NormalTrajSpeed();
+            beetle1.beetleControl.ClearErrors();
+            beetle1.beetleControl.NormalTrajSpeed();
             richTextBoxErrorMsg.Text += "Errors are Cleared\n";
         }
 
@@ -346,7 +348,7 @@ namespace Beetle
                 return;
             }
 
-            runThread = new Thread(BeetleControl.Calibration);
+            runThread = new Thread(beetle1.beetleControl.Calibration);
             runThread.Start();
             richTextBoxErrorMsg.Text += "Calibrating\n";
         }
@@ -354,17 +356,17 @@ namespace Beetle
         private void IL_Click(object sender, EventArgs e)
         {
             PowerMeter.Read();
-            labelILValue.Text = Parameters.loss.ToString();
+            labelILValue.Text = PowerMeter.loss.ToString();
         }
 
         private void ControlBoxDetection_Click(object sender, EventArgs e)
         {
-            if (BeetleConnection.GetInstance().AssignPorts())
+            if (beetle1.Detect())
             {
-                Parameters.SaveCOMPorts();
+                beetle1.parameters.SaveCOMPorts();
                 richTextBoxErrorMsg.Text += "COM Ports Saved\n";
             }
-            if (BeetleControl.Connection() && PiezoControl.GetInstance().Connection())
+            if (beetle1.Connection())
             {
                 buttonCalibration.Enabled = true;
                 buttonClearError.Enabled = true;
@@ -386,9 +388,9 @@ namespace Beetle
 
         private void buttonReference_Click(object sender, EventArgs e)
         {
-            Parameters.lossReference = PowerMeter.Read("dBm");
+            PowerMeter.lossReference = PowerMeter.Read("dBm");
             richTextBoxErrorMsg.Text += "Reference Set\n";
-            Parameters.SaveReference();
+            beetle1.parameters.SaveReference();
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -400,7 +402,7 @@ namespace Beetle
             }
 
             startTime = DateTime.Now;
-            runThread = new Thread(BeetleControl.GotoClose);
+            runThread = new Thread(beetle1.beetleControl.GotoClose);
             runThread.Start();
             richTextBoxErrorMsg.Text += "Closing\n";
         }
@@ -409,13 +411,13 @@ namespace Beetle
         {
             // Abort function can cause unexpected errors, so avoid using it
             //runThread.Abort();
-            Parameters.errorFlag = true; // set errorFlag to let thread finish
+            beetle1.parameters.errorFlag = true; // set errorFlag to let thread finish
             richTextBoxErrorMsg.Text += "Run Cancelling\n";
             while (runThread.IsAlive)
             {; }
-            BeetleControl.DisengageMotors();
-            BeetleControl.NormalTrajSpeed();
-            Parameters.errorFlag = false;
+            beetle1.beetleControl.DisengageMotors();
+            beetle1.beetleControl.NormalTrajSpeed();
+            beetle1.parameters.errorFlag = false;
             richTextBoxErrorMsg.Text += "Run Cancelled\n";
             Parameters.Log("Run Cancelled");
             Console.WriteLine("Run Cancelled");
@@ -442,12 +444,12 @@ namespace Beetle
 
         private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Parameters.productName = comboBoxProductSelect.Text;
+            beetle1.parameters.productName = comboBoxProductSelect.Text;
         }
 
         private void comboBoxUsePiezo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
+            beetle1.parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
         }
 
         private void buttonChartOnOff_Click(object sender, EventArgs e)
@@ -467,9 +469,9 @@ namespace Beetle
                 return;
             }
 
-            BeetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value, 
+            beetle1.beetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value, 
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
-            runThread = new Thread(BeetleControl.GotoTemp);
+            runThread = new Thread(beetle1.beetleControl.GotoTemp);
             runThread.Start();
         }
 
@@ -478,21 +480,21 @@ namespace Beetle
         {
             double[] p = { (double)numericUpDownPx.Value, (double)numericUpDownPy.Value, (double)numericUpDownPz.Value, 0 };
             //p.CopyTo(Parameters.pivotPoint, 0);
-            BeetleMathModel.GetInstance().SetPivotPoint = p;
-            Parameters.SavePivotPoint();
+            beetle1.mathModel.SetPivotPoint = p;
+            beetle1.parameters.SavePivotPoint();
             MessageBox.Show("Pivot Point Saved");
         }
 
         private void buttonSetInitial_Click(object sender, EventArgs e)
         {
-            Parameters.position.CopyTo(Parameters.initialPosition, 0);
-            Parameters.SaveInitialPosition();
+            beetle1.parameters.position.CopyTo(beetle1.parameters.initialPosition, 0);
+            beetle1.parameters.SaveInitialPosition();
             MessageBox.Show("Initial Position Saved");
         }
 
         private void buttonClearErrorBC_Click(object sender, EventArgs e)
         {
-            BeetleControl.ClearErrors();
+            beetle1.beetleControl.ClearErrors();
             Console.WriteLine("Errors Cleared");
             //BeetleControl.NormalTrajSpeed();
             //richTextBoxErrorMsg.Text += "Errors are Cleared\n";
@@ -500,7 +502,7 @@ namespace Beetle
 
         private void buttonPiezoReset_Click(object sender, EventArgs e)
         {
-            PiezoControl.GetInstance().Reset();
+            beetle1.piezoControl.Reset();
         }
 
         private void buttonPiezoSearch_Click(object sender, EventArgs e)
@@ -511,13 +513,13 @@ namespace Beetle
                 return;
             }
 
-            runThread = new Thread(BeetleAlignment.GetInstance().PiezoSearchRun);
+            runThread = new Thread(beetle1.ba.PiezoSearchRun);
             runThread.Start();
         }
 
         private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
+            beetle1.parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
         }
 
         private void richTextBoxErrorMsg_TextChanged(object sender, EventArgs e)
@@ -530,9 +532,9 @@ namespace Beetle
 
         private void comboBoxPMChl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Parameters.channel = (byte)(comboBoxPMChl.SelectedIndex + 1);
+            PowerMeter.channel = (byte)(comboBoxPMChl.SelectedIndex + 1);
             PowerMeter.Open();
-            Parameters.SavePMChl();
+            beetle1.parameters.SavePMChl();
         }
     }
 }

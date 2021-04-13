@@ -9,12 +9,11 @@ namespace Beetle
     // The Arduino DAC Shield has 0 - 4.096V range. So we are using only portion of the full range.
     class PiezoControl
     {
-        private static PiezoControl instance;
-        public static PiezoControl GetInstance()
+        private Parameters parameters;
+
+        public PiezoControl(Parameters prmts)
         {
-            if (instance == null)
-                instance = new PiezoControl();
-            return instance;
+            parameters = prmts;
         }
 
         private SerialPort ardnPort;
@@ -23,7 +22,7 @@ namespace Beetle
         {
             try
             {
-                ardnPort = new SerialPort(Parameters.arduinoComPortName, 115200, Parity.None, 8, StopBits.One)
+                ardnPort = new SerialPort(parameters.arduinoComPortName, 115200, Parity.None, 8, StopBits.One)
                 {
                     ReadTimeout = 200,
                     WriteTimeout = 200
@@ -49,7 +48,7 @@ namespace Beetle
         // ch is 0-2 representing x, y, z
         // dacValue is the DAC value which is 0- 0xfff
         // total command has two byte, 0x#***, wherr the # position is ch (0-2) and * positions is the code
-        // will update Parameters.piezoPosition whenever this function is called
+        // will update parameters.piezoPosition whenever this function is called
         public void Send(byte ch, ushort dacValue)
         {
             if (dacValue > 0x0fff)
@@ -64,11 +63,11 @@ namespace Beetle
             catch (Exception e)
             {
                 MessageBox.Show(e.Message + "\nPiezo COM Port Failed");
-                Parameters.errorFlag = true;
-                Parameters.errors = "Piezo COM Port Failed";
+                parameters.errorFlag = true;
+                parameters.errors = "Piezo COM Port Failed";
                 return;
             }
-            Parameters.piezoPosition[ch] = dacValue;
+            parameters.piezoPosition[ch] = dacValue;
         }
 
         public void Reset()

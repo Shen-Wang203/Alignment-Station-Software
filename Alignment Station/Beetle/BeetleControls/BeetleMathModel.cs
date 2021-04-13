@@ -4,39 +4,37 @@ namespace Beetle
 {
     class BeetleMathModel
     {
-        private static BeetleMathModel instance;
-        public static BeetleMathModel GetInstance()
+        private Parameters parameters;
+        public BeetleMathModel(Parameters prmts)
         {
-            if (instance == null)
-                instance = new BeetleMathModel();
-            return instance;
+            parameters = prmts;
         }
 
         // Rotation first, relative to the pivot point; Translate second
         // Pivot point is based on center of the moving plate
         // Angle is in degree. Rx Pitch; Ry Roll; Rz Yaw
         // r is the moving plate hex radius, L is the arm length
-        private float R = 50f;
+        private static float R = 50f;
         //private double r = R / Math.Cos(Math.PI / 6);
-        private float L = 78.5f;
+        private static float L = 78.5f;
         // This is the height of the universal joint center point to the base + top moving part top surface to its joint surface, this is a fixture fixed parameter, find it from the 3D model. 
-        private float baseZ = 65.9221f + 8f;
+        private static float baseZ = 65.9221f + 8f;
         // Pivot point coordinates relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance.
         //Parameters.pivotPoint = { 0, 0, 0, 0 };
 
-        public float SetR
+        public static float SetR
         {
             //get { return R; }
             set { R = value; }
         }
 
-        public float SetL
+        public static float SetL
         {
             //get { return L; }
             set { L = value; }
         }
 
-        public float SetBaseZ
+        public static float SetBaseZ
         {
             //get { return baseZ; }
             set { baseZ = value + 8f; }
@@ -46,11 +44,11 @@ namespace Beetle
         public double[] SetPivotPoint
         {
             //get { return pivotPoint; }
-            set { value.CopyTo(Parameters.pivotPoint, 0); Parameters.pivotPoint[2] += 8; }
+            set { value.CopyTo(parameters.pivotPoint, 0); parameters.pivotPoint[2] += 8; }
         }
 
         //Matrix multiply C = A.B, A and B can be any dimension
-        private double[,] MxM(double[,] A, double[,] B)
+        private static double[,] MxM(double[,] A, double[,] B)
         {
             int row = A.GetLength(0);
             int column = B.GetLength(1);
@@ -71,7 +69,7 @@ namespace Beetle
         }
 
         //Matrix times Array C = A.B, B is [n,1] array
-        private double[] MxA(double[,] A, double[] B)
+        private static double[] MxA(double[,] A, double[] B)
         {
             int row = A.GetLength(0);
             int element = A.GetLength(1);
@@ -87,7 +85,7 @@ namespace Beetle
             return C;
         }
 
-        private double[,] MRz(double Rz)
+        private static double[,] MRz(double Rz)
         {
             double angle = (Math.PI / 180) * Rz;
             double[,] mrz = { { Math.Cos(angle), -Math.Sin(angle), 0, 0 },
@@ -97,7 +95,7 @@ namespace Beetle
             return mrz;
         }
 
-        private double[,] MRy(double Ry)
+        private static double[,] MRy(double Ry)
         {
             double angle = (Math.PI / 180) * Ry;
             double[,] mry = { { Math.Cos(angle),  0, Math.Sin(angle), 0 },
@@ -107,7 +105,7 @@ namespace Beetle
             return mry;
         }
 
-        private double[,] MRx(double Rx)
+        private static double[,] MRx(double Rx)
         {
             double angle = (Math.PI / 180) * Rx;
             double[,] mrx = { { 1,               0, 0,                0 },
@@ -117,7 +115,7 @@ namespace Beetle
             return mrx;
         }
 
-        private double[,] MT(double x, double y, double z)
+        private static double[,] MT(double x, double y, double z)
         {
             double[,] mt = {{ 1, 0, 0, x },
                             { 0, 1, 0, y },
@@ -137,22 +135,22 @@ namespace Beetle
             // Original coordinate's center is in the geometry center
             double[] a = { 0, r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                a[i] -= Parameters.pivotPoint[i];
+                a[i] -= parameters.pivotPoint[i];
             double[] b = { r * Math.Cos(Math.PI * 5 / 6), r * Math.Sin(Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                b[i] -= Parameters.pivotPoint[i];
+                b[i] -= parameters.pivotPoint[i];
             double[] c = { r * Math.Cos(-Math.PI * 5 / 6), r * Math.Sin(-Math.PI * 5 / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                c[i] -= Parameters.pivotPoint[i];
+                c[i] -= parameters.pivotPoint[i];
             double[] d = { 0, -r, 0, 1 };
             for (int i = 0; i < 4; i++)
-                d[i] -= Parameters.pivotPoint[i];
+                d[i] -= parameters.pivotPoint[i];
             double[] e = { r * Math.Cos(-Math.PI / 6), r * Math.Sin(-Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                e[i] -= Parameters.pivotPoint[i];
+                e[i] -= parameters.pivotPoint[i];
             double[] f = { r * Math.Cos(Math.PI / 6), r * Math.Sin(Math.PI / 6), 0, 1 };
             for (int i = 0; i < 4; i++)
-                f[i] -= Parameters.pivotPoint[i];
+                f[i] -= parameters.pivotPoint[i];
 
             // Coordinate transform based on pivot point
             double[] aa = MxA(MT(x, y, z), MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a))));
@@ -177,7 +175,7 @@ namespace Beetle
             double A, B, C;
             double T1x, T1y, T2x, T2y, T3x, T3y;
             // Find the position of T1
-            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + Parameters.pivotPoint[2];
+            double s = Mbc[0]; double t = Mbc[1]; double u = Mbc[2] + parameters.pivotPoint[2];
             double p = Vbc[0]; double q = Vbc[1]; double v = Vbc[2];
             if (p == 0)
             {
@@ -215,7 +213,7 @@ namespace Beetle
             }
 
             // Find the position of T2
-            s = Mde[0]; t = Mde[1]; u = Mde[2] + Parameters.pivotPoint[2];
+            s = Mde[0]; t = Mde[1]; u = Mde[2] + parameters.pivotPoint[2];
             p = Vde[0]; q = Vde[1]; v = Vde[2];
             if (p == 0)
             {
@@ -252,7 +250,7 @@ namespace Beetle
             }
 
             // Find the position of T3
-            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + Parameters.pivotPoint[2];
+            s = Mfa[0]; t = Mfa[1]; u = Mfa[2] + parameters.pivotPoint[2];
             p = Vfa[0]; q = Vfa[1]; v = Vfa[2];
             if (p == 0)
             {
@@ -288,19 +286,19 @@ namespace Beetle
             }
 
             // The T points location at original/center coordinate
-            T1x += Parameters.pivotPoint[0];
-            T1y += Parameters.pivotPoint[1];
-            T2x += Parameters.pivotPoint[0];
-            T2y += Parameters.pivotPoint[1];
-            T3x += Parameters.pivotPoint[0];
-            T3y += Parameters.pivotPoint[1];
+            T1x += parameters.pivotPoint[0];
+            T1y += parameters.pivotPoint[1];
+            T2x += parameters.pivotPoint[0];
+            T2y += parameters.pivotPoint[1];
+            T3x += parameters.pivotPoint[0];
+            T3y += parameters.pivotPoint[1];
             double[] T = { T1x, T1y, T2x, T2y, T3x, T3y };
 
             return T;
         }
 
         // Return the normal vector of the current platform face
-        public double[] NormalVector(double Rx, double Ry, double Rz)
+        public static double[] NormalVector(double Rx, double Ry, double Rz)
         {
             double[] a = {0, 0, 1, 1};
             return MxA(MRx(Rx), MxA(MRy(Ry), MxA(MRz(Rz), a)));

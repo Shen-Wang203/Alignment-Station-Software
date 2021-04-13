@@ -32,7 +32,7 @@ namespace Beetle
                     Stroke = Brushes.RosyBrown
                 },
             };
-            seriesXY[0].Values.Add(new ScatterPoint(x: Parameters.position[0]*1000, y: Parameters.position[1]*1000, weight: weightValue));
+            seriesXY[0].Values.Add(new ScatterPoint(x: beetle1.parameters.position[0]*1000, y: beetle1.parameters.position[1]*1000, weight: weightValue));
             cartesianChartXY.Series = seriesXY;
             cartesianChartXY.LegendLocation = LegendLocation.Top;
             cartesianChartXY.BackColor = System.Drawing.Color.Transparent;
@@ -91,7 +91,7 @@ namespace Beetle
                 }
             );
 
-            Parameters.position.CopyTo(oldPosition, 0);
+            beetle1.parameters.position.CopyTo(oldPosition, 0);
 
             seriesA = new SeriesCollection
             {
@@ -228,9 +228,9 @@ namespace Beetle
 
         private void ChartsDataUpdate()
         {
-            double x = Math.Round(Parameters.position[0], 4), y = Math.Round(Parameters.position[1], 4);
-            if (oldPosition[2] != Parameters.position[2] || oldPosition[3] != Parameters.position[3] || oldPosition[4] != Parameters.position[4] || 
-                oldPosition[5] != Parameters.position[5])
+            double x = Math.Round(beetle1.parameters.position[0], 4), y = Math.Round(beetle1.parameters.position[1], 4);
+            if (oldPosition[2] != beetle1.parameters.position[2] || oldPosition[3] != beetle1.parameters.position[3] || oldPosition[4] != beetle1.parameters.position[4] || 
+                oldPosition[5] != beetle1.parameters.position[5])
             {
                 if (seriesXY[0].Values.Count > 1)
                 {
@@ -246,9 +246,9 @@ namespace Beetle
             }
             else if (oldPosition[0] != x || oldPosition[1] != y)
             {
-                if (Parameters.loss > oldLoss)
+                if (PowerMeter.loss > oldLoss)
                     weightValue += 4;
-                else if (Parameters.loss < oldLoss)
+                else if (PowerMeter.loss < oldLoss)
                     weightValue -= 4;
 
                 // Adjust axial range
@@ -263,11 +263,11 @@ namespace Beetle
                     cartesianChartXY.AxisY[0].MaxValue = (int)(y * 1000) + 1;
 
                 seriesXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
-                oldLoss = Parameters.loss;
+                oldLoss = PowerMeter.loss;
             }
-            Parameters.position.CopyTo(oldPosition, 0);
+            beetle1.parameters.position.CopyTo(oldPosition, 0);
 
-            seriesZ[0].Values.Add(Math.Round(Parameters.position[2], 4));
+            seriesZ[0].Values.Add(Math.Round(beetle1.parameters.position[2], 4));
             if (seriesZ[0].Values.Count > 20)
                 seriesZ[0].Values.RemoveAt(0);
         }
@@ -276,10 +276,10 @@ namespace Beetle
         {
             if (comboBoxMotorSelectTop.SelectedIndex != 6)
             {
-                if (BeetleControl.onTargetFlag[comboBoxMotorSelectTop.SelectedIndex] == 1)
-                    BeetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectTop.SelectedIndex);
-                seriesA[0].Values.Add(BeetleControl.countsReal[comboBoxMotorSelectTop.SelectedIndex]);
-                seriesA[1].Values.Add(BeetleControl.countsTarget[comboBoxMotorSelectTop.SelectedIndex]);
+                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectTop.SelectedIndex] == 1)
+                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectTop.SelectedIndex);
+                seriesA[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectTop.SelectedIndex]);
+                seriesA[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectTop.SelectedIndex]);
                 if (seriesA[0].Values.Count > 30)
                     seriesA[0].Values.RemoveAt(0);
                 if (seriesA[1].Values.Count > 30)
@@ -288,10 +288,10 @@ namespace Beetle
 
             if (comboBoxMotorSelectMid.SelectedIndex != 6)
             {
-                if (BeetleControl.onTargetFlag[comboBoxMotorSelectMid.SelectedIndex] == 1)
-                    BeetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectMid.SelectedIndex);
-                seriesB[0].Values.Add(BeetleControl.countsReal[comboBoxMotorSelectMid.SelectedIndex]);
-                seriesB[1].Values.Add(BeetleControl.countsTarget[comboBoxMotorSelectMid.SelectedIndex]);
+                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectMid.SelectedIndex] == 1)
+                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectMid.SelectedIndex);
+                seriesB[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectMid.SelectedIndex]);
+                seriesB[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectMid.SelectedIndex]);
                 if (seriesB[0].Values.Count > 30)
                     seriesB[0].Values.RemoveAt(0);
                 if (seriesB[1].Values.Count > 30)
@@ -300,10 +300,10 @@ namespace Beetle
 
             if (comboBoxMotorSelectBot.SelectedIndex != 6)
             {
-                if (BeetleControl.onTargetFlag[comboBoxMotorSelectBot.SelectedIndex] == 1)
-                    BeetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectBot.SelectedIndex);
-                seriesC[0].Values.Add(BeetleControl.countsReal[comboBoxMotorSelectBot.SelectedIndex]);
-                seriesC[1].Values.Add(BeetleControl.countsTarget[comboBoxMotorSelectBot.SelectedIndex]);
+                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectBot.SelectedIndex] == 1)
+                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectBot.SelectedIndex);
+                seriesC[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectBot.SelectedIndex]);
+                seriesC[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectBot.SelectedIndex]);
                 if (seriesC[0].Values.Count > 30)
                     seriesC[0].Values.RemoveAt(0);
                 if (seriesC[1].Values.Count > 30)

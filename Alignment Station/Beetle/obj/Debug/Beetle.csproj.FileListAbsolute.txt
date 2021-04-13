@@ -120,3 +120,4 @@ C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beet
 C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csproj.CopyComplete
 C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.exe
 C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\obj\Debug\Beetle.csprojAssemblyReference.cache

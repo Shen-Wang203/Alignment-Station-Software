@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -9,7 +8,7 @@ namespace Beetle
     class BeetleSearch
     {
         /*
-         * All the motor errors will errecte Parameters.errorFlag automaticly in BeetleControl, so monitor this flag constantly
+         * All the motor errors will errecte Parameters.errorFlag automaticly in beetleControl, so monitor this flag constantly
          * Parameters.errorflag will be used as program stop flag as well. Intance like meet criteria, unexpected high loss, failed
          *     to find better loss and motor errors will errect this flag.
          *     
@@ -20,39 +19,50 @@ namespace Beetle
          *     
          * Loss will be updated in Parameters.loss whenever PowerMeter.read() is called
          * 
-         * Real-time motor counts can be get from BeetleControl.countsReal
+         * Real-time motor counts can be get from beetleControl.countsReal
          * 
-         * Motors don't need to engage before moving, BeetleControl will engage motors that will need to move. But remember to disengage all motors after alignment and curing process.
+         * Motors don't need to engage before moving, beetleControl will engage motors that will need to move. But remember to disengage all motors after alignment and curing process.
          * 
          * Searching Step Size Adjust:
          *     AxisSteppingSearch step size is adjusted through amplification of min step size (xyStepSizeAmp * stepSearchMinStepSize), so change xyStepSizeAmp can change the step size
          *     AxisInterpolationSearch step size is automatically adjusted based on loss, can change xyStepSizeAmp to change step size as needed (xyStepSizeAmp * theStepBasedOnLoss)
          *     ZSteppingSearch step size is automatically adjusted based on loss, can change zStepSizeAmp to change step size as needed () (zStepSizeAmp * theStepBasedOnLoss)
          */ 
-        private static int xDirectionTrend = 1;
-        private static int yDirectionTrend = 1;
-        private static int zDirectionTrend = 1;
-        private static readonly double stepSearchMinStepSize = 0.0001; // in mm, default is 0.1um 
+        private int xDirectionTrend = 1;
+        private int yDirectionTrend = 1;
+        private int zDirectionTrend = 1;
+        private readonly double stepSearchMinStepSize = 0.0001; // in mm, default is 0.1um 
 
-        protected static sbyte lossFailToImprove = 0;
-        protected static bool secondTry = false;
+        protected sbyte lossFailToImprove = 0;
+        protected bool secondTry = false;
         protected static sbyte productCondition = 0;
-        protected static List<double> loss = new List<double>();
-        protected static List<double> pos = new List<double>();
-        protected static double lossCriteria = Parameters.lossCriteria;
-        protected static bool xyStepCountsLimit = false;
-        protected static bool xyStepGoBackToLast = true;
-        protected static double scanSearchRadius = 0.15; // in mm, default is 150um
-        protected static float zStepSizeAmp = 1.0f;
-        protected static float xyStepSizeAmp = 1.0f; // need to larger than 1
-        protected static double limitZ = 145;
-        protected static string zMode = "normal";
-        //protected static double lossCurrentMax = Parameters.lossCurrentMax;
-        protected static double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0 };
-        protected static bool doubleCheckFlag = false;
-        protected static bool stopInBetweenFlag = false;
+        protected List<double> loss = new List<double>();
+        protected List<double> pos = new List<double>();
+        protected double lossCriteria;
+        protected bool xyStepCountsLimit = false;
+        protected bool xyStepGoBackToLast = true;
+        protected double scanSearchRadius = 0.15; // in mm, default is 150um
+        protected float zStepSizeAmp = 1.0f;
+        protected float xyStepSizeAmp = 1.0f; // need to larger than 1
+        protected double limitZ = 145;
+        protected string zMode = "normal";
+        protected double[] posCurrentMax = new double[6] { 0, 0, 138, 0, 0, 0 };
+        protected bool doubleCheckFlag = false;
+        protected bool stopInBetweenFlag = false;
+
+        protected Parameters parameters;
+        protected BeetleControl beetleControl;
+        protected PiezoControl piezoControl;
+
+        public BeetleSearch(Parameters prmts, BeetleControl bc, PiezoControl pc)
+        {
+            parameters = prmts;
+            beetleControl = bc;
+            lossCriteria = parameters.lossCriteria;
+            piezoControl = pc;
+        }
         
-        protected static void ProductSelect()
+        protected void ProductSelect()
         {
             /* Add more if product extended
             *  productCondition has four types:
@@ -62,19 +72,19 @@ namespace Beetle
             *       = 4: MM + Small Ferrule Focal Length (< 0.1mm)
             *  all different products should be classified as one of those four types
             */
-            if (Parameters.productName == "VOA")
+            if (parameters.productName == "VOA")
                 productCondition = 2;
-            else if (Parameters.productName == "SM 1xN")
+            else if (parameters.productName == "SM 1xN")
                 productCondition = 1;
-            else if (Parameters.productName == "MM 1xN")
+            else if (parameters.productName == "MM 1xN")
                 productCondition = 3;
-            else if (Parameters.productName == "UWDM")
+            else if (parameters.productName == "UWDM")
                 productCondition = 2;
             else
             {
                 Console.WriteLine("Unsupported product");
                 Parameters.Log("Unsupported product");
-                Parameters.errorFlag = true;
+                parameters.errorFlag = true;
             }
         }
 
@@ -84,42 +94,42 @@ namespace Beetle
         {
             Console.WriteLine("Square Search Started");
             Parameters.Log("Square Search Started");
-            double pX0 = Parameters.position[0], pY0 = Parameters.position[1];
-            int countX0 = BeetleControl.countsReal[0], countY0 = BeetleControl.countsReal[1];
+            double pX0 = parameters.position[0], pY0 = parameters.position[1];
+            int countX0 = beetleControl.countsReal[0], countY0 = beetleControl.countsReal[1];
             double squareRadius = scanSearchRadius - 0.1;
             double[] px = new double[5] { pX0 + squareRadius, pX0, pX0 - squareRadius, pX0, pX0 + squareRadius };
             double[] py = new double[5] { pY0, pY0 + squareRadius, pY0, pY0 - squareRadius, pY0 };
             double loss0 = PowerMeter.Read();
 
-            BeetleControl.XMoveTo(px[0], doubleCheck: false, stopInBetween: false);
+            beetleControl.XMoveTo(px[0], doubleCheck: false, stopInBetween: false);
 
             for (int i = 1; i < 5; i ++)
             {
-                BeetleControl.XMoveTo(px[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
-                BeetleControl.YMoveTo(py[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
-                while (Math.Abs(Parameters.position[0] - px[i]) > 4 * BeetleControl.encoderResolution && !Parameters.errorFlag)
+                beetleControl.XMoveTo(px[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
+                beetleControl.YMoveTo(py[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false);
+                while (Math.Abs(parameters.position[0] - px[i]) > 4 * beetleControl.encoderResolution && !parameters.errorFlag)
                 {
-                    BeetleControl.RealCountsFetch(0); // 0 is T1x, 1 is T1y
-                    Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
+                    beetleControl.RealCountsFetch(0); // 0 is T1x, 1 is T1y
+                    parameters.position[0] = pX0 + (beetleControl.countsReal[0] - countX0) * beetleControl.encoderResolution;
                     if (PowerMeter.Read() > loss0 + 10.0)
                     {
-                        BeetleControl.DisengageMotors();
+                        beetleControl.DisengageMotors();
                         // Update counts and position before exiting
-                        BeetleControl.RealCountsFetch(6);
-                        Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
-                        Parameters.position[1] = pY0 + (BeetleControl.countsReal[1] - countY0) * BeetleControl.encoderResolution;
+                        beetleControl.RealCountsFetch(6);
+                        parameters.position[0] = pX0 + (beetleControl.countsReal[0] - countX0) * beetleControl.encoderResolution;
+                        parameters.position[1] = pY0 + (beetleControl.countsReal[1] - countY0) * beetleControl.encoderResolution;
                         return true;
                     }
                 }
 
-                if (Parameters.errorFlag)
+                if (parameters.errorFlag)
                     return false;
 
                 Thread.Sleep(100);
                 // Update counts and position for next movement
-                BeetleControl.RealCountsFetch(6);
-                Parameters.position[0] = pX0 + (BeetleControl.countsReal[0] - countX0) * BeetleControl.encoderResolution;
-                Parameters.position[1] = pY0 + (BeetleControl.countsReal[1] - countY0) * BeetleControl.encoderResolution;
+                beetleControl.RealCountsFetch(6);
+                parameters.position[0] = pX0 + (beetleControl.countsReal[0] - countX0) * beetleControl.encoderResolution;
+                parameters.position[1] = pY0 + (beetleControl.countsReal[1] - countY0) * beetleControl.encoderResolution;
             }
             return false;
         }
@@ -150,25 +160,25 @@ namespace Beetle
             
             if (axis == 0)
             {
-                p1 = Parameters.position[axis] + scanSearchRadius * xDirectionTrend;
-                p2 = Parameters.position[axis] - scanSearchRadius * xDirectionTrend;
+                p1 = parameters.position[axis] + scanSearchRadius * xDirectionTrend;
+                p2 = parameters.position[axis] - scanSearchRadius * xDirectionTrend;
             }
             else
             {
-                p1 = Parameters.position[axis] + scanSearchRadius * yDirectionTrend;
-                p2 = Parameters.position[axis] - scanSearchRadius * yDirectionTrend;
+                p1 = parameters.position[axis] + scanSearchRadius * yDirectionTrend;
+                p2 = parameters.position[axis] - scanSearchRadius * yDirectionTrend;
             }
 
             double[] p = new double[2] { p1, p2 };
-            p0 = Parameters.position[axis];
-            count0 = BeetleControl.countsReal[axis];
+            p0 = parameters.position[axis];
+            count0 = beetleControl.countsReal[axis];
 
             for (int i = 0; i < 2; i ++)
             {
                 if (axis == 0)
-                    BeetleControl.XMoveTo(p[i], mode: 't', checkOnTarget: false);
+                    beetleControl.XMoveTo(p[i], mode: 't', checkOnTarget: false);
                 else
-                    BeetleControl.YMoveTo(p[i], mode: 't', checkOnTarget: false);
+                    beetleControl.YMoveTo(p[i], mode: 't', checkOnTarget: false);
                 
                 // Active Monitor Loss and Position
                 trend = 0;
@@ -176,13 +186,13 @@ namespace Beetle
                 loss.Clear();
                 pos.Clear();
                 loss0 = PowerMeter.Read();
-                while (Math.Abs(Parameters.position[axis] - p[i]) > BeetleControl.tolerance * BeetleControl.encoderResolution && !Parameters.errorFlag)
+                while (Math.Abs(parameters.position[axis] - p[i]) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
                 {
-                    BeetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
-                    Parameters.position[axis] = p0 + (BeetleControl.countsReal[axis] - count0) * BeetleControl.encoderResolution;
-                    Console.WriteLine($"Pos: {Math.Round(Parameters.position[axis], 4)}");
-                    Parameters.Log($"Pos: {Math.Round(Parameters.position[axis], 4)}");
-                    pos.Add(Parameters.position[axis]);
+                    beetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
+                    parameters.position[axis] = p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution;
+                    Console.WriteLine($"Pos: {Math.Round(parameters.position[axis], 4)}");
+                    Parameters.Log($"Pos: {Math.Round(parameters.position[axis], 4)}");
+                    pos.Add(parameters.position[axis]);
                     loss.Add(PowerMeter.Read());
 
                     if ((loss[loss.Count - 1] - loss0) <= -LossBound(loss0))
@@ -204,9 +214,9 @@ namespace Beetle
                     if (unchange > 100)
                         break;
                 }
-                BeetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
+                beetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
 
-                if (Parameters.errorFlag)
+                if (parameters.errorFlag)
                     return false;
 
                 // if has max, go to the max position
@@ -216,12 +226,12 @@ namespace Beetle
                     Parameters.Log("Has Max");
                     if (axis == 0)
                     {
-                        BeetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         xDirectionTrend *= (-2 * i + 1);
                     }
                     else
                     {
-                        BeetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         yDirectionTrend *= (-2 * i + 1);
                     }
                     Thread.Sleep(150); // delay 150ms
@@ -235,9 +245,9 @@ namespace Beetle
                     Parameters.Log("Return to Original");
                     // return to original position first
                     if (axis == 0)
-                        BeetleControl.XMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.XMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
                     else
-                        BeetleControl.YMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.YMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
                 }
             }
             // if both direction failed to find max, return false and return to original pos
@@ -263,14 +273,14 @@ namespace Beetle
             }
             loss.Clear();
             pos.Clear();
-            double loss0, p = Parameters.position[axis], bound, diff;
+            double loss0, p = parameters.position[axis], bound, diff;
             sbyte trend = 1, sameCount = 0, totalStep = 0;
             loss.Add(PowerMeter.Read());
-            pos.Add(Parameters.position[axis]);
+            pos.Add(parameters.position[axis]);
             loss0 = loss[loss.Count - 1];
             if (LossMeetCriteria())
                 return true;
-            while (!Parameters.errorFlag)
+            while (!parameters.errorFlag)
             {
                 totalStep += 1;
                 if (xyStepCountsLimit && totalStep >= 4)
@@ -282,18 +292,18 @@ namespace Beetle
 
                 if (axis == 0)
                 {
-                    p = Parameters.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend;
-                    BeetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    p = parameters.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend;
+                    beetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 }
                 else
                 {
-                    p = Parameters.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend;
-                    BeetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    p = parameters.position[axis] + stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend;
+                    beetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 }
                 // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
-                pos.Add(Parameters.position[axis]);
+                pos.Add(parameters.position[axis]);
                 if (LossMeetCriteria())
                     return true;
 
@@ -306,9 +316,9 @@ namespace Beetle
                     if (!xyStepGoBackToLast && totalStep >= 2)
                         return true;
                     if (axis == 0)
-                        p = Parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend;
+                        p = parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend;
                     else
-                        p = Parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend;
+                        p = parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend;
                     trend -= 1;
                     if (trend != 0)
                     {
@@ -341,9 +351,9 @@ namespace Beetle
                         if (!xyStepGoBackToLast)
                             return true;
                         if (axis == 0)
-                            p = Parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend * 2;
+                            p = parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * xDirectionTrend * 2;
                         else
-                            p = Parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend * 2;
+                            p = parameters.position[axis] - stepSearchMinStepSize * xyStepSizeAmp * yDirectionTrend * 2;
                         Console.WriteLine("Exit due to same loss");
                         Parameters.Log("Exit due to same loss");
                         break;
@@ -351,17 +361,17 @@ namespace Beetle
                 }
             }
 
-            if (Parameters.errorFlag)
+            if (parameters.errorFlag)
                 return false;
 
             if (axis == 0)
-                BeetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                beetleControl.XMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
             else
-                BeetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                beetleControl.YMoveTo(p, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
             // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
             Thread.Sleep(150); // delay 150ms
             loss.Add(PowerMeter.Read());
-            pos.Add(Parameters.position[axis]);
+            pos.Add(parameters.position[axis]);
             StatusCheck(loss.Max());
             // if unchanged, return false
             if (loss.Max() - loss.Min() < 0.002)
@@ -393,7 +403,7 @@ namespace Beetle
             pos.Clear();
             List<double> pList;
             List<double> grid = new List<double>();
-            double step, p0 = Parameters.position[axis], pFinal;
+            double step, p0 = parameters.position[axis], pFinal;
             sbyte i = 1;
             loss.Add(PowerMeter.Read());
             pos.Add(p0);
@@ -407,17 +417,17 @@ namespace Beetle
             else
                 pList = new List<double> { p0, p0 + 2 * step, p0 - step, p0 + step, p0 - 2 * step };
             
-            while (i < 6 && !Parameters.errorFlag)
+            while (i < 6 && !parameters.errorFlag)
             {
                 if (axis == 0)
-                    BeetleControl.XMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    beetleControl.XMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 else
-                    BeetleControl.YMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
-                Console.WriteLine($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
-                Parameters.Log($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
+                    beetleControl.YMoveTo(pList[i], ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                Console.WriteLine($"X: {Math.Round(parameters.position[0], 4)}, Y: {Math.Round(parameters.position[1], 4)}");
+                Parameters.Log($"X: {Math.Round(parameters.position[0], 4)}, Y: {Math.Round(parameters.position[1], 4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
-                pos.Add(Parameters.position[axis]);
+                pos.Add(parameters.position[axis]);
                 if (LossMeetCriteria())
                 {
                     // larger than start position, then plus steps first, dir_trend is 1
@@ -463,7 +473,7 @@ namespace Beetle
                 }
             }
 
-            if (Parameters.errorFlag)
+            if (parameters.errorFlag)
                 return false;
 
             if ((loss.Max() - loss.Min()) < 0.002)
@@ -471,29 +481,29 @@ namespace Beetle
                 Console.WriteLine("Unchange, go back to original");
                 Parameters.Log("Unchange, go back to original");
                 if (axis == 0)
-                    BeetleControl.XMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    beetleControl.XMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 else
-                    BeetleControl.YMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
-                Console.WriteLine($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
-                Parameters.Log($"X: {Math.Round(Parameters.position[0], 4)}, Y: {Math.Round(Parameters.position[1], 4)}");
+                    beetleControl.YMoveTo(p0, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                Console.WriteLine($"X: {Math.Round(parameters.position[0], 4)}, Y: {Math.Round(parameters.position[1], 4)}");
+                Parameters.Log($"X: {Math.Round(parameters.position[0], 4)}, Y: {Math.Round(parameters.position[1], 4)}");
                 return false;
             }
 
-            for (double g = pos.Min(); g <= pos.Max(); g += BeetleControl.encoderResolution)
+            for (double g = pos.Min(); g <= pos.Max(); g += beetleControl.encoderResolution)
                 grid.Add(g);
             double[] s = BarycentericInterpolation(pos, loss, grid);
             pFinal = grid[Array.IndexOf(s, s.Max())];
-            if (Math.Abs(pFinal - pos[pos.Count - 1]) > BeetleControl.encoderResolution)
+            if (Math.Abs(pFinal - pos[pos.Count - 1]) > beetleControl.encoderResolution)
             {
                 if (axis == 0)
-                    BeetleControl.XMoveTo(pFinal, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    beetleControl.XMoveTo(pFinal, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 else
-                    BeetleControl.YMoveTo(pFinal, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
-                Console.WriteLine($"End X: {Math.Round(Parameters.position[0], 4)}, End Y: {Math.Round(Parameters.position[1],4)}");
-                Parameters.Log($"End X: {Math.Round(Parameters.position[0], 4)}, End Y: {Math.Round(Parameters.position[1], 4)}");
+                    beetleControl.YMoveTo(pFinal, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                Console.WriteLine($"End X: {Math.Round(parameters.position[0], 4)}, End Y: {Math.Round(parameters.position[1],4)}");
+                Parameters.Log($"End X: {Math.Round(parameters.position[0], 4)}, End Y: {Math.Round(parameters.position[1], 4)}");
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
-                pos.Add(Parameters.position[axis]);
+                pos.Add(parameters.position[axis]);
             }   
 
             if (pFinal > p0)
@@ -523,7 +533,7 @@ namespace Beetle
         {
             Console.WriteLine("Z Stepping Started");
             Parameters.Log("Z Stepping Started");
-            double z = Parameters.position[2], loss0, step, bound, diff;
+            double z = parameters.position[2], loss0, step, bound, diff;
             loss.Clear();
             pos.Clear();
             sbyte successNum = 0;
@@ -540,23 +550,23 @@ namespace Beetle
             else if (step < 0.0015)
                 step = 0.0015;
 
-            while (!Parameters.errorFlag)
+            while (!parameters.errorFlag)
             {
                 z += step;
                 if (z > limitZ)
                 {
                     if (secondTry)
                     {
-                        Parameters.errorFlag = true;
+                        parameters.errorFlag = true;
                         Console.WriteLine("Reach Limit Second Try Failed");
                         Parameters.Log("Reach Limit Second Try Failed");
-                        Parameters.errors = "Reach Z Limit, Move Closer\n";
+                        parameters.errors = "Reach Z Limit, Move Closer\n";
                         return false;
                     }
                     secondTry = true;
                     lossFailToImprove = 0;
                     z -= (step + 0.07);
-                    BeetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                    beetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                     Console.WriteLine("Reach Limit, Go Back 0.07 for second try");
                     Console.WriteLine($"z: {Math.Round(z, 5)}");
                     Parameters.Log("Reach Limit, Go Back 0.07 for second try");
@@ -564,10 +574,10 @@ namespace Beetle
                     break;
                 }
 
-                BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
-                pos.Add(Parameters.position[2]);
+                pos.Add(parameters.position[2]);
                 Console.WriteLine($"z: {Math.Round(z, 5)}");
                 Parameters.Log($"z: {Math.Round(z, 5)}");
                 if (LossMeetCriteria())
@@ -608,10 +618,10 @@ namespace Beetle
                     if (successNum != 0)
                     {
                         // go back to the previous points
-                        BeetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                        beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
                         Thread.Sleep(150); // delay 150ms
                         loss.Add(PowerMeter.Read());
-                        pos.Add(Parameters.position[2]);
+                        pos.Add(parameters.position[2]);
                         Console.WriteLine($"Z position: {Math.Round(z, 5)}");
                         Parameters.Log($"Z position: {Math.Round(z, 5)}");
                         break;
@@ -637,10 +647,10 @@ namespace Beetle
             Console.WriteLine($"Z ends at {Math.Round(z, 5)}");
             Parameters.Log($"Z ends at {Math.Round(z, 5)}");
             // set current pos as max loss position temporarily in order to update the max loss position in check_abnormal_loss function
-            Parameters.position[2] = pos[loss.IndexOf(loss.Max())];
+            parameters.position[2] = pos[loss.IndexOf(loss.Max())];
             StatusCheck(loss.Max());
             // change current_pos to the correct one
-            Parameters.position[2] = z;
+            parameters.position[2] = z;
 
             return true;
         }
@@ -715,33 +725,33 @@ namespace Beetle
         // In Python code its called check_abnormal_loss
         protected virtual void StatusCheck(double loss0)
         {
-            if (loss0 > (Parameters.lossCurrentMax + 0.01))
+            if (loss0 > (parameters.lossCurrentMax + 0.01))
             {
-                Parameters.lossCurrentMax = loss0;
-                Parameters.position.CopyTo(posCurrentMax, 0);
+                parameters.lossCurrentMax = loss0;
+                parameters.position.CopyTo(posCurrentMax, 0);
                 lossFailToImprove = 0;
             }
             else
             {
-                if ((loss0 < (4 * Parameters.lossCurrentMax) && loss0 < -10) || loss0 < -45)
+                if ((loss0 < (4 * parameters.lossCurrentMax) && loss0 < -10) || loss0 < -45)
                 {
-                    Parameters.errors = "Unexpected High Loss";
+                    parameters.errors = "Unexpected High Loss";
                     Console.WriteLine("Unexpected High Loss");
                     Parameters.Log("Unexpected High Loss");
-                    BeetleControl.NormalTrajSpeed();
-                    BeetleControl.GotoReset();
-                    Parameters.errorFlag = true;
+                    beetleControl.NormalTrajSpeed();
+                    beetleControl.GotoReset();
+                    parameters.errorFlag = true;
                 }
 
                 lossFailToImprove += 1;
                 if (lossFailToImprove == 6)
                 {
                     lossFailToImprove = 0;
-                    Parameters.errors = "Fail to find better Loss, Go to Best Position";
+                    parameters.errors = "Fail to find better Loss, Go to Best Position";
                     Console.WriteLine("Fail to find better Loss, Go to Best Position");
                     Parameters.Log("Fail to find better Loss, Go to Best Position");
-                    Parameters.errorFlag = true;
-                    BeetleControl.GotoPosition(posCurrentMax);
+                    parameters.errorFlag = true;
+                    beetleControl.GotoPosition(posCurrentMax);
                 }
             }
         }
@@ -749,9 +759,9 @@ namespace Beetle
         // In Python code is method is called loss_target_check
         protected virtual bool LossMeetCriteria()
         {
-            if (Parameters.loss > lossCriteria)
+            if (PowerMeter.loss > lossCriteria)
             {
-                Parameters.errorFlag = true;
+                parameters.errorFlag = true;
                 return true;
             }
             return false;
@@ -845,15 +855,15 @@ namespace Beetle
             loss.Clear();
             pos.Clear();
             double loss0, bound, diff;
-            ushort p = Parameters.piezoPosition[axis];
+            ushort p = parameters.piezoPosition[axis];
             sbyte trend = 1, sameCount = 0;
             bool directionChanged = false;
             loss.Add(PowerMeter.Read());
-            pos.Add(Parameters.piezoPosition[axis]);
+            pos.Add(parameters.piezoPosition[axis]);
             loss0 = loss[loss.Count - 1];
             if (!targetLess && LossMeetCriteria())
                 return true;
-            while (!Parameters.errorFlag)
+            while (!parameters.errorFlag)
             {
                 if (p > 0xfff)
                 {
@@ -864,17 +874,17 @@ namespace Beetle
                 }
 
                 if (axis == 0)
-                    p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * xDirectionTrend);
+                    p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * xDirectionTrend);
                 else if (axis == 1)
-                    p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * yDirectionTrend);
+                    p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * yDirectionTrend);
                 else
                     // z needs larger (3x) step size
-                    p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * zAmp * zDirectionTrend);
-                PiezoControl.GetInstance().Send(axis, p);
+                    p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * zAmp * zDirectionTrend);
+                piezoControl.Send(axis, p);
 
                 Thread.Sleep(40); // delay 40ms
                 loss.Add(PowerMeter.Read());
-                pos.Add(Parameters.piezoPosition[axis]);
+                pos.Add(parameters.piezoPosition[axis]);
                 if (!targetLess && LossMeetCriteria())
                     return true;
 
@@ -886,11 +896,11 @@ namespace Beetle
                 if (diff <= -bound)
                 {
                     if (axis == 0)
-                        p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * xDirectionTrend);
+                        p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * xDirectionTrend);
                     else if (axis == 1)
-                        p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * yDirectionTrend);
+                        p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * yDirectionTrend);
                     else
-                        p = (ushort)(Parameters.piezoPosition[axis] + Parameters.piezoStepSize * zAmp * zDirectionTrend);
+                        p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * zAmp * zDirectionTrend);
                     trend -= 1;
                     if (trend != 0 || directionChanged)
                     {
@@ -924,11 +934,11 @@ namespace Beetle
                     if (!targetLess && sameCount >= 12)
                     {
                         if (axis == 0)
-                            p = (ushort)(Parameters.piezoPosition[axis] - Parameters.piezoStepSize * xDirectionTrend * 6);
+                            p = (ushort)(parameters.piezoPosition[axis] - parameters.piezoStepSize * xDirectionTrend * 6);
                         else if (axis == 1)
-                            p = (ushort)(Parameters.piezoPosition[axis] - Parameters.piezoStepSize * yDirectionTrend * 6);
+                            p = (ushort)(parameters.piezoPosition[axis] - parameters.piezoStepSize * yDirectionTrend * 6);
                         else
-                            p = (ushort)(Parameters.piezoPosition[axis] - Parameters.piezoStepSize * zAmp * zDirectionTrend * 6);
+                            p = (ushort)(parameters.piezoPosition[axis] - parameters.piezoStepSize * zAmp * zDirectionTrend * 6);
                         Console.WriteLine("Exit Due to Same Loss");
                         Parameters.Log("Exit Due to Same Loss");
                         break;
@@ -936,14 +946,14 @@ namespace Beetle
                 }
             }
 
-            if (Parameters.errorFlag)
+            if (parameters.errorFlag)
                 return false;
 
-            PiezoControl.GetInstance().Send(axis, p);
+            piezoControl.Send(axis, p);
             // It's important to delay some time after disengaging motor to let the motor fully stopped, then fetch the loss.
             Thread.Sleep(40); // delay 40ms
             loss.Add(PowerMeter.Read());
-            pos.Add(Parameters.piezoPosition[axis]);
+            pos.Add(parameters.piezoPosition[axis]);
             if (!targetLess)
                 StatusCheck(loss.Max());
             // if unchanged, return false
