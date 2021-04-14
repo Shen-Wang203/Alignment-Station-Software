@@ -38,7 +38,7 @@
     <Setting Name="PivotZ" Type="System.Double" Scope="User">
       <Value Profile="(Default)">42</Value>
     </Setting>
-    <Setting Name="BeetleFixtureNum" Type="System.SByte" Scope="User">
+    <Setting Name="BeetleFixtureNum" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="ArdnCOM" Type="System.String" Scope="User">

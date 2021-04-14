@@ -16,7 +16,7 @@ namespace Beetle
         private static MessageBasedSession mSession;
         private static string readcmd;
 
-        //private static readonly string[] testPowerLines = System.IO.File.ReadAllLines(@"C:\Users\swang\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\powerread.txt");
+        //private static readonly string[] testPowerLines = System.IO.File.ReadAllLines(@"C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Beetle\powerread.txt");
         //private static int testlinenum = 0;
         //private static Random rnd = new Random();
 
@@ -120,21 +120,20 @@ namespace Beetle
         //        loss = double.Parse(eachLine.Substring(10));
         //        testlinenum += 1;
         //    }
-        //    loss += Parameters.lossReference;
+        //    loss += lossReference;
         //    if (unit == "dBm")
         //        return loss;
-        //    loss -= Parameters.lossReference;
+        //    loss -= lossReference;
         //    loss = Math.Round(loss, 4);
         //    Console.WriteLine($"Loss: {loss}");
         //    Parameters.Log($"Loss: {loss}");
-        //    Parameters.loss = loss;
         //    Thread.Sleep(20);
         //    return loss;
         //}
 
         //public static double ReadNoPrint()
         //{
-        //    loss = rnd.NextDouble() * Parameters.loss * 0.002 + Parameters.loss;
+        //    loss = rnd.NextDouble() * loss * 0.002 + loss;
         //    loss = Math.Round(loss, 4);
         //    //Parameters.loss = loss;
         //    Thread.Sleep(20);

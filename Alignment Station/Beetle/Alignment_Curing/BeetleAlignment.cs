@@ -69,8 +69,6 @@ namespace Beetle
                 beetleControl.ZMoveTo(limitZ - parameters.productGap[parameters.productName]);
             }
 
-            beetleControl.SlowTrajSpeed();
-
             loss.Add(PowerMeter.Read());
             parameters.position.CopyTo(posCurrentMax, 0);
             while (!parameters.errorFlag)
@@ -81,7 +79,8 @@ namespace Beetle
                     break;
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-                ZSteppingSearch();
+                //ZSteppingSearch();
+                ZSearch();
             }
 
             beetleControl.NormalTrajSpeed();
@@ -240,6 +239,21 @@ namespace Beetle
                 }
             }
             return false;
+        }
+
+        private void ZSearch()
+        { 
+            if (searchMode == "scan")
+            {
+                if (!AxisScanSearch(axis: 2))
+                {
+                    Console.WriteLine("Z Scan Search Failed");
+                    Parameters.Log("Z Scan Search Failed");
+                    parameters.errorFlag = true;
+                }
+            }
+            else
+                ZSteppingSearch();
         }
 
         public void PiezoSearchRun()

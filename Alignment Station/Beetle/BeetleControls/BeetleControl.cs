@@ -21,6 +21,7 @@ namespace Beetle
         private sbyte xDirectionOld = 0;
         private sbyte yDirectionOld = 0;
         private sbyte zDirectionOld = 0;
+        private bool normalSpeedFlag = false;
         
         public sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move, 1 means on target, 0 means not yet
         public byte globalErrorCount = 0;
@@ -33,12 +34,17 @@ namespace Beetle
         public int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
         public int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
         public double[] tempP;
+        public int zTrajT1yCountRange = 0;
 
         public BeetleControl(Parameters prmts, BeetleMathModel mm)
         {
             parameters = prmts;
-            mathModel = mm; 
+            mathModel = mm;
+            FixtureInit();
+        }
 
+        public void FixtureInit()
+        { 
             int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
             double A1x, A1y, A2x, A2y, A3x, A3y;
             switch(parameters.beetleFixtureNumber)
@@ -251,41 +257,80 @@ namespace Beetle
 
         public void SlowTrajSpeed()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 1000";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 1000";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 600";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 1000";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 1000";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 600";
-            T123SendOnly(xstr1, ystr1);
-            T123SendOnly(xstr2, ystr2);
+            //string xstr1 = "w axis0.trap_traj.config.accel_limit 1000";
+            //string xstr2 = "w axis0.trap_traj.config.decel_limit 1000";
+            string xstr3 = "w axis0.trap_traj.config.vel_limit 400";
+            //string ystr1 = "w axis1.trap_traj.config.accel_limit 1000";
+            //string ystr2 = "w axis1.trap_traj.config.decel_limit 1000";
+            string ystr3 = "w axis1.trap_traj.config.vel_limit 400";
+            //T123SendOnly(xstr1, ystr1);
+            //T123SendOnly(xstr2, ystr2);
             T123SendOnly(xstr3, ystr3);
+            normalSpeedFlag = false;
         }
 
         public void SlowTrajSpeed2()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 80";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 80";
+            //string xstr1 = "w axis0.trap_traj.config.accel_limit 80";
+            //string xstr2 = "w axis0.trap_traj.config.decel_limit 80";
             string xstr3 = "w axis0.trap_traj.config.vel_limit 80";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 80";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 80";
+            //string ystr1 = "w axis1.trap_traj.config.accel_limit 80";
+            //string ystr2 = "w axis1.trap_traj.config.decel_limit 80";
             string ystr3 = "w axis1.trap_traj.config.vel_limit 80";
-            T123SendOnly(xstr1, ystr1);
-            T123SendOnly(xstr2, ystr2);
+            //T123SendOnly(xstr1, ystr1);
+            //T123SendOnly(xstr2, ystr2);
             T123SendOnly(xstr3, ystr3);
+            normalSpeedFlag = false;
         }
 
         public void NormalTrajSpeed()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 70000";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 70000";
+            string xstr1 = "w axis0.trap_traj.config.accel_limit 100000";
+            string xstr2 = "w axis0.trap_traj.config.decel_limit 100000";
             string xstr3 = "w axis0.trap_traj.config.vel_limit 100000";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 70000";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 70000";
+            string ystr1 = "w axis1.trap_traj.config.accel_limit 100000";
+            string ystr2 = "w axis1.trap_traj.config.decel_limit 100000";
             string ystr3 = "w axis1.trap_traj.config.vel_limit 100000";
             T123SendOnly(xstr1, ystr1);
             T123SendOnly(xstr2, ystr2);
             T123SendOnly(xstr3, ystr3);
+            normalSpeedFlag = true;
+        }
+
+        // axial: 0-5
+        public void SetTrajSpeed(byte axial, int vel)
+        {
+            string cmd = "";
+            if (axial == 0)
+            {
+                cmd = "w axis0.trap_traj.config.vel_limit " + vel.ToString();
+                T1SendOnly(cmd);
+            }
+            else if (axial == 1)
+            {
+                cmd = "w axis1.trap_traj.config.vel_limit " + vel.ToString();
+                T1SendOnly(cmd);
+            }
+            else if (axial == 2)
+            {
+                cmd = "w axis0.trap_traj.config.vel_limit " + vel.ToString();
+                T2SendOnly(cmd);
+            }
+            else if (axial == 3)
+            {
+                cmd = "w axis1.trap_traj.config.vel_limit " + vel.ToString();
+                T2SendOnly(cmd);
+            }
+            else if (axial == 4)
+            {
+                cmd = "w axis0.trap_traj.config.vel_limit " + vel.ToString();
+                T3SendOnly(cmd);
+            }
+            else if (axial == 5)
+            {
+                cmd = "w axis1.trap_traj.config.vel_limit " + vel.ToString();
+                T3SendOnly(cmd);
+            }
         }
 
         // position is the platform position
@@ -704,6 +749,17 @@ namespace Beetle
             string strpp = " 0 0";
             string cmd;
 
+            int[] delta = new int[6] { Math.Abs(counts[0] - countsReal[0]), Math.Abs(counts[1] - countsReal[1]), Math.Abs(counts[2] - countsReal[2]),
+                                        Math.Abs(counts[3] - countsReal[3]), Math.Abs(counts[4] - countsReal[4]), Math.Abs(counts[5] - countsReal[5])};
+            // Change each axial's speed so that all axial can stop at the same time
+            if (mode == 't')
+            {
+                SpeedCalForTraj(delta);
+                zTrajT1yCountRange = delta[1];
+            }
+            else if (!normalSpeedFlag)
+                NormalTrajSpeed();
+
             // Engage motors as needed, only engage motors that need to move
             // Engage motor and send counts to this motor has to have some time delay in between
             // otherwise there will have strange bugs to come from Odrive
@@ -717,7 +773,7 @@ namespace Beetle
 
             if (onTargetFlag[0] == 0)
             {
-                if ((Math.Abs(counts[0] - countsReal[0]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[0] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[0], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[0]);
@@ -726,7 +782,7 @@ namespace Beetle
 
             if (onTargetFlag[2] == 0)
             {
-                if ((Math.Abs(counts[2] - countsReal[2]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[2] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[2], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[2]);
@@ -735,7 +791,7 @@ namespace Beetle
 
             if (onTargetFlag[4] == 0)
             {
-                if ((Math.Abs(counts[4] - countsReal[4]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[4] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(xstrp, counts[4], strpp);
                 else
                     cmd = string.Concat(xstrt, counts[4]);
@@ -744,7 +800,7 @@ namespace Beetle
 
             if (onTargetFlag[1] == 0)
             {
-                if ((Math.Abs(counts[1] - countsReal[1]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[1] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[1], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[1]);
@@ -753,7 +809,7 @@ namespace Beetle
 
             if (onTargetFlag[3] == 0)
             {
-                if ((Math.Abs(counts[3] - countsReal[3]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[3] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[3], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[3]);
@@ -762,12 +818,25 @@ namespace Beetle
 
             if (onTargetFlag[5] == 0)
             {
-                if ((Math.Abs(counts[5] - countsReal[5]) < trajectoryThreshold) && mode == 'p')
+                if ((delta[5] < trajectoryThreshold) && mode == 'p')
                     cmd = string.Concat(ystrp, counts[5], strpp);
                 else
                     cmd = string.Concat(ystrt, counts[5]);
                 T3SendOnly(cmd);
             }
+        }
+
+        // Calculate the speed for each axial so that each axial can arrive target position at the same time
+        // input is the delta counts for each axial from 0-5
+        private void SpeedCalForTraj(int[] deltaCount)
+        {
+            int slowSpeed = 400;
+            int m = deltaCount.Max();
+            // Axial that needs to travel longest has 300 speed
+            // Other axial will scale based on their relative deltacounts
+            for (byte i = 0; i < 6; i ++)
+                SetTrajSpeed(i, slowSpeed * deltaCount[i] / m);
+            normalSpeedFlag = false;
         }
 
         // Fetch each axis's real counts. axis = 6 fetch all 6 axis

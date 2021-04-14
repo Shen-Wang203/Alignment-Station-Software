@@ -64,6 +64,7 @@ namespace Beetle
             comboBoxMotorSelectMid.SelectedIndex = 6;
             comboBoxMotorSelectBot.SelectedIndex = 6;
             comboBoxPMChl.SelectedIndex = 0;
+            comboBoxFixtureNum.SelectedIndex = beetle1.parameters.beetleFixtureNumber;
 
             // load inital positions on the GUI
             numericUpDownX.Value = (decimal)beetle1.parameters.initialPosition[0];
@@ -336,7 +337,6 @@ namespace Beetle
         private void ButtonClearError_Click(object sender, EventArgs e)
         {
             beetle1.beetleControl.ClearErrors();
-            beetle1.beetleControl.NormalTrajSpeed();
             richTextBoxErrorMsg.Text += "Errors are Cleared\n";
         }
 
@@ -347,6 +347,8 @@ namespace Beetle
                 MessageBox.Show("Another Process Runing");
                 return;
             }
+
+            startTime = DateTime.Now;
 
             runThread = new Thread(beetle1.beetleControl.Calibration);
             runThread.Start();
@@ -437,20 +439,15 @@ namespace Beetle
 
         private void Test_Click(object sender, EventArgs e)
         {
-            ////runThread = new Thread(BA.Test);
-            //runThread = new Thread(PiezoControl.TestRun);
-            //runThread.Start();
+            double[] pp = new double[6];
+            beetle1.parameters.position.CopyTo(pp, 0);
+            pp[2] += 4;
+            beetle1.beetleControl.GotoPosition(pp, mode: 't', checkOnTarget: false);
         }
 
-        private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            beetle1.parameters.productName = comboBoxProductSelect.Text;
-        }
+        private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e) => beetle1.parameters.productName = comboBoxProductSelect.Text;
 
-        private void comboBoxUsePiezo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            beetle1.parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
-        }
+        private void comboBoxUsePiezo_SelectedIndexChanged(object sender, EventArgs e) => beetle1.parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
 
         private void buttonChartOnOff_Click(object sender, EventArgs e)
         {
@@ -500,10 +497,7 @@ namespace Beetle
             //richTextBoxErrorMsg.Text += "Errors are Cleared\n";
         }
 
-        private void buttonPiezoReset_Click(object sender, EventArgs e)
-        {
-            beetle1.piezoControl.Reset();
-        }
+        private void buttonPiezoReset_Click(object sender, EventArgs e) => beetle1.piezoControl.Reset();
 
         private void buttonPiezoSearch_Click(object sender, EventArgs e)
         {
@@ -517,10 +511,7 @@ namespace Beetle
             runThread.Start();
         }
 
-        private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            beetle1.parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
-        }
+        private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)=> beetle1.parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
 
         private void richTextBoxErrorMsg_TextChanged(object sender, EventArgs e)
         {
@@ -528,6 +519,12 @@ namespace Beetle
             richTextBoxErrorMsg.SelectionStart = richTextBoxErrorMsg.Text.Length;
             // scroll it automatically
             richTextBoxErrorMsg.ScrollToCaret();
+        }
+
+        private void comboBoxFixtureNum_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            beetle1.parameters.beetleFixtureNumber = (byte)comboBoxFixtureNum.SelectedIndex;
+            beetle1.beetleControl.FixtureInit();
         }
 
         private void comboBoxPMChl_SelectedIndexChanged(object sender, EventArgs e)

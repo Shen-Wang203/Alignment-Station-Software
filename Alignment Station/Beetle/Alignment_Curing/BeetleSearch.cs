@@ -134,7 +134,7 @@ namespace Beetle
             return false;
         }
 
-        // for axis: x is 0, y is 1
+        // for axis: x is 0, y is 1, z is 2
         // radius in mm
         // starting from the current position and exit at the best position (if return true)
         // loss is updated at Parameters.loss and match current position (if return true)
@@ -146,10 +146,15 @@ namespace Beetle
                 Console.WriteLine("Scan Search X Started");
                 Parameters.Log("Scan Search X Started");
             }
-            else
+            else if (axis == 1)
             {
                 Console.WriteLine("Scan Search Y Started");
                 Parameters.Log("Scan Search Y Started");
+            }
+            else if (axis == 2)
+            {
+                Console.WriteLine("Scan Search Z Started");
+                Parameters.Log("Scan Search Z Started");
             }
             double p1, p2, p0;
             int count0;
@@ -157,16 +162,22 @@ namespace Beetle
             pos.Clear();
             double loss0;
             sbyte trend, unchange;
-            
+            double zScanSearchRadius = scanSearchRadius * 3;
+
             if (axis == 0)
             {
                 p1 = parameters.position[axis] + scanSearchRadius * xDirectionTrend;
                 p2 = parameters.position[axis] - scanSearchRadius * xDirectionTrend;
             }
-            else
+            else if (axis == 1)
             {
                 p1 = parameters.position[axis] + scanSearchRadius * yDirectionTrend;
                 p2 = parameters.position[axis] - scanSearchRadius * yDirectionTrend;
+            }
+            else
+            {
+                p1 = parameters.position[axis] + zScanSearchRadius; // z scan always go plus direction first
+                p2 = parameters.position[axis] - zScanSearchRadius;
             }
 
             double[] p = new double[2] { p1, p2 };
@@ -177,9 +188,11 @@ namespace Beetle
             {
                 if (axis == 0)
                     beetleControl.XMoveTo(p[i], mode: 't', checkOnTarget: false);
-                else
+                else if (axis == 1)
                     beetleControl.YMoveTo(p[i], mode: 't', checkOnTarget: false);
-                
+                else
+                    beetleControl.ZMoveTo(p[i], mode: 't', checkOnTarget: false);
+
                 // Active Monitor Loss and Position
                 trend = 0;
                 unchange = 0;
@@ -188,8 +201,17 @@ namespace Beetle
                 loss0 = PowerMeter.Read();
                 while (Math.Abs(parameters.position[axis] - p[i]) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
                 {
-                    beetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
-                    parameters.position[axis] = p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution;
+                    if (axis < 2)
+                    {
+                        beetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
+                        parameters.position[axis] = p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution;
+                    }
+                    else
+                    {
+                        beetleControl.RealCountsFetch(1); // z uses T1y axial to guess position
+                        // Z position is estimated through how much T1y has moved relative to its total range, and scale to Z total movement 
+                        parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[1] - count0) / beetleControl.zTrajT1yCountRange;
+                    }
                     Console.WriteLine($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     Parameters.Log($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     pos.Add(parameters.position[axis]);
@@ -214,7 +236,7 @@ namespace Beetle
                     if (unchange > 100)
                         break;
                 }
-                beetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo
+                beetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo with checkOnTarget to be false
 
                 if (parameters.errorFlag)
                     return false;
@@ -229,11 +251,13 @@ namespace Beetle
                         beetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         xDirectionTrend *= (-2 * i + 1);
                     }
-                    else
+                    else if (axis == 1)
                     {
                         beetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                         yDirectionTrend *= (-2 * i + 1);
                     }
+                    else
+                        beetleControl.ZMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
                     Thread.Sleep(150); // delay 150ms
                     StatusCheck(PowerMeter.Read());
                     return true;
@@ -246,8 +270,10 @@ namespace Beetle
                     // return to original position first
                     if (axis == 0)
                         beetleControl.XMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
-                    else
+                    else if (axis == 1)
                         beetleControl.YMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                    else
+                        beetleControl.ZMoveTo(p0, doubleCheck: false, stopInBetween: stopInBetweenFlag);
                 }
             }
             // if both direction failed to find max, return false and return to original pos

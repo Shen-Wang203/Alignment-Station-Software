@@ -12,7 +12,7 @@ namespace Beetle
         public string beetleT2ComPortName = "";
         public string beetleT3ComPortName = "";
         public string arduinoComPortName = ""; // for piezo control
-        public sbyte beetleFixtureNumber = 3;
+        public byte beetleFixtureNumber = 3;
         // Pivot point coordinates is relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance
         public double[] pivotPoint = { 0, 0, 42, 0 };
         public double[] position = { 0, 0, 140, 2.4, -1.0, 0 }; // Position in mm { x, y, z, Rx, Ry, Rz}
