@@ -32,7 +32,7 @@ namespace Beetle
                     Stroke = Brushes.RosyBrown
                 },
             };
-            seriesXY[0].Values.Add(new ScatterPoint(x: beetle1.parameters.position[0]*1000, y: beetle1.parameters.position[1]*1000, weight: weightValue));
+            seriesXY[0].Values.Add(new ScatterPoint(x: bt.parameters.position[0]*1000, y: bt.parameters.position[1]*1000, weight: weightValue));
             cartesianChartXY.Series = seriesXY;
             cartesianChartXY.LegendLocation = LegendLocation.Top;
             cartesianChartXY.BackColor = System.Drawing.Color.Transparent;
@@ -91,7 +91,7 @@ namespace Beetle
                 }
             );
 
-            beetle1.parameters.position.CopyTo(oldPosition, 0);
+            bt.parameters.position.CopyTo(oldPosition, 0);
 
             seriesA = new SeriesCollection
             {
@@ -228,9 +228,9 @@ namespace Beetle
 
         private void ChartsDataUpdate()
         {
-            double x = Math.Round(beetle1.parameters.position[0], 4), y = Math.Round(beetle1.parameters.position[1], 4);
-            if (oldPosition[2] != beetle1.parameters.position[2] || oldPosition[3] != beetle1.parameters.position[3] || oldPosition[4] != beetle1.parameters.position[4] || 
-                oldPosition[5] != beetle1.parameters.position[5])
+            double x = Math.Round(bt.parameters.position[0], 4), y = Math.Round(bt.parameters.position[1], 4);
+            if (oldPosition[2] != bt.parameters.position[2] || oldPosition[3] != bt.parameters.position[3] || oldPosition[4] != bt.parameters.position[4] || 
+                oldPosition[5] != bt.parameters.position[5])
             {
                 if (seriesXY[0].Values.Count > 1)
                 {
@@ -265,9 +265,9 @@ namespace Beetle
                 seriesXY[0].Values.Add(new ScatterPoint(x: x * 1000, y: y * 1000, weight: weightValue));
                 oldLoss = PowerMeter.loss;
             }
-            beetle1.parameters.position.CopyTo(oldPosition, 0);
+            bt.parameters.position.CopyTo(oldPosition, 0);
 
-            seriesZ[0].Values.Add(Math.Round(beetle1.parameters.position[2], 4));
+            seriesZ[0].Values.Add(Math.Round(bt.parameters.position[2], 4));
             if (seriesZ[0].Values.Count > 20)
                 seriesZ[0].Values.RemoveAt(0);
         }
@@ -276,10 +276,10 @@ namespace Beetle
         {
             if (comboBoxMotorSelectTop.SelectedIndex != 6)
             {
-                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectTop.SelectedIndex] == 1)
-                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectTop.SelectedIndex);
-                seriesA[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectTop.SelectedIndex]);
-                seriesA[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectTop.SelectedIndex]);
+                if (bt.beetleControl.onTargetFlag[comboBoxMotorSelectTop.SelectedIndex] == 1)
+                    bt.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectTop.SelectedIndex);
+                seriesA[0].Values.Add(bt.beetleControl.countsReal[comboBoxMotorSelectTop.SelectedIndex]);
+                seriesA[1].Values.Add(bt.beetleControl.countsTarget[comboBoxMotorSelectTop.SelectedIndex]);
                 if (seriesA[0].Values.Count > 30)
                     seriesA[0].Values.RemoveAt(0);
                 if (seriesA[1].Values.Count > 30)
@@ -288,10 +288,10 @@ namespace Beetle
 
             if (comboBoxMotorSelectMid.SelectedIndex != 6)
             {
-                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectMid.SelectedIndex] == 1)
-                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectMid.SelectedIndex);
-                seriesB[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectMid.SelectedIndex]);
-                seriesB[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectMid.SelectedIndex]);
+                if (bt.beetleControl.onTargetFlag[comboBoxMotorSelectMid.SelectedIndex] == 1)
+                    bt.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectMid.SelectedIndex);
+                seriesB[0].Values.Add(bt.beetleControl.countsReal[comboBoxMotorSelectMid.SelectedIndex]);
+                seriesB[1].Values.Add(bt.beetleControl.countsTarget[comboBoxMotorSelectMid.SelectedIndex]);
                 if (seriesB[0].Values.Count > 30)
                     seriesB[0].Values.RemoveAt(0);
                 if (seriesB[1].Values.Count > 30)
@@ -300,10 +300,10 @@ namespace Beetle
 
             if (comboBoxMotorSelectBot.SelectedIndex != 6)
             {
-                if (beetle1.beetleControl.onTargetFlag[comboBoxMotorSelectBot.SelectedIndex] == 1)
-                    beetle1.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectBot.SelectedIndex);
-                seriesC[0].Values.Add(beetle1.beetleControl.countsReal[comboBoxMotorSelectBot.SelectedIndex]);
-                seriesC[1].Values.Add(beetle1.beetleControl.countsTarget[comboBoxMotorSelectBot.SelectedIndex]);
+                if (bt.beetleControl.onTargetFlag[comboBoxMotorSelectBot.SelectedIndex] == 1)
+                    bt.beetleControl.RealCountsFetch((sbyte)comboBoxMotorSelectBot.SelectedIndex);
+                seriesC[0].Values.Add(bt.beetleControl.countsReal[comboBoxMotorSelectBot.SelectedIndex]);
+                seriesC[1].Values.Add(bt.beetleControl.countsTarget[comboBoxMotorSelectBot.SelectedIndex]);
                 if (seriesC[0].Values.Count > 30)
                     seriesC[0].Values.RemoveAt(0);
                 if (seriesC[1].Values.Count > 30)

@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Beetle
 {
     class BeetleSystemObject
@@ -31,9 +32,6 @@ namespace Beetle
             ba = new BeetleAlignment(parameters, beetleControl, piezoControl);
             bc = new BeetleCuring(parameters, beetleControl, piezoControl);
         }
-        
-
-
 
     }
 }

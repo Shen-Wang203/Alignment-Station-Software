@@ -182,7 +182,8 @@ namespace Beetle
 
             double[] p = new double[2] { p1, p2 };
             p0 = parameters.position[axis];
-            count0 = beetleControl.countsReal[axis];
+            // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
+            count0 = axis == 2 ? beetleControl.countsReal[0] : beetleControl.countsReal[axis];
 
             for (int i = 0; i < 2; i ++)
             {
@@ -191,7 +192,7 @@ namespace Beetle
                 else if (axis == 1)
                     beetleControl.YMoveTo(p[i], mode: 't', checkOnTarget: false);
                 else
-                    beetleControl.ZMoveTo(p[i], mode: 't', checkOnTarget: false);
+                    beetleControl.ZMoveTo(p[i], mode: 't', checkOnTarget: false, speed: 600);
 
                 // Active Monitor Loss and Position
                 trend = 0;
@@ -208,15 +209,17 @@ namespace Beetle
                     }
                     else
                     {
-                        beetleControl.RealCountsFetch(1); // z uses T1y axial to guess position
-                        // Z position is estimated through how much T1y has moved relative to its total range, and scale to Z total movement 
-                        parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[1] - count0) / beetleControl.zTrajT1yCountRange;
+                        beetleControl.RealCountsFetch(0); // z uses T1x axial to guess position
+                        // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
+                        parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
                     }
                     Console.WriteLine($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     Parameters.Log($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     pos.Add(parameters.position[axis]);
                     loss.Add(PowerMeter.Read());
-
+                    if (parameters.position[axis] >= limitZ)
+                        break;
+                    
                     if ((loss[loss.Count - 1] - loss0) <= -LossBound(loss0))
                     {
                         trend -= 1;
@@ -246,19 +249,53 @@ namespace Beetle
                 {
                     Console.WriteLine("Has Max");
                     Parameters.Log("Has Max");
+                    double Pr;
                     if (axis == 0)
                     {
-                        beetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * scanSearchRadius * xDirectionTrend * 0.1;
+                        Pr = pos[loss.IndexOf(loss.Max())];
+                        //beetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.XMoveTo(Pr, mode: 't', checkOnTarget: false);
                         xDirectionTrend *= (-2 * i + 1);
                     }
                     else if (axis == 1)
                     {
-                        beetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * scanSearchRadius * yDirectionTrend * 0.1;
+                        Pr = pos[loss.IndexOf(loss.Max())];
+                        //beetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.YMoveTo(Pr, mode: 't', checkOnTarget: false);
                         yDirectionTrend *= (-2 * i + 1);
                     }
                     else
-                        beetleControl.ZMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
-                    Thread.Sleep(150); // delay 150ms
+                    {
+                        //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * zScanSearchRadius * 0.1;
+                        Pr = pos[loss.IndexOf(loss.Max())];
+                        //beetleControl.ZMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
+                        beetleControl.ZMoveTo(Pr, mode: 't', checkOnTarget: false, speed: -1);
+                    }
+
+                    while (Math.Abs(parameters.position[axis] - Pr) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
+                    {
+                        if (axis < 2)
+                        {
+                            beetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
+                            parameters.position[axis] = p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution;
+                        }
+                        else
+                        {
+                            beetleControl.RealCountsFetch(0); // z uses T1x axial to guess position
+                            // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
+                            parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
+                        }
+                        if (PowerMeter.Read() > loss.Max() - 0.02)
+                        {
+                            beetleControl.DisengageMotors();
+                            break;
+                        }
+                    }
+                    beetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo with checkOnTarget to be false
+                    parameters.position[axis] = axis < 2 ? p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution : 
+                                                            zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
                     StatusCheck(PowerMeter.Read());
                     return true;
                 }

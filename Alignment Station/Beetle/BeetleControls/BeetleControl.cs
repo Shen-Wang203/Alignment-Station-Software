@@ -34,7 +34,7 @@ namespace Beetle
         public int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
         public int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
         public double[] tempP;
-        public int zTrajT1yCountRange = 0;
+        public int zTrajT1xCountRange = 0;
 
         public BeetleControl(Parameters prmts, BeetleMathModel mm)
         {
@@ -335,19 +335,20 @@ namespace Beetle
 
         // position is the platform position
         // will update Parameters.position
-        public void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        // speed only works for mode 't'
+        public void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 100000)
         {
             double[] Tmm = mathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
             position.CopyTo(parameters.position, 0);
-            GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
+            GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // XAbs is the platform x absolute position in mm
         // will update Parameters.position if checkOnTarget is true
         // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial. 
         // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
-        public void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 400)
         {
             sbyte xDirec;
             double counter = 0;
@@ -371,14 +372,14 @@ namespace Beetle
             if (checkOnTarget)
                 parameters.position[0] = XAbs;
 
-            GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
+            GotoTargetCounts(targetCounts, freedom: 'x', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // YAbs is the platform y absolute position in mm
         // will update Parameters.position if checkOnTarget is true
         // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
         // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
-        public void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 400)
         {
             sbyte yDirec;
             double counter = 0;
@@ -402,12 +403,12 @@ namespace Beetle
             if (checkOnTarget)
                 parameters.position[1] = YAbs;
 
-            GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget);
+            GotoTargetCounts(targetCounts, freedom: 'y', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // ZAbs is the platform z absolute position in mm
         // will update Parameters.position
-        public void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true)
+        public void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true, int speed = 400)
         {
             sbyte zDirec;
             double counter = 0;
@@ -436,69 +437,71 @@ namespace Beetle
                 targetPosition[2] = deltaZ * normVector[2] + parameters.position[2];
             }
 
-            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
+            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // RxAbs is the absolute Rx value in degree
         // will update Parameters.position
-        public void RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RxMoveTo(double RxAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 4000)
         {
             double[] targetPosition = new double[6];
             parameters.position.CopyTo(targetPosition, 0);
             targetPosition[3] = RxAbs;
 
-            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
+            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // RyAbs is the absolute Ry value in degree
         // will update Parameters.position
-        public void RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RyMoveTo(double RyAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 4000)
         {
             double[] targetPosition = new double[6];
             parameters.position.CopyTo(targetPosition, 0);
             targetPosition[4] = RyAbs;
 
-            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
+            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         // RzAbs is the absolute Rz value in degree
         // will update Parameters.position
-        public void RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        public void RzMoveTo(double RzAbs, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 4000)
         {
             double[] targetPosition = new double[6];
             parameters.position.CopyTo(targetPosition, 0);
             targetPosition[5] = RzAbs;
 
-            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget);
+            GotoPosition(targetPosition, stopInBetween: stopInBetween, ignoreError: ignoreError, doubleCheck: doubleCheck, mode: mode, checkOnTarget: checkOnTarget, speed: speed);
         }
 
         public void GotoReset() => GotoPosition(parameters.initialPosition, stopInBetween:true);
 
-        public void GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 }, stopInBetween:true);
+        public void GotoClose() => GotoTargetCounts(new int[6] { -1000, -1000, -1000, -1000, -1000, -1000 }, stopInBetween:true, speed: 10000);
 
         public void GotoTemp() => GotoPosition(tempP, stopInBetween: true);
 
+        public void GotoTempSyn() => GotoPosition(tempP, stopInBetween: true, mode: 't', speed: 5000);
+
         // return false when timeout or driver board errors or out of range
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
-        private bool GotoTargetCounts(int[] targetCounts, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
+        private bool GotoTargetCounts(int[] targetCounts, int speed, char freedom = 'a', bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true)
         {
             targetCounts.CopyTo(countsTarget, 0);
             if (!SafetyCheck(targetCounts))
             { 
                 DisengageMotors();
-                parameters.errors = "Out of Range\n";
                 parameters.errorFlag = true;
                 Console.WriteLine(parameters.errors);
+                MessageBox.Show("Out of Range");
                 return false;
             }
             int timeoutloop, timeout = 50;
             if (mode == 't')
-                timeout = 100;
+                timeout = 300; // traj mode time out is about 30s
             SetOnTargetFlag(freedom);
             // try three times on doublecheck
             for (int i = 0; i < 3; i++)
             {
-                SendCounts(targetCounts, mode: mode);
+                SendCounts(targetCounts, mode: mode, speed: speed);
                 // timeout for about 5s
                 timeoutloop = 0;
                 while (checkOnTarget && timeoutloop < timeout)
@@ -509,7 +512,7 @@ namespace Beetle
                     timeoutloop++;
                 }
 
-                if (timeoutloop >= 49)
+                if (timeoutloop >= timeout - 1)
                 {
                     Console.WriteLine("Time Out Error");
                     Parameters.Log("Time Out Error");
@@ -739,7 +742,8 @@ namespace Beetle
 
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
         // mode can be 't' or 'p' meaning trajectory or stepping method
-        private void SendCounts(int[] counts, char mode = 'p')
+        // speed only works when mode is 't', if speed is smaller than 0 means to keep the speed as it is.
+        private void SendCounts(int[] counts, int speed, char mode = 'p')
         {
             int trajectoryThreshold = 10000;
             string xstrp = "p 0 ";
@@ -751,13 +755,11 @@ namespace Beetle
 
             int[] delta = new int[6] { Math.Abs(counts[0] - countsReal[0]), Math.Abs(counts[1] - countsReal[1]), Math.Abs(counts[2] - countsReal[2]),
                                         Math.Abs(counts[3] - countsReal[3]), Math.Abs(counts[4] - countsReal[4]), Math.Abs(counts[5] - countsReal[5])};
+            zTrajT1xCountRange = delta[0];
             // Change each axial's speed so that all axial can stop at the same time
-            if (mode == 't')
-            {
-                SpeedCalForTraj(delta);
-                zTrajT1yCountRange = delta[1];
-            }
-            else if (!normalSpeedFlag)
+            if (mode == 't' && speed > 0)
+                SpeedCalForTraj(delta, speed);
+            else if (!normalSpeedFlag && speed > 0)
                 NormalTrajSpeed();
 
             // Engage motors as needed, only engage motors that need to move
@@ -827,15 +829,14 @@ namespace Beetle
         }
 
         // Calculate the speed for each axial so that each axial can arrive target position at the same time
-        // input is the delta counts for each axial from 0-5
-        private void SpeedCalForTraj(int[] deltaCount)
+        // input is the delta counts for each axial from 0-5, speed is the max speed of six motors
+        private void SpeedCalForTraj(int[] deltaCount, int speed)
         {
-            int slowSpeed = 400;
             int m = deltaCount.Max();
             // Axial that needs to travel longest has 300 speed
             // Other axial will scale based on their relative deltacounts
             for (byte i = 0; i < 6; i ++)
-                SetTrajSpeed(i, slowSpeed * deltaCount[i] / m);
+                SetTrajSpeed(i, speed * deltaCount[i] / m);
             normalSpeedFlag = false;
         }
 

@@ -78,6 +78,9 @@
             this.comboBoxCamSelect = new System.Windows.Forms.ComboBox();
             this.pictureBoxCam = new System.Windows.Forms.PictureBox();
             this.tabPageStageControl = new System.Windows.Forms.TabPage();
+            this.comboBoxBeetleSelect = new System.Windows.Forms.ComboBox();
+            this.labelSystemSelect = new System.Windows.Forms.Label();
+            this.buttonSetPositionSyn = new System.Windows.Forms.Button();
             this.labelRy = new System.Windows.Forms.Label();
             this.labelRz = new System.Windows.Forms.Label();
             this.labelRx = new System.Windows.Forms.Label();
@@ -126,6 +129,34 @@
             this.numericUpDownRx = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.pictureBoxFigure = new System.Windows.Forms.PictureBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.labelPiezoPosValue1woa = new System.Windows.Forms.Label();
+            this.labelPiezoPos1woa = new System.Windows.Forms.Label();
+            this.buttonPiezoSearch1woa = new System.Windows.Forms.Button();
+            this.buttonPiezoReset1woa = new System.Windows.Forms.Button();
+            this.buttonSetPivot1woa = new System.Windows.Forms.Button();
+            this.labelPz1woa = new System.Windows.Forms.Label();
+            this.labelPy1woa = new System.Windows.Forms.Label();
+            this.labelPx1woa = new System.Windows.Forms.Label();
+            this.numericUpDownPz1woa = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPy1woa = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPx1woa = new System.Windows.Forms.NumericUpDown();
+            this.buttonGo1woa = new System.Windows.Forms.Button();
+            this.buttonGoSyn1woa = new System.Windows.Forms.Button();
+            this.buttonSetInitial1woa = new System.Windows.Forms.Button();
+            this.labelBeetle1 = new System.Windows.Forms.Label();
+            this.numericUpDownRz1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelRz1woa = new System.Windows.Forms.Label();
+            this.numericUpDownRy1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelRy1woa = new System.Windows.Forms.Label();
+            this.numericUpDownRx1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelRx1woa = new System.Windows.Forms.Label();
+            this.numericUpDownZ1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelZ1woa = new System.Windows.Forms.Label();
+            this.numericUpDownY1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelY1woa = new System.Windows.Forms.Label();
+            this.numericUpDownX1woa = new System.Windows.Forms.NumericUpDown();
+            this.labelX1woa = new System.Windows.Forms.Label();
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPageAlignCuring.SuspendLayout();
@@ -146,6 +177,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFigure)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRz1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRy1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZ1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY1woa)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX1woa)).BeginInit();
             this.SuspendLayout();
             // 
             // ButtonReset
@@ -156,10 +197,9 @@
             this.ButtonReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonReset.ForeColor = System.Drawing.Color.Black;
-            this.ButtonReset.Location = new System.Drawing.Point(2725, 235);
-            this.ButtonReset.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.ButtonReset.Location = new System.Drawing.Point(1090, 94);
             this.ButtonReset.Name = "ButtonReset";
-            this.ButtonReset.Size = new System.Drawing.Size(450, 150);
+            this.ButtonReset.Size = new System.Drawing.Size(180, 60);
             this.ButtonReset.TabIndex = 0;
             this.ButtonReset.Text = "Reset";
             this.ButtonReset.UseVisualStyleBackColor = false;
@@ -174,10 +214,9 @@
             this.ButtonAlignment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonAlignment.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonAlignment.ForeColor = System.Drawing.Color.Black;
-            this.ButtonAlignment.Location = new System.Drawing.Point(2725, 452);
-            this.ButtonAlignment.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.ButtonAlignment.Location = new System.Drawing.Point(1090, 181);
             this.ButtonAlignment.Name = "ButtonAlignment";
-            this.ButtonAlignment.Size = new System.Drawing.Size(450, 150);
+            this.ButtonAlignment.Size = new System.Drawing.Size(180, 60);
             this.ButtonAlignment.TabIndex = 1;
             this.ButtonAlignment.Text = "Alignment";
             this.ButtonAlignment.UseVisualStyleBackColor = false;
@@ -192,10 +231,9 @@
             this.ButtonPreCuring.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonPreCuring.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonPreCuring.ForeColor = System.Drawing.Color.Black;
-            this.ButtonPreCuring.Location = new System.Drawing.Point(2725, 660);
-            this.ButtonPreCuring.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.ButtonPreCuring.Location = new System.Drawing.Point(1090, 264);
             this.ButtonPreCuring.Name = "ButtonPreCuring";
-            this.ButtonPreCuring.Size = new System.Drawing.Size(450, 150);
+            this.ButtonPreCuring.Size = new System.Drawing.Size(180, 60);
             this.ButtonPreCuring.TabIndex = 2;
             this.ButtonPreCuring.Text = "PreCuring";
             this.ButtonPreCuring.UseVisualStyleBackColor = false;
@@ -210,10 +248,9 @@
             this.ButtonCuring.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ButtonCuring.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonCuring.ForeColor = System.Drawing.Color.Black;
-            this.ButtonCuring.Location = new System.Drawing.Point(2728, 872);
-            this.ButtonCuring.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.ButtonCuring.Location = new System.Drawing.Point(1091, 349);
             this.ButtonCuring.Name = "ButtonCuring";
-            this.ButtonCuring.Size = new System.Drawing.Size(450, 150);
+            this.ButtonCuring.Size = new System.Drawing.Size(180, 60);
             this.ButtonCuring.TabIndex = 3;
             this.ButtonCuring.Text = "Curing";
             this.ButtonCuring.UseVisualStyleBackColor = false;
@@ -226,10 +263,9 @@
             this.buttonClearError.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonClearError.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClearError.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonClearError.Location = new System.Drawing.Point(402, 498);
-            this.buttonClearError.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonClearError.Location = new System.Drawing.Point(161, 199);
             this.buttonClearError.Name = "buttonClearError";
-            this.buttonClearError.Size = new System.Drawing.Size(400, 140);
+            this.buttonClearError.Size = new System.Drawing.Size(160, 56);
             this.buttonClearError.TabIndex = 4;
             this.buttonClearError.Text = "Clear Errors";
             this.buttonClearError.UseVisualStyleBackColor = false;
@@ -242,10 +278,9 @@
             this.buttonCalibration.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonCalibration.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCalibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCalibration.Location = new System.Drawing.Point(402, 355);
-            this.buttonCalibration.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonCalibration.Location = new System.Drawing.Point(161, 142);
             this.buttonCalibration.Name = "buttonCalibration";
-            this.buttonCalibration.Size = new System.Drawing.Size(400, 140);
+            this.buttonCalibration.Size = new System.Drawing.Size(160, 56);
             this.buttonCalibration.TabIndex = 5;
             this.buttonCalibration.Text = "Calibration";
             this.buttonCalibration.UseVisualStyleBackColor = false;
@@ -256,10 +291,9 @@
             this.labelILValue.AutoSize = true;
             this.labelILValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelILValue.ForeColor = System.Drawing.Color.Yellow;
-            this.labelILValue.Location = new System.Drawing.Point(2070, 765);
-            this.labelILValue.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelILValue.Location = new System.Drawing.Point(828, 306);
             this.labelILValue.Name = "labelILValue";
-            this.labelILValue.Size = new System.Drawing.Size(512, 113);
+            this.labelILValue.Size = new System.Drawing.Size(203, 46);
             this.labelILValue.TabIndex = 7;
             this.labelILValue.Text = "-50.000dB";
             this.labelILValue.Click += new System.EventHandler(this.IL_Click);
@@ -272,10 +306,9 @@
             this.buttonControlBoxDetection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonControlBoxDetection.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonControlBoxDetection.ForeColor = System.Drawing.Color.Silver;
-            this.buttonControlBoxDetection.Location = new System.Drawing.Point(5, 355);
-            this.buttonControlBoxDetection.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonControlBoxDetection.Location = new System.Drawing.Point(2, 142);
             this.buttonControlBoxDetection.Name = "buttonControlBoxDetection";
-            this.buttonControlBoxDetection.Size = new System.Drawing.Size(400, 140);
+            this.buttonControlBoxDetection.Size = new System.Drawing.Size(160, 56);
             this.buttonControlBoxDetection.TabIndex = 8;
             this.buttonControlBoxDetection.Text = "Control Box Detection";
             this.buttonControlBoxDetection.UseVisualStyleBackColor = false;
@@ -288,10 +321,9 @@
             this.buttonTest.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTest.Location = new System.Drawing.Point(5, 782);
-            this.buttonTest.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonTest.Location = new System.Drawing.Point(2, 313);
             this.buttonTest.Name = "buttonTest";
-            this.buttonTest.Size = new System.Drawing.Size(400, 140);
+            this.buttonTest.Size = new System.Drawing.Size(160, 56);
             this.buttonTest.TabIndex = 9;
             this.buttonTest.Text = "Test";
             this.buttonTest.UseVisualStyleBackColor = false;
@@ -303,15 +335,16 @@
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl1.Controls.Add(this.tabPageAlignCuring);
             this.tabControl1.Controls.Add(this.tabPageStageControl);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.HotTrack = true;
             this.tabControl1.ItemSize = new System.Drawing.Size(50, 30);
-            this.tabControl1.Location = new System.Drawing.Point(-8, 0);
+            this.tabControl1.Location = new System.Drawing.Point(-3, 0);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(3225, 1800);
+            this.tabControl1.Size = new System.Drawing.Size(1290, 720);
             this.tabControl1.TabIndex = 10;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -350,7 +383,7 @@
             this.tabPageAlignCuring.Location = new System.Drawing.Point(4, 34);
             this.tabPageAlignCuring.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageAlignCuring.Name = "tabPageAlignCuring";
-            this.tabPageAlignCuring.Size = new System.Drawing.Size(3217, 1762);
+            this.tabPageAlignCuring.Size = new System.Drawing.Size(1282, 682);
             this.tabPageAlignCuring.TabIndex = 2;
             this.tabPageAlignCuring.Text = "Alignment & Curing";
             // 
@@ -365,10 +398,9 @@
             "CH1",
             "CH2",
             "CH3"});
-            this.comboBoxPMChl.Location = new System.Drawing.Point(2392, 58);
-            this.comboBoxPMChl.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxPMChl.Location = new System.Drawing.Point(957, 23);
             this.comboBoxPMChl.Name = "comboBoxPMChl";
-            this.comboBoxPMChl.Size = new System.Drawing.Size(139, 46);
+            this.comboBoxPMChl.Size = new System.Drawing.Size(58, 24);
             this.comboBoxPMChl.TabIndex = 42;
             this.comboBoxPMChl.SelectedIndexChanged += new System.EventHandler(this.comboBoxPMChl_SelectedIndexChanged);
             // 
@@ -376,10 +408,9 @@
             // 
             this.labelPMChl.AutoSize = true;
             this.labelPMChl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPMChl.Location = new System.Drawing.Point(2070, 55);
-            this.labelPMChl.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPMChl.Location = new System.Drawing.Point(828, 22);
             this.labelPMChl.Name = "labelPMChl";
-            this.labelPMChl.Size = new System.Drawing.Size(327, 58);
+            this.labelPMChl.Size = new System.Drawing.Size(132, 25);
             this.labelPMChl.TabIndex = 41;
             this.labelPMChl.Text = "PM Channel: ";
             // 
@@ -387,10 +418,9 @@
             // 
             this.labelPiezoPositionValue.AutoSize = true;
             this.labelPiezoPositionValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPiezoPositionValue.Location = new System.Drawing.Point(2562, 1565);
-            this.labelPiezoPositionValue.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPiezoPositionValue.Location = new System.Drawing.Point(1025, 626);
             this.labelPiezoPositionValue.Name = "labelPiezoPositionValue";
-            this.labelPiezoPositionValue.Size = new System.Drawing.Size(297, 39);
+            this.labelPiezoPositionValue.Size = new System.Drawing.Size(136, 17);
             this.labelPiezoPositionValue.TabIndex = 40;
             this.labelPiezoPositionValue.Text = "2048, 2048, 2048";
             // 
@@ -398,20 +428,18 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(2600, 1545);
-            this.label13.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label13.Location = new System.Drawing.Point(1040, 618);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(0, 39);
+            this.label13.Size = new System.Drawing.Size(0, 17);
             this.label13.TabIndex = 39;
             // 
             // labelPiezoPosition
             // 
             this.labelPiezoPosition.AutoSize = true;
             this.labelPiezoPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPiezoPosition.Location = new System.Drawing.Point(2560, 1500);
-            this.labelPiezoPosition.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPiezoPosition.Location = new System.Drawing.Point(1024, 600);
             this.labelPiezoPosition.Name = "labelPiezoPosition";
-            this.labelPiezoPosition.Size = new System.Drawing.Size(538, 46);
+            this.labelPiezoPosition.Size = new System.Drawing.Size(229, 20);
             this.labelPiezoPosition.TabIndex = 38;
             this.labelPiezoPosition.Text = "Piezo DAC Value (0 - 4096)";
             // 
@@ -419,10 +447,9 @@
             // 
             this.labelPositionAngles.AutoSize = true;
             this.labelPositionAngles.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPositionAngles.Location = new System.Drawing.Point(2562, 1372);
-            this.labelPositionAngles.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPositionAngles.Location = new System.Drawing.Point(1025, 549);
             this.labelPositionAngles.Name = "labelPositionAngles";
-            this.labelPositionAngles.Size = new System.Drawing.Size(231, 39);
+            this.labelPositionAngles.Size = new System.Drawing.Size(109, 17);
             this.labelPositionAngles.TabIndex = 37;
             this.labelPositionAngles.Text = "-0.0, -0.0, 0.0";
             // 
@@ -430,10 +457,9 @@
             // 
             this.labelPositionXYZ.AutoSize = true;
             this.labelPositionXYZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPositionXYZ.Location = new System.Drawing.Point(2562, 1315);
-            this.labelPositionXYZ.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPositionXYZ.Location = new System.Drawing.Point(1025, 526);
             this.labelPositionXYZ.Name = "labelPositionXYZ";
-            this.labelPositionXYZ.Size = new System.Drawing.Size(451, 39);
+            this.labelPositionXYZ.Size = new System.Drawing.Size(208, 17);
             this.labelPositionXYZ.TabIndex = 36;
             this.labelPositionXYZ.Text = "-0.0000, -0.0000, 138.0000";
             // 
@@ -441,10 +467,9 @@
             // 
             this.labelBeetlePosition.AutoSize = true;
             this.labelBeetlePosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelBeetlePosition.Location = new System.Drawing.Point(2560, 1252);
-            this.labelBeetlePosition.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelBeetlePosition.Location = new System.Drawing.Point(1024, 501);
             this.labelBeetlePosition.Name = "labelBeetlePosition";
-            this.labelBeetlePosition.Size = new System.Drawing.Size(583, 46);
+            this.labelBeetlePosition.Size = new System.Drawing.Size(247, 20);
             this.labelBeetlePosition.TabIndex = 35;
             this.labelBeetlePosition.Text = "Beetle Position (XYZ; θxθyθz)";
             // 
@@ -468,10 +493,9 @@
             this.panel2.Controls.Add(this.buttonTest);
             this.panel2.Controls.Add(this.buttonCancleRun);
             this.panel2.Controls.Add(this.buttonClose);
-            this.panel2.Location = new System.Drawing.Point(-5, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.panel2.Location = new System.Drawing.Point(-2, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(802, 1690);
+            this.panel2.Size = new System.Drawing.Size(321, 676);
             this.panel2.TabIndex = 34;
             // 
             // comboBoxFixtureNum
@@ -488,10 +512,9 @@
             "#3",
             "#4",
             "#5"});
-            this.comboBoxFixtureNum.Location = new System.Drawing.Point(238, 988);
-            this.comboBoxFixtureNum.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxFixtureNum.Location = new System.Drawing.Point(95, 397);
             this.comboBoxFixtureNum.Name = "comboBoxFixtureNum";
-            this.comboBoxFixtureNum.Size = new System.Drawing.Size(196, 46);
+            this.comboBoxFixtureNum.Size = new System.Drawing.Size(81, 24);
             this.comboBoxFixtureNum.TabIndex = 36;
             this.comboBoxFixtureNum.SelectedIndexChanged += new System.EventHandler(this.comboBoxFixtureNum_SelectedIndexChanged);
             // 
@@ -500,20 +523,18 @@
             this.labelBeetleFixture.AutoSize = true;
             this.labelBeetleFixture.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.labelBeetleFixture.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelBeetleFixture.Location = new System.Drawing.Point(5, 985);
-            this.labelBeetleFixture.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelBeetleFixture.Location = new System.Drawing.Point(2, 396);
             this.labelBeetleFixture.Name = "labelBeetleFixture";
-            this.labelBeetleFixture.Size = new System.Drawing.Size(247, 58);
+            this.labelBeetleFixture.Size = new System.Drawing.Size(98, 25);
             this.labelBeetleFixture.TabIndex = 35;
             this.labelBeetleFixture.Text = "Fixture #: ";
             // 
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(38, 25);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.pictureBox2.Location = new System.Drawing.Point(15, 10);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(730, 295);
+            this.pictureBox2.Size = new System.Drawing.Size(292, 118);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 34;
             this.pictureBox2.TabStop = false;
@@ -525,10 +546,9 @@
             this.buttonChartOnOff.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonChartOnOff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonChartOnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonChartOnOff.Location = new System.Drawing.Point(402, 782);
-            this.buttonChartOnOff.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonChartOnOff.Location = new System.Drawing.Point(161, 313);
             this.buttonChartOnOff.Name = "buttonChartOnOff";
-            this.buttonChartOnOff.Size = new System.Drawing.Size(400, 140);
+            this.buttonChartOnOff.Size = new System.Drawing.Size(160, 56);
             this.buttonChartOnOff.TabIndex = 33;
             this.buttonChartOnOff.Text = "Live Charts Off";
             this.buttonChartOnOff.UseVisualStyleBackColor = false;
@@ -539,10 +559,9 @@
             this.labelErrorMessage.AutoSize = true;
             this.labelErrorMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelErrorMessage.ForeColor = System.Drawing.Color.Silver;
-            this.labelErrorMessage.Location = new System.Drawing.Point(12, 1055);
-            this.labelErrorMessage.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelErrorMessage.Location = new System.Drawing.Point(5, 422);
             this.labelErrorMessage.Name = "labelErrorMessage";
-            this.labelErrorMessage.Size = new System.Drawing.Size(181, 69);
+            this.labelErrorMessage.Size = new System.Drawing.Size(77, 29);
             this.labelErrorMessage.TabIndex = 26;
             this.labelErrorMessage.Text = "Logs:";
             // 
@@ -556,10 +575,9 @@
             this.comboBoxProductSelect.Items.AddRange(new object[] {
             "MM 1xN",
             "SM 1xN"});
-            this.comboBoxProductSelect.Location = new System.Drawing.Point(230, 927);
-            this.comboBoxProductSelect.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxProductSelect.Location = new System.Drawing.Point(92, 371);
             this.comboBoxProductSelect.Name = "comboBoxProductSelect";
-            this.comboBoxProductSelect.Size = new System.Drawing.Size(204, 46);
+            this.comboBoxProductSelect.Size = new System.Drawing.Size(84, 24);
             this.comboBoxProductSelect.TabIndex = 32;
             this.comboBoxProductSelect.SelectedIndexChanged += new System.EventHandler(this.comboBoxProductSelect_SelectedIndexChanged);
             // 
@@ -570,10 +588,9 @@
             this.buttonReference.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonReference.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonReference.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonReference.Location = new System.Drawing.Point(5, 498);
-            this.buttonReference.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonReference.Location = new System.Drawing.Point(2, 199);
             this.buttonReference.Name = "buttonReference";
-            this.buttonReference.Size = new System.Drawing.Size(400, 140);
+            this.buttonReference.Size = new System.Drawing.Size(160, 56);
             this.buttonReference.TabIndex = 17;
             this.buttonReference.Text = "Reference";
             this.buttonReference.UseVisualStyleBackColor = false;
@@ -584,10 +601,9 @@
             this.labelProductSelect.AutoSize = true;
             this.labelProductSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.labelProductSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelProductSelect.Location = new System.Drawing.Point(5, 924);
-            this.labelProductSelect.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelProductSelect.Location = new System.Drawing.Point(2, 370);
             this.labelProductSelect.Name = "labelProductSelect";
-            this.labelProductSelect.Size = new System.Drawing.Size(225, 58);
+            this.labelProductSelect.Size = new System.Drawing.Size(90, 25);
             this.labelProductSelect.TabIndex = 31;
             this.labelProductSelect.Text = "Product: ";
             // 
@@ -596,10 +612,9 @@
             this.labelUsePiezo.AutoSize = true;
             this.labelUsePiezo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.labelUsePiezo.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelUsePiezo.Location = new System.Drawing.Point(455, 924);
-            this.labelUsePiezo.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelUsePiezo.Location = new System.Drawing.Point(182, 370);
             this.labelUsePiezo.Name = "labelUsePiezo";
-            this.labelUsePiezo.Size = new System.Drawing.Size(164, 58);
+            this.labelUsePiezo.Size = new System.Drawing.Size(67, 25);
             this.labelUsePiezo.TabIndex = 30;
             this.labelUsePiezo.Text = "Piezo:";
             // 
@@ -613,10 +628,9 @@
             this.comboBoxUsePiezo.Items.AddRange(new object[] {
             "Yes",
             "No"});
-            this.comboBoxUsePiezo.Location = new System.Drawing.Point(632, 927);
-            this.comboBoxUsePiezo.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxUsePiezo.Location = new System.Drawing.Point(253, 371);
             this.comboBoxUsePiezo.Name = "comboBoxUsePiezo";
-            this.comboBoxUsePiezo.Size = new System.Drawing.Size(164, 46);
+            this.comboBoxUsePiezo.Size = new System.Drawing.Size(68, 24);
             this.comboBoxUsePiezo.TabIndex = 2;
             this.comboBoxUsePiezo.SelectedIndexChanged += new System.EventHandler(this.comboBoxUsePiezo_SelectedIndexChanged);
             // 
@@ -627,10 +641,9 @@
             this.richTextBoxErrorMsg.EnableAutoDragDrop = true;
             this.richTextBoxErrorMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxErrorMsg.ForeColor = System.Drawing.Color.LightGray;
-            this.richTextBoxErrorMsg.Location = new System.Drawing.Point(5, 1122);
-            this.richTextBoxErrorMsg.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.richTextBoxErrorMsg.Location = new System.Drawing.Point(2, 449);
             this.richTextBoxErrorMsg.Name = "richTextBoxErrorMsg";
-            this.richTextBoxErrorMsg.Size = new System.Drawing.Size(798, 565);
+            this.richTextBoxErrorMsg.Size = new System.Drawing.Size(319, 226);
             this.richTextBoxErrorMsg.TabIndex = 15;
             this.richTextBoxErrorMsg.Text = "";
             this.richTextBoxErrorMsg.WordWrap = false;
@@ -643,10 +656,9 @@
             this.buttonCancleRun.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonCancleRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCancleRun.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCancleRun.Location = new System.Drawing.Point(402, 640);
-            this.buttonCancleRun.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonCancleRun.Location = new System.Drawing.Point(161, 256);
             this.buttonCancleRun.Name = "buttonCancleRun";
-            this.buttonCancleRun.Size = new System.Drawing.Size(400, 140);
+            this.buttonCancleRun.Size = new System.Drawing.Size(160, 56);
             this.buttonCancleRun.TabIndex = 21;
             this.buttonCancleRun.Text = "Cancle Run";
             this.buttonCancleRun.UseVisualStyleBackColor = false;
@@ -659,10 +671,9 @@
             this.buttonClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Indigo;
             this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonClose.Location = new System.Drawing.Point(5, 640);
-            this.buttonClose.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonClose.Location = new System.Drawing.Point(2, 256);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(400, 140);
+            this.buttonClose.Size = new System.Drawing.Size(160, 56);
             this.buttonClose.TabIndex = 20;
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = false;
@@ -673,10 +684,9 @@
             this.labelTimeValue.AutoSize = true;
             this.labelTimeValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTimeValue.ForeColor = System.Drawing.Color.Silver;
-            this.labelTimeValue.Location = new System.Drawing.Point(2072, 272);
-            this.labelTimeValue.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTimeValue.Location = new System.Drawing.Point(829, 109);
             this.labelTimeValue.Name = "labelTimeValue";
-            this.labelTimeValue.Size = new System.Drawing.Size(399, 113);
+            this.labelTimeValue.Size = new System.Drawing.Size(159, 46);
             this.labelTimeValue.TabIndex = 28;
             this.labelTimeValue.Text = "0min 0s";
             // 
@@ -684,10 +694,9 @@
             // 
             this.labelTime.AutoSize = true;
             this.labelTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTime.Location = new System.Drawing.Point(2070, 195);
-            this.labelTime.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTime.Location = new System.Drawing.Point(828, 78);
             this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(224, 76);
+            this.labelTime.Size = new System.Drawing.Size(95, 31);
             this.labelTime.TabIndex = 27;
             this.labelTime.Text = "Time: ";
             // 
@@ -696,10 +705,9 @@
             this.labelStatusValue.AutoSize = true;
             this.labelStatusValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStatusValue.ForeColor = System.Drawing.Color.Lime;
-            this.labelStatusValue.Location = new System.Drawing.Point(2395, 908);
-            this.labelStatusValue.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelStatusValue.Location = new System.Drawing.Point(958, 363);
             this.labelStatusValue.Name = "labelStatusValue";
-            this.labelStatusValue.Size = new System.Drawing.Size(200, 107);
+            this.labelStatusValue.Size = new System.Drawing.Size(85, 44);
             this.labelStatusValue.TabIndex = 25;
             this.labelStatusValue.Text = "Idle";
             // 
@@ -707,10 +715,9 @@
             // 
             this.labelStatus.AutoSize = true;
             this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.Location = new System.Drawing.Point(2062, 908);
-            this.labelStatus.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelStatus.Location = new System.Drawing.Point(825, 363);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(370, 107);
+            this.labelStatus.Size = new System.Drawing.Size(157, 44);
             this.labelStatus.TabIndex = 24;
             this.labelStatus.Text = "Status: ";
             // 
@@ -718,10 +725,9 @@
             // 
             this.labelTargetValue.AutoSize = true;
             this.labelTargetValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 30F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTargetValue.Location = new System.Drawing.Point(2070, 515);
-            this.labelTargetValue.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTargetValue.Location = new System.Drawing.Point(828, 206);
             this.labelTargetValue.Name = "labelTargetValue";
-            this.labelTargetValue.Size = new System.Drawing.Size(512, 113);
+            this.labelTargetValue.Size = new System.Drawing.Size(203, 46);
             this.labelTargetValue.TabIndex = 23;
             this.labelTargetValue.Text = "-50.000dB";
             // 
@@ -729,10 +735,9 @@
             // 
             this.labelTarget.AutoSize = true;
             this.labelTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTarget.Location = new System.Drawing.Point(2070, 428);
-            this.labelTarget.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelTarget.Location = new System.Drawing.Point(828, 171);
             this.labelTarget.Name = "labelTarget";
-            this.labelTarget.Size = new System.Drawing.Size(604, 76);
+            this.labelTarget.Size = new System.Drawing.Size(257, 31);
             this.labelTarget.TabIndex = 22;
             this.labelTarget.Text = "Target Loss (dB):  ";
             // 
@@ -740,19 +745,17 @@
             // 
             this.labelIL.AutoSize = true;
             this.labelIL.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelIL.Location = new System.Drawing.Point(2070, 685);
-            this.labelIL.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelIL.Location = new System.Drawing.Point(828, 274);
             this.labelIL.Name = "labelIL";
-            this.labelIL.Size = new System.Drawing.Size(527, 76);
+            this.labelIL.Size = new System.Drawing.Size(225, 31);
             this.labelIL.TabIndex = 16;
             this.labelIL.Text = "Current IL (dB): ";
             // 
             // cartesianChartZ
             // 
-            this.cartesianChartZ.Location = new System.Drawing.Point(1620, 1038);
-            this.cartesianChartZ.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.cartesianChartZ.Location = new System.Drawing.Point(648, 415);
             this.cartesianChartZ.Name = "cartesianChartZ";
-            this.cartesianChartZ.Size = new System.Drawing.Size(918, 650);
+            this.cartesianChartZ.Size = new System.Drawing.Size(367, 260);
             this.cartesianChartZ.TabIndex = 14;
             this.cartesianChartZ.Text = "cartesianChart2";
             // 
@@ -763,10 +766,9 @@
             this.buttonDisconnectPM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(150)))));
             this.buttonDisconnectPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonDisconnectPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDisconnectPM.Location = new System.Drawing.Point(2585, 25);
-            this.buttonDisconnectPM.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonDisconnectPM.Location = new System.Drawing.Point(1034, 10);
             this.buttonDisconnectPM.Name = "buttonDisconnectPM";
-            this.buttonDisconnectPM.Size = new System.Drawing.Size(288, 140);
+            this.buttonDisconnectPM.Size = new System.Drawing.Size(115, 56);
             this.buttonDisconnectPM.TabIndex = 18;
             this.buttonDisconnectPM.Text = "Disconnect PM";
             this.buttonDisconnectPM.UseVisualStyleBackColor = false;
@@ -774,10 +776,9 @@
             // 
             // cartesianChartXY
             // 
-            this.cartesianChartXY.Location = new System.Drawing.Point(815, 1038);
-            this.cartesianChartXY.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.cartesianChartXY.Location = new System.Drawing.Point(326, 415);
             this.cartesianChartXY.Name = "cartesianChartXY";
-            this.cartesianChartXY.Size = new System.Drawing.Size(750, 650);
+            this.cartesianChartXY.Size = new System.Drawing.Size(300, 260);
             this.cartesianChartXY.TabIndex = 13;
             this.cartesianChartXY.Text = "cartesianChart1";
             // 
@@ -785,10 +786,9 @@
             // 
             this.label_camSelect.AutoSize = true;
             this.label_camSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_camSelect.Location = new System.Drawing.Point(812, 22);
-            this.label_camSelect.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label_camSelect.Location = new System.Drawing.Point(325, 9);
             this.label_camSelect.Name = "label_camSelect";
-            this.label_camSelect.Size = new System.Drawing.Size(403, 58);
+            this.label_camSelect.Size = new System.Drawing.Size(161, 25);
             this.label_camSelect.TabIndex = 12;
             this.label_camSelect.Text = "Camera Source: ";
             // 
@@ -799,10 +799,9 @@
             this.buttonConnectPM.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(150)))));
             this.buttonConnectPM.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConnectPM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonConnectPM.Location = new System.Drawing.Point(2888, 25);
-            this.buttonConnectPM.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonConnectPM.Location = new System.Drawing.Point(1155, 10);
             this.buttonConnectPM.Name = "buttonConnectPM";
-            this.buttonConnectPM.Size = new System.Drawing.Size(288, 140);
+            this.buttonConnectPM.Size = new System.Drawing.Size(115, 56);
             this.buttonConnectPM.TabIndex = 19;
             this.buttonConnectPM.Text = "Connect PM";
             this.buttonConnectPM.UseVisualStyleBackColor = false;
@@ -815,19 +814,17 @@
             this.comboBoxCamSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxCamSelect.ForeColor = System.Drawing.Color.Silver;
             this.comboBoxCamSelect.FormattingEnabled = true;
-            this.comboBoxCamSelect.Location = new System.Drawing.Point(1230, 25);
-            this.comboBoxCamSelect.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxCamSelect.Location = new System.Drawing.Point(492, 10);
             this.comboBoxCamSelect.Name = "comboBoxCamSelect";
-            this.comboBoxCamSelect.Size = new System.Drawing.Size(482, 46);
+            this.comboBoxCamSelect.Size = new System.Drawing.Size(195, 24);
             this.comboBoxCamSelect.TabIndex = 11;
             this.comboBoxCamSelect.SelectedIndexChanged += new System.EventHandler(this.comboBoxCamSelect_SelectedIndexChanged);
             // 
             // pictureBoxCam
             // 
-            this.pictureBoxCam.Location = new System.Drawing.Point(805, 92);
-            this.pictureBoxCam.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.pictureBoxCam.Location = new System.Drawing.Point(322, 37);
             this.pictureBoxCam.Name = "pictureBoxCam";
-            this.pictureBoxCam.Size = new System.Drawing.Size(1250, 938);
+            this.pictureBoxCam.Size = new System.Drawing.Size(500, 375);
             this.pictureBoxCam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxCam.TabIndex = 10;
             this.pictureBoxCam.TabStop = false;
@@ -835,6 +832,9 @@
             // tabPageStageControl
             // 
             this.tabPageStageControl.BackColor = System.Drawing.Color.White;
+            this.tabPageStageControl.Controls.Add(this.comboBoxBeetleSelect);
+            this.tabPageStageControl.Controls.Add(this.labelSystemSelect);
+            this.tabPageStageControl.Controls.Add(this.buttonSetPositionSyn);
             this.tabPageStageControl.Controls.Add(this.labelRy);
             this.tabPageStageControl.Controls.Add(this.labelRz);
             this.tabPageStageControl.Controls.Add(this.labelRx);
@@ -872,12 +872,54 @@
             this.tabPageStageControl.Controls.Add(this.pictureBoxFigure);
             this.tabPageStageControl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.tabPageStageControl.Location = new System.Drawing.Point(4, 34);
-            this.tabPageStageControl.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.tabPageStageControl.Name = "tabPageStageControl";
-            this.tabPageStageControl.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.tabPageStageControl.Size = new System.Drawing.Size(3217, 1762);
+            this.tabPageStageControl.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageStageControl.Size = new System.Drawing.Size(1282, 682);
             this.tabPageStageControl.TabIndex = 1;
             this.tabPageStageControl.Text = "Stage Control";
+            // 
+            // comboBoxBeetleSelect
+            // 
+            this.comboBoxBeetleSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxBeetleSelect.FormattingEnabled = true;
+            this.comboBoxBeetleSelect.Items.AddRange(new object[] {
+            "--Select--",
+            "System 1",
+            "System 2"});
+            this.comboBoxBeetleSelect.Location = new System.Drawing.Point(633, 642);
+            this.comboBoxBeetleSelect.Name = "comboBoxBeetleSelect";
+            this.comboBoxBeetleSelect.Size = new System.Drawing.Size(104, 24);
+            this.comboBoxBeetleSelect.TabIndex = 53;
+            this.comboBoxBeetleSelect.SelectedIndexChanged += new System.EventHandler(this.comboBoxBeetleSelect_SelectedIndexChanged);
+            // 
+            // labelSystemSelect
+            // 
+            this.labelSystemSelect.AutoSize = true;
+            this.labelSystemSelect.BackColor = System.Drawing.Color.Transparent;
+            this.labelSystemSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSystemSelect.ForeColor = System.Drawing.Color.Black;
+            this.labelSystemSelect.Location = new System.Drawing.Point(457, 642);
+            this.labelSystemSelect.Name = "labelSystemSelect";
+            this.labelSystemSelect.Size = new System.Drawing.Size(181, 26);
+            this.labelSystemSelect.TabIndex = 52;
+            this.labelSystemSelect.Text = "Beetle System: ";
+            // 
+            // buttonSetPositionSyn
+            // 
+            this.buttonSetPositionSyn.AutoSize = true;
+            this.buttonSetPositionSyn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.buttonSetPositionSyn.FlatAppearance.BorderSize = 0;
+            this.buttonSetPositionSyn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.buttonSetPositionSyn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSetPositionSyn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetPositionSyn.ForeColor = System.Drawing.Color.Black;
+            this.buttonSetPositionSyn.Location = new System.Drawing.Point(462, 133);
+            this.buttonSetPositionSyn.Name = "buttonSetPositionSyn";
+            this.buttonSetPositionSyn.Size = new System.Drawing.Size(123, 41);
+            this.buttonSetPositionSyn.TabIndex = 51;
+            this.buttonSetPositionSyn.Text = "Go-Syn Mode";
+            this.buttonSetPositionSyn.UseVisualStyleBackColor = false;
+            this.buttonSetPositionSyn.Click += new System.EventHandler(this.buttonSetPositionSyn_Click);
             // 
             // labelRy
             // 
@@ -885,10 +927,9 @@
             this.labelRy.BackColor = System.Drawing.Color.Transparent;
             this.labelRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRy.ForeColor = System.Drawing.Color.Black;
-            this.labelRy.Location = new System.Drawing.Point(1375, 815);
-            this.labelRy.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelRy.Location = new System.Drawing.Point(550, 326);
             this.labelRy.Name = "labelRy";
-            this.labelRy.Size = new System.Drawing.Size(95, 63);
+            this.labelRy.Size = new System.Drawing.Size(41, 26);
             this.labelRy.TabIndex = 50;
             this.labelRy.Text = "Ry";
             // 
@@ -898,10 +939,9 @@
             this.labelRz.BackColor = System.Drawing.Color.Transparent;
             this.labelRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRz.ForeColor = System.Drawing.Color.Black;
-            this.labelRz.Location = new System.Drawing.Point(1858, 345);
-            this.labelRz.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelRz.Location = new System.Drawing.Point(743, 138);
             this.labelRz.Name = "labelRz";
-            this.labelRz.Size = new System.Drawing.Size(95, 63);
+            this.labelRz.Size = new System.Drawing.Size(41, 26);
             this.labelRz.TabIndex = 49;
             this.labelRz.Text = "Rz";
             // 
@@ -911,10 +951,9 @@
             this.labelRx.BackColor = System.Drawing.Color.Transparent;
             this.labelRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRx.ForeColor = System.Drawing.Color.Black;
-            this.labelRx.Location = new System.Drawing.Point(2152, 752);
-            this.labelRx.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelRx.Location = new System.Drawing.Point(861, 301);
             this.labelRx.Name = "labelRx";
-            this.labelRx.Size = new System.Drawing.Size(95, 63);
+            this.labelRx.Size = new System.Drawing.Size(41, 26);
             this.labelRx.TabIndex = 48;
             this.labelRx.Text = "Rx";
             // 
@@ -924,10 +963,9 @@
             this.labelZ.BackColor = System.Drawing.Color.Transparent;
             this.labelZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelZ.ForeColor = System.Drawing.Color.Black;
-            this.labelZ.Location = new System.Drawing.Point(1778, 265);
-            this.labelZ.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelZ.Location = new System.Drawing.Point(711, 106);
             this.labelZ.Name = "labelZ";
-            this.labelZ.Size = new System.Drawing.Size(61, 63);
+            this.labelZ.Size = new System.Drawing.Size(26, 26);
             this.labelZ.TabIndex = 47;
             this.labelZ.Text = "Z";
             // 
@@ -937,10 +975,9 @@
             this.labelT.BackColor = System.Drawing.Color.Transparent;
             this.labelT.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelT.ForeColor = System.Drawing.Color.Black;
-            this.labelT.Location = new System.Drawing.Point(1312, 738);
-            this.labelT.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelT.Location = new System.Drawing.Point(525, 295);
             this.labelT.Name = "labelT";
-            this.labelT.Size = new System.Drawing.Size(64, 63);
+            this.labelT.Size = new System.Drawing.Size(29, 26);
             this.labelT.TabIndex = 46;
             this.labelT.Text = "Y";
             // 
@@ -950,10 +987,9 @@
             this.labelX.BackColor = System.Drawing.Color.Transparent;
             this.labelX.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelX.ForeColor = System.Drawing.Color.Black;
-            this.labelX.Location = new System.Drawing.Point(2150, 605);
-            this.labelX.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelX.Location = new System.Drawing.Point(860, 242);
             this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(64, 63);
+            this.labelX.Size = new System.Drawing.Size(28, 26);
             this.labelX.TabIndex = 45;
             this.labelX.Text = "X";
             // 
@@ -962,10 +998,9 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(2558, 8);
-            this.label1.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label1.Location = new System.Drawing.Point(1023, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(510, 54);
+            this.label1.Size = new System.Drawing.Size(218, 24);
             this.label1.TabIndex = 44;
             this.label1.Text = "Real && Target Position";
             // 
@@ -975,10 +1010,9 @@
             this.label14.BackColor = System.Drawing.Color.Transparent;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Black;
-            this.label14.Location = new System.Drawing.Point(2198, 180);
-            this.label14.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label14.Location = new System.Drawing.Point(879, 72);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(228, 46);
+            this.label14.Size = new System.Drawing.Size(89, 20);
             this.label14.TabIndex = 43;
             this.label14.Text = "Unit: mm / °";
             // 
@@ -987,10 +1021,9 @@
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label12.Location = new System.Drawing.Point(2428, 78);
-            this.label12.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label12.Location = new System.Drawing.Point(971, 31);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(268, 46);
+            this.label12.Size = new System.Drawing.Size(107, 20);
             this.label12.TabIndex = 42;
             this.label12.Text = "Motor Select: ";
             // 
@@ -1006,10 +1039,9 @@
             "T3x",
             "T3y",
             "OFF"});
-            this.comboBoxMotorSelectTop.Location = new System.Drawing.Point(2698, 70);
-            this.comboBoxMotorSelectTop.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxMotorSelectTop.Location = new System.Drawing.Point(1079, 28);
             this.comboBoxMotorSelectTop.Name = "comboBoxMotorSelectTop";
-            this.comboBoxMotorSelectTop.Size = new System.Drawing.Size(124, 46);
+            this.comboBoxMotorSelectTop.Size = new System.Drawing.Size(52, 24);
             this.comboBoxMotorSelectTop.TabIndex = 41;
             this.comboBoxMotorSelectTop.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectTop_SelectedIndexChanged);
             // 
@@ -1021,10 +1053,9 @@
             this.buttonSetInitial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetInitial.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetInitial.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetInitial.Location = new System.Drawing.Point(1155, 212);
-            this.buttonSetInitial.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonSetInitial.Location = new System.Drawing.Point(462, 85);
             this.buttonSetInitial.Name = "buttonSetInitial";
-            this.buttonSetInitial.Size = new System.Drawing.Size(308, 95);
+            this.buttonSetInitial.Size = new System.Drawing.Size(123, 38);
             this.buttonSetInitial.TabIndex = 34;
             this.buttonSetInitial.Text = "Set Initial";
             this.buttonSetInitial.UseVisualStyleBackColor = false;
@@ -1035,10 +1066,9 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label11.Location = new System.Drawing.Point(2428, 615);
-            this.label11.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label11.Location = new System.Drawing.Point(971, 246);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(268, 46);
+            this.label11.Size = new System.Drawing.Size(107, 20);
             this.label11.TabIndex = 40;
             this.label11.Text = "Motor Select: ";
             // 
@@ -1053,20 +1083,19 @@
             0,
             0,
             65536});
-            this.numericUpDownPx.Location = new System.Drawing.Point(1155, 78);
-            this.numericUpDownPx.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownPx.Location = new System.Drawing.Point(462, 31);
             this.numericUpDownPx.Maximum = new decimal(new int[] {
-            50,
+            200,
             0,
             0,
             0});
             this.numericUpDownPx.Minimum = new decimal(new int[] {
-            50,
+            200,
             0,
             0,
             -2147483648});
             this.numericUpDownPx.Name = "numericUpDownPx";
-            this.numericUpDownPx.Size = new System.Drawing.Size(155, 64);
+            this.numericUpDownPx.Size = new System.Drawing.Size(62, 28);
             this.numericUpDownPx.TabIndex = 31;
             // 
             // buttonSetPivot
@@ -1077,10 +1106,9 @@
             this.buttonSetPivot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetPivot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetPivot.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetPivot.Location = new System.Drawing.Point(1690, 2);
-            this.buttonSetPivot.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonSetPivot.Location = new System.Drawing.Point(676, 1);
             this.buttonSetPivot.Name = "buttonSetPivot";
-            this.buttonSetPivot.Size = new System.Drawing.Size(248, 145);
+            this.buttonSetPivot.Size = new System.Drawing.Size(99, 58);
             this.buttonSetPivot.TabIndex = 22;
             this.buttonSetPivot.Text = "Set Pivot Point";
             this.buttonSetPivot.UseVisualStyleBackColor = false;
@@ -1097,20 +1125,19 @@
             0,
             0,
             65536});
-            this.numericUpDownPy.Location = new System.Drawing.Point(1338, 78);
-            this.numericUpDownPy.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownPy.Location = new System.Drawing.Point(535, 31);
             this.numericUpDownPy.Maximum = new decimal(new int[] {
-            50,
+            200,
             0,
             0,
             0});
             this.numericUpDownPy.Minimum = new decimal(new int[] {
-            50,
+            200,
             0,
             0,
             -2147483648});
             this.numericUpDownPy.Name = "numericUpDownPy";
-            this.numericUpDownPy.Size = new System.Drawing.Size(155, 64);
+            this.numericUpDownPy.Size = new System.Drawing.Size(62, 28);
             this.numericUpDownPy.TabIndex = 32;
             // 
             // buttonClearErrorBC
@@ -1121,10 +1148,9 @@
             this.buttonClearErrorBC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClearErrorBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonClearErrorBC.ForeColor = System.Drawing.Color.Black;
-            this.buttonClearErrorBC.Location = new System.Drawing.Point(1952, 2);
-            this.buttonClearErrorBC.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonClearErrorBC.Location = new System.Drawing.Point(781, 1);
             this.buttonClearErrorBC.Name = "buttonClearErrorBC";
-            this.buttonClearErrorBC.Size = new System.Drawing.Size(248, 145);
+            this.buttonClearErrorBC.Size = new System.Drawing.Size(99, 58);
             this.buttonClearErrorBC.TabIndex = 37;
             this.buttonClearErrorBC.Text = "Clear Error";
             this.buttonClearErrorBC.UseVisualStyleBackColor = false;
@@ -1141,10 +1167,19 @@
             0,
             0,
             65536});
-            this.numericUpDownPz.Location = new System.Drawing.Point(1520, 78);
-            this.numericUpDownPz.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownPz.Location = new System.Drawing.Point(608, 31);
+            this.numericUpDownPz.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPz.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPz.Name = "numericUpDownPz";
-            this.numericUpDownPz.Size = new System.Drawing.Size(155, 64);
+            this.numericUpDownPz.Size = new System.Drawing.Size(62, 28);
             this.numericUpDownPz.TabIndex = 33;
             // 
             // buttonSetPosition
@@ -1156,10 +1191,9 @@
             this.buttonSetPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetPosition.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetPosition.Location = new System.Drawing.Point(1155, 375);
-            this.buttonSetPosition.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonSetPosition.Location = new System.Drawing.Point(462, 183);
             this.buttonSetPosition.Name = "buttonSetPosition";
-            this.buttonSetPosition.Size = new System.Drawing.Size(308, 182);
+            this.buttonSetPosition.Size = new System.Drawing.Size(123, 73);
             this.buttonSetPosition.TabIndex = 13;
             this.buttonSetPosition.Text = "Go";
             this.buttonSetPosition.UseVisualStyleBackColor = false;
@@ -1171,10 +1205,9 @@
             this.label8.BackColor = System.Drawing.Color.Transparent;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.Black;
-            this.label8.Location = new System.Drawing.Point(1142, 10);
-            this.label8.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label8.Location = new System.Drawing.Point(457, 4);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(92, 63);
+            this.label8.Size = new System.Drawing.Size(40, 26);
             this.label8.TabIndex = 16;
             this.label8.Text = "Px";
             // 
@@ -1190,10 +1223,9 @@
             "T3x",
             "T3y",
             "OFF"});
-            this.comboBoxMotorSelectMid.Location = new System.Drawing.Point(2698, 610);
-            this.comboBoxMotorSelectMid.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxMotorSelectMid.Location = new System.Drawing.Point(1079, 244);
             this.comboBoxMotorSelectMid.Name = "comboBoxMotorSelectMid";
-            this.comboBoxMotorSelectMid.Size = new System.Drawing.Size(124, 46);
+            this.comboBoxMotorSelectMid.Size = new System.Drawing.Size(52, 24);
             this.comboBoxMotorSelectMid.TabIndex = 39;
             this.comboBoxMotorSelectMid.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectMid_SelectedIndexChanged);
             // 
@@ -1202,10 +1234,9 @@
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label10.Location = new System.Drawing.Point(2428, 1158);
-            this.label10.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label10.Location = new System.Drawing.Point(971, 463);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(268, 46);
+            this.label10.Size = new System.Drawing.Size(107, 20);
             this.label10.TabIndex = 38;
             this.label10.Text = "Motor Select: ";
             // 
@@ -1221,19 +1252,17 @@
             "T3x",
             "T3y",
             "OFF"});
-            this.comboBoxMotorSelectBot.Location = new System.Drawing.Point(2698, 1148);
-            this.comboBoxMotorSelectBot.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxMotorSelectBot.Location = new System.Drawing.Point(1079, 459);
             this.comboBoxMotorSelectBot.Name = "comboBoxMotorSelectBot";
-            this.comboBoxMotorSelectBot.Size = new System.Drawing.Size(124, 46);
+            this.comboBoxMotorSelectBot.Size = new System.Drawing.Size(52, 24);
             this.comboBoxMotorSelectBot.TabIndex = 27;
             this.comboBoxMotorSelectBot.SelectedIndexChanged += new System.EventHandler(this.comboBoxMotorSelectBot_SelectedIndexChanged);
             // 
             // cartesianChartMotorC
             // 
-            this.cartesianChartMotorC.Location = new System.Drawing.Point(2428, 1212);
-            this.cartesianChartMotorC.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.cartesianChartMotorC.Location = new System.Drawing.Point(971, 485);
             this.cartesianChartMotorC.Name = "cartesianChartMotorC";
-            this.cartesianChartMotorC.Size = new System.Drawing.Size(758, 465);
+            this.cartesianChartMotorC.Size = new System.Drawing.Size(303, 186);
             this.cartesianChartMotorC.TabIndex = 26;
             this.cartesianChartMotorC.Text = "cartesianChart4";
             // 
@@ -1254,10 +1283,9 @@
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.panel1.Location = new System.Drawing.Point(-2, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.panel1.Location = new System.Drawing.Point(-1, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1130, 1698);
+            this.panel1.Size = new System.Drawing.Size(452, 679);
             this.panel1.TabIndex = 25;
             // 
             // labelILValueBC
@@ -1265,10 +1293,9 @@
             this.labelILValueBC.AutoSize = true;
             this.labelILValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelILValueBC.ForeColor = System.Drawing.Color.Yellow;
-            this.labelILValueBC.Location = new System.Drawing.Point(820, 1555);
-            this.labelILValueBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelILValueBC.Location = new System.Drawing.Point(328, 622);
             this.labelILValueBC.Name = "labelILValueBC";
-            this.labelILValueBC.Size = new System.Drawing.Size(266, 76);
+            this.labelILValueBC.Size = new System.Drawing.Size(113, 31);
             this.labelILValueBC.TabIndex = 50;
             this.labelILValueBC.Text = "-50.000";
             // 
@@ -1277,10 +1304,9 @@
             this.labelILBC.AutoSize = true;
             this.labelILBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelILBC.ForeColor = System.Drawing.Color.Silver;
-            this.labelILBC.Location = new System.Drawing.Point(545, 1555);
-            this.labelILBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelILBC.Location = new System.Drawing.Point(218, 622);
             this.labelILBC.Name = "labelILBC";
-            this.labelILBC.Size = new System.Drawing.Size(279, 76);
+            this.labelILBC.Size = new System.Drawing.Size(119, 31);
             this.labelILBC.TabIndex = 49;
             this.labelILBC.Text = "IL (dB): ";
             // 
@@ -1290,10 +1316,9 @@
             this.labelPiezoPositionBC.BackColor = System.Drawing.Color.Transparent;
             this.labelPiezoPositionBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPiezoPositionBC.ForeColor = System.Drawing.Color.Silver;
-            this.labelPiezoPositionBC.Location = new System.Drawing.Point(32, 1482);
-            this.labelPiezoPositionBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPiezoPositionBC.Location = new System.Drawing.Point(13, 593);
             this.labelPiezoPositionBC.Name = "labelPiezoPositionBC";
-            this.labelPiezoPositionBC.Size = new System.Drawing.Size(446, 39);
+            this.labelPiezoPositionBC.Size = new System.Drawing.Size(186, 17);
             this.labelPiezoPositionBC.TabIndex = 48;
             this.labelPiezoPositionBC.Text = "Piezo DAC Value (0 - 4096):";
             // 
@@ -1303,10 +1328,9 @@
             this.labelPiezoPositionValueBC.BackColor = System.Drawing.Color.Transparent;
             this.labelPiezoPositionValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPiezoPositionValueBC.ForeColor = System.Drawing.Color.Silver;
-            this.labelPiezoPositionValueBC.Location = new System.Drawing.Point(512, 1482);
-            this.labelPiezoPositionValueBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPiezoPositionValueBC.Location = new System.Drawing.Point(205, 593);
             this.labelPiezoPositionValueBC.Name = "labelPiezoPositionValueBC";
-            this.labelPiezoPositionValueBC.Size = new System.Drawing.Size(281, 39);
+            this.labelPiezoPositionValueBC.Size = new System.Drawing.Size(120, 17);
             this.labelPiezoPositionValueBC.TabIndex = 47;
             this.labelPiezoPositionValueBC.Text = "2048, 2048, 2048";
             // 
@@ -1318,10 +1342,9 @@
             this.buttonPiezoReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonPiezoReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonPiezoReset.ForeColor = System.Drawing.Color.Silver;
-            this.buttonPiezoReset.Location = new System.Drawing.Point(10, 1385);
-            this.buttonPiezoReset.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonPiezoReset.Location = new System.Drawing.Point(4, 554);
             this.buttonPiezoReset.Name = "buttonPiezoReset";
-            this.buttonPiezoReset.Size = new System.Drawing.Size(340, 90);
+            this.buttonPiezoReset.Size = new System.Drawing.Size(136, 36);
             this.buttonPiezoReset.TabIndex = 46;
             this.buttonPiezoReset.Text = "Piezo Reset";
             this.buttonPiezoReset.UseVisualStyleBackColor = false;
@@ -1341,10 +1364,9 @@
             "8",
             "10",
             "12"});
-            this.comboBoxPiezoStep.Location = new System.Drawing.Point(990, 1400);
-            this.comboBoxPiezoStep.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.comboBoxPiezoStep.Location = new System.Drawing.Point(396, 560);
             this.comboBoxPiezoStep.Name = "comboBoxPiezoStep";
-            this.comboBoxPiezoStep.Size = new System.Drawing.Size(106, 46);
+            this.comboBoxPiezoStep.Size = new System.Drawing.Size(45, 24);
             this.comboBoxPiezoStep.TabIndex = 44;
             this.comboBoxPiezoStep.SelectedIndexChanged += new System.EventHandler(this.comboBoxPiezoStep_SelectedIndexChanged);
             // 
@@ -1356,10 +1378,9 @@
             this.buttonPiezoSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonPiezoSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonPiezoSearch.ForeColor = System.Drawing.Color.Silver;
-            this.buttonPiezoSearch.Location = new System.Drawing.Point(345, 1385);
-            this.buttonPiezoSearch.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.buttonPiezoSearch.Location = new System.Drawing.Point(138, 554);
             this.buttonPiezoSearch.Name = "buttonPiezoSearch";
-            this.buttonPiezoSearch.Size = new System.Drawing.Size(340, 90);
+            this.buttonPiezoSearch.Size = new System.Drawing.Size(136, 36);
             this.buttonPiezoSearch.TabIndex = 45;
             this.buttonPiezoSearch.Text = "Piezo Search";
             this.buttonPiezoSearch.UseVisualStyleBackColor = false;
@@ -1371,19 +1392,18 @@
             this.labelPiezoStep.BackColor = System.Drawing.Color.Transparent;
             this.labelPiezoStep.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPiezoStep.ForeColor = System.Drawing.Color.Silver;
-            this.labelPiezoStep.Location = new System.Drawing.Point(700, 1400);
-            this.labelPiezoStep.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelPiezoStep.Location = new System.Drawing.Point(280, 560);
             this.labelPiezoStep.Name = "labelPiezoStep";
-            this.labelPiezoStep.Size = new System.Drawing.Size(273, 54);
+            this.labelPiezoStep.Size = new System.Drawing.Size(110, 24);
             this.labelPiezoStep.TabIndex = 44;
             this.labelPiezoStep.Text = "Piezo Step: ";
             // 
             // pictureBoxCamBC
             // 
-            this.pictureBoxCamBC.Location = new System.Drawing.Point(2, 500);
+            this.pictureBoxCamBC.Location = new System.Drawing.Point(1, 200);
             this.pictureBoxCamBC.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxCamBC.Name = "pictureBoxCamBC";
-            this.pictureBoxCamBC.Size = new System.Drawing.Size(1125, 842);
+            this.pictureBoxCamBC.Size = new System.Drawing.Size(450, 337);
             this.pictureBoxCamBC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxCamBC.TabIndex = 38;
             this.pictureBoxCamBC.TabStop = false;
@@ -1393,10 +1413,9 @@
             this.labelStatusValueBC.AutoSize = true;
             this.labelStatusValueBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStatusValueBC.ForeColor = System.Drawing.Color.Lime;
-            this.labelStatusValueBC.Location = new System.Drawing.Point(265, 1555);
-            this.labelStatusValueBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelStatusValueBC.Location = new System.Drawing.Point(106, 622);
             this.labelStatusValueBC.Name = "labelStatusValueBC";
-            this.labelStatusValueBC.Size = new System.Drawing.Size(186, 76);
+            this.labelStatusValueBC.Size = new System.Drawing.Size(79, 31);
             this.labelStatusValueBC.TabIndex = 36;
             this.labelStatusValueBC.Text = "IDLE";
             // 
@@ -1405,10 +1424,9 @@
             this.labelStatusBC.AutoSize = true;
             this.labelStatusBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStatusBC.ForeColor = System.Drawing.Color.Silver;
-            this.labelStatusBC.Location = new System.Drawing.Point(22, 1555);
-            this.labelStatusBC.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelStatusBC.Location = new System.Drawing.Point(9, 622);
             this.labelStatusBC.Name = "labelStatusBC";
-            this.labelStatusBC.Size = new System.Drawing.Size(269, 76);
+            this.labelStatusBC.Size = new System.Drawing.Size(115, 31);
             this.labelStatusBC.TabIndex = 35;
             this.labelStatusBC.Text = "Status: ";
             // 
@@ -1417,10 +1435,9 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F, System.Drawing.FontStyle.Bold);
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label9.Location = new System.Drawing.Point(92, 338);
-            this.label9.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label9.Location = new System.Drawing.Point(37, 135);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(930, 153);
+            this.label9.Size = new System.Drawing.Size(384, 63);
             this.label9.TabIndex = 30;
             this.label9.Text = "Beetle Control";
             // 
@@ -1429,10 +1446,9 @@
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(180, 50);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.pictureBox1.Location = new System.Drawing.Point(72, 20);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(738, 275);
+            this.pictureBox1.Size = new System.Drawing.Size(295, 110);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
@@ -1448,8 +1464,7 @@
             0,
             0,
             196608});
-            this.numericUpDownY.Location = new System.Drawing.Point(1388, 738);
-            this.numericUpDownY.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownY.Location = new System.Drawing.Point(555, 295);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1461,7 +1476,7 @@
             0,
             -2147483648});
             this.numericUpDownY.Name = "numericUpDownY";
-            this.numericUpDownY.Size = new System.Drawing.Size(250, 64);
+            this.numericUpDownY.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownY.TabIndex = 24;
             // 
             // numericUpDownRz
@@ -1475,8 +1490,7 @@
             0,
             0,
             65536});
-            this.numericUpDownRz.Location = new System.Drawing.Point(1968, 345);
-            this.numericUpDownRz.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownRz.Location = new System.Drawing.Point(787, 138);
             this.numericUpDownRz.Maximum = new decimal(new int[] {
             6,
             0,
@@ -1488,7 +1502,7 @@
             0,
             -2147483648});
             this.numericUpDownRz.Name = "numericUpDownRz";
-            this.numericUpDownRz.Size = new System.Drawing.Size(152, 64);
+            this.numericUpDownRz.Size = new System.Drawing.Size(61, 28);
             this.numericUpDownRz.TabIndex = 28;
             // 
             // label7
@@ -1497,19 +1511,17 @@
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Black;
-            this.label7.Location = new System.Drawing.Point(1325, 10);
-            this.label7.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label7.Location = new System.Drawing.Point(530, 4);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(92, 63);
+            this.label7.Size = new System.Drawing.Size(40, 26);
             this.label7.TabIndex = 17;
             this.label7.Text = "Py";
             // 
             // cartesianChartMotorB
             // 
-            this.cartesianChartMotorB.Location = new System.Drawing.Point(2428, 675);
-            this.cartesianChartMotorB.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.cartesianChartMotorB.Location = new System.Drawing.Point(971, 270);
             this.cartesianChartMotorB.Name = "cartesianChartMotorB";
-            this.cartesianChartMotorB.Size = new System.Drawing.Size(758, 465);
+            this.cartesianChartMotorB.Size = new System.Drawing.Size(303, 186);
             this.cartesianChartMotorB.TabIndex = 24;
             this.cartesianChartMotorB.Text = "cartesianChart4";
             // 
@@ -1524,28 +1536,26 @@
             0,
             0,
             65536});
-            this.numericUpDownRy.Location = new System.Drawing.Point(1482, 818);
-            this.numericUpDownRy.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownRy.Location = new System.Drawing.Point(593, 327);
             this.numericUpDownRy.Maximum = new decimal(new int[] {
-            6,
+            7,
             0,
             0,
             0});
             this.numericUpDownRy.Minimum = new decimal(new int[] {
-            6,
+            7,
             0,
             0,
             -2147483648});
             this.numericUpDownRy.Name = "numericUpDownRy";
-            this.numericUpDownRy.Size = new System.Drawing.Size(155, 64);
+            this.numericUpDownRy.Size = new System.Drawing.Size(62, 28);
             this.numericUpDownRy.TabIndex = 27;
             // 
             // cartesianChartMotorA
             // 
-            this.cartesianChartMotorA.Location = new System.Drawing.Point(2428, 132);
-            this.cartesianChartMotorA.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.cartesianChartMotorA.Location = new System.Drawing.Point(971, 53);
             this.cartesianChartMotorA.Name = "cartesianChartMotorA";
-            this.cartesianChartMotorA.Size = new System.Drawing.Size(758, 465);
+            this.cartesianChartMotorA.Size = new System.Drawing.Size(303, 186);
             this.cartesianChartMotorA.TabIndex = 23;
             this.cartesianChartMotorA.Text = "cartesianChart3";
             // 
@@ -1555,10 +1565,9 @@
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(1510, 10);
-            this.label6.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.label6.Location = new System.Drawing.Point(604, 4);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(92, 63);
+            this.label6.Size = new System.Drawing.Size(40, 26);
             this.label6.TabIndex = 18;
             this.label6.Text = "Pz";
             // 
@@ -1574,8 +1583,7 @@
             0,
             0,
             196608});
-            this.numericUpDownZ.Location = new System.Drawing.Point(1850, 262);
-            this.numericUpDownZ.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownZ.Location = new System.Drawing.Point(740, 105);
             this.numericUpDownZ.Maximum = new decimal(new int[] {
             150,
             0,
@@ -1587,7 +1595,7 @@
             0,
             -2147483648});
             this.numericUpDownZ.Name = "numericUpDownZ";
-            this.numericUpDownZ.Size = new System.Drawing.Size(270, 64);
+            this.numericUpDownZ.Size = new System.Drawing.Size(108, 28);
             this.numericUpDownZ.TabIndex = 25;
             this.numericUpDownZ.Value = new decimal(new int[] {
             140,
@@ -1606,20 +1614,19 @@
             0,
             0,
             65536});
-            this.numericUpDownRx.Location = new System.Drawing.Point(2260, 755);
-            this.numericUpDownRx.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownRx.Location = new System.Drawing.Point(904, 302);
             this.numericUpDownRx.Maximum = new decimal(new int[] {
-            6,
+            7,
             0,
             0,
             0});
             this.numericUpDownRx.Minimum = new decimal(new int[] {
-            6,
+            7,
             0,
             0,
             -2147483648});
             this.numericUpDownRx.Name = "numericUpDownRx";
-            this.numericUpDownRx.Size = new System.Drawing.Size(152, 64);
+            this.numericUpDownRx.Size = new System.Drawing.Size(61, 28);
             this.numericUpDownRx.TabIndex = 26;
             // 
             // numericUpDownX
@@ -1633,8 +1640,7 @@
             0,
             0,
             196608});
-            this.numericUpDownX.Location = new System.Drawing.Point(2162, 675);
-            this.numericUpDownX.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.numericUpDownX.Location = new System.Drawing.Point(865, 270);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             9,
             0,
@@ -1646,20 +1652,458 @@
             0,
             -2147483648});
             this.numericUpDownX.Name = "numericUpDownX";
-            this.numericUpDownX.Size = new System.Drawing.Size(250, 64);
+            this.numericUpDownX.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownX.TabIndex = 23;
             // 
             // pictureBoxFigure
             // 
             this.pictureBoxFigure.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxFigure.Image = global::Beetle.Properties.Resources.Beetle_3D;
-            this.pictureBoxFigure.Location = new System.Drawing.Point(1138, 180);
+            this.pictureBoxFigure.Location = new System.Drawing.Point(455, 72);
             this.pictureBoxFigure.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxFigure.Name = "pictureBoxFigure";
-            this.pictureBoxFigure.Size = new System.Drawing.Size(1282, 1518);
+            this.pictureBoxFigure.Size = new System.Drawing.Size(513, 607);
             this.pictureBoxFigure.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxFigure.TabIndex = 0;
             this.pictureBoxFigure.TabStop = false;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.labelPiezoPosValue1woa);
+            this.tabPage1.Controls.Add(this.labelPiezoPos1woa);
+            this.tabPage1.Controls.Add(this.buttonPiezoSearch1woa);
+            this.tabPage1.Controls.Add(this.buttonPiezoReset1woa);
+            this.tabPage1.Controls.Add(this.buttonSetPivot1woa);
+            this.tabPage1.Controls.Add(this.labelPz1woa);
+            this.tabPage1.Controls.Add(this.labelPy1woa);
+            this.tabPage1.Controls.Add(this.labelPx1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownPz1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownPy1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownPx1woa);
+            this.tabPage1.Controls.Add(this.buttonGo1woa);
+            this.tabPage1.Controls.Add(this.buttonGoSyn1woa);
+            this.tabPage1.Controls.Add(this.buttonSetInitial1woa);
+            this.tabPage1.Controls.Add(this.labelBeetle1);
+            this.tabPage1.Controls.Add(this.numericUpDownRz1woa);
+            this.tabPage1.Controls.Add(this.labelRz1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownRy1woa);
+            this.tabPage1.Controls.Add(this.labelRy1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownRx1woa);
+            this.tabPage1.Controls.Add(this.labelRx1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownZ1woa);
+            this.tabPage1.Controls.Add(this.labelZ1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownY1woa);
+            this.tabPage1.Controls.Add(this.labelY1woa);
+            this.tabPage1.Controls.Add(this.numericUpDownX1woa);
+            this.tabPage1.Controls.Add(this.labelX1woa);
+            this.tabPage1.Location = new System.Drawing.Point(4, 34);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1282, 682);
+            this.tabPage1.TabIndex = 3;
+            this.tabPage1.Text = "WOA";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // labelPiezoPosValue1woa
+            // 
+            this.labelPiezoPosValue1woa.AutoSize = true;
+            this.labelPiezoPosValue1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPiezoPosValue1woa.Location = new System.Drawing.Point(60, 563);
+            this.labelPiezoPosValue1woa.Name = "labelPiezoPosValue1woa";
+            this.labelPiezoPosValue1woa.Size = new System.Drawing.Size(196, 26);
+            this.labelPiezoPosValue1woa.TabIndex = 26;
+            this.labelPiezoPosValue1woa.Text = "2048, 2048, 2048";
+            // 
+            // labelPiezoPos1woa
+            // 
+            this.labelPiezoPos1woa.AutoSize = true;
+            this.labelPiezoPos1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPiezoPos1woa.Location = new System.Drawing.Point(60, 537);
+            this.labelPiezoPos1woa.Name = "labelPiezoPos1woa";
+            this.labelPiezoPos1woa.Size = new System.Drawing.Size(281, 26);
+            this.labelPiezoPos1woa.TabIndex = 25;
+            this.labelPiezoPos1woa.Text = "Piezo DAC Value (0-4096): ";
+            // 
+            // buttonPiezoSearch1woa
+            // 
+            this.buttonPiezoSearch1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPiezoSearch1woa.Location = new System.Drawing.Point(196, 476);
+            this.buttonPiezoSearch1woa.Name = "buttonPiezoSearch1woa";
+            this.buttonPiezoSearch1woa.Size = new System.Drawing.Size(117, 58);
+            this.buttonPiezoSearch1woa.TabIndex = 24;
+            this.buttonPiezoSearch1woa.Text = "Piezo Search";
+            this.buttonPiezoSearch1woa.UseVisualStyleBackColor = true;
+            // 
+            // buttonPiezoReset1woa
+            // 
+            this.buttonPiezoReset1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPiezoReset1woa.Location = new System.Drawing.Point(64, 476);
+            this.buttonPiezoReset1woa.Name = "buttonPiezoReset1woa";
+            this.buttonPiezoReset1woa.Size = new System.Drawing.Size(117, 58);
+            this.buttonPiezoReset1woa.TabIndex = 23;
+            this.buttonPiezoReset1woa.Text = "Piezo Reset";
+            this.buttonPiezoReset1woa.UseVisualStyleBackColor = true;
+            // 
+            // buttonSetPivot1woa
+            // 
+            this.buttonSetPivot1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetPivot1woa.Location = new System.Drawing.Point(196, 376);
+            this.buttonSetPivot1woa.Name = "buttonSetPivot1woa";
+            this.buttonSetPivot1woa.Size = new System.Drawing.Size(117, 64);
+            this.buttonSetPivot1woa.TabIndex = 22;
+            this.buttonSetPivot1woa.Text = "Set Pivot Point";
+            this.buttonSetPivot1woa.UseVisualStyleBackColor = true;
+            // 
+            // labelPz1woa
+            // 
+            this.labelPz1woa.AutoSize = true;
+            this.labelPz1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPz1woa.Location = new System.Drawing.Point(59, 376);
+            this.labelPz1woa.Name = "labelPz1woa";
+            this.labelPz1woa.Size = new System.Drawing.Size(42, 29);
+            this.labelPz1woa.TabIndex = 21;
+            this.labelPz1woa.Text = "Pz";
+            // 
+            // labelPy1woa
+            // 
+            this.labelPy1woa.AutoSize = true;
+            this.labelPy1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPy1woa.Location = new System.Drawing.Point(59, 309);
+            this.labelPy1woa.Name = "labelPy1woa";
+            this.labelPy1woa.Size = new System.Drawing.Size(42, 29);
+            this.labelPy1woa.TabIndex = 20;
+            this.labelPy1woa.Text = "Py";
+            // 
+            // labelPx1woa
+            // 
+            this.labelPx1woa.AutoSize = true;
+            this.labelPx1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPx1woa.Location = new System.Drawing.Point(60, 242);
+            this.labelPx1woa.Name = "labelPx1woa";
+            this.labelPx1woa.Size = new System.Drawing.Size(42, 29);
+            this.labelPx1woa.TabIndex = 19;
+            this.labelPx1woa.Text = "Px";
+            // 
+            // numericUpDownPz1woa
+            // 
+            this.numericUpDownPz1woa.DecimalPlaces = 1;
+            this.numericUpDownPz1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPz1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownPz1woa.Location = new System.Drawing.Point(64, 408);
+            this.numericUpDownPz1woa.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPz1woa.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownPz1woa.Name = "numericUpDownPz1woa";
+            this.numericUpDownPz1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownPz1woa.TabIndex = 18;
+            // 
+            // numericUpDownPy1woa
+            // 
+            this.numericUpDownPy1woa.DecimalPlaces = 1;
+            this.numericUpDownPy1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPy1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownPy1woa.Location = new System.Drawing.Point(64, 341);
+            this.numericUpDownPy1woa.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPy1woa.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownPy1woa.Name = "numericUpDownPy1woa";
+            this.numericUpDownPy1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownPy1woa.TabIndex = 17;
+            // 
+            // numericUpDownPx1woa
+            // 
+            this.numericUpDownPx1woa.DecimalPlaces = 1;
+            this.numericUpDownPx1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownPx1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownPx1woa.Location = new System.Drawing.Point(64, 274);
+            this.numericUpDownPx1woa.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPx1woa.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownPx1woa.Name = "numericUpDownPx1woa";
+            this.numericUpDownPx1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownPx1woa.TabIndex = 16;
+            // 
+            // buttonGo1woa
+            // 
+            this.buttonGo1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonGo1woa.Location = new System.Drawing.Point(363, 381);
+            this.buttonGo1woa.Name = "buttonGo1woa";
+            this.buttonGo1woa.Size = new System.Drawing.Size(119, 59);
+            this.buttonGo1woa.TabIndex = 15;
+            this.buttonGo1woa.Text = "Go Step-Mode";
+            this.buttonGo1woa.UseVisualStyleBackColor = true;
+            // 
+            // buttonGoSyn1woa
+            // 
+            this.buttonGoSyn1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonGoSyn1woa.Location = new System.Drawing.Point(363, 306);
+            this.buttonGoSyn1woa.Name = "buttonGoSyn1woa";
+            this.buttonGoSyn1woa.Size = new System.Drawing.Size(119, 59);
+            this.buttonGoSyn1woa.TabIndex = 14;
+            this.buttonGoSyn1woa.Text = "Go Syn-Mode";
+            this.buttonGoSyn1woa.UseVisualStyleBackColor = true;
+            // 
+            // buttonSetInitial1woa
+            // 
+            this.buttonSetInitial1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetInitial1woa.Location = new System.Drawing.Point(363, 242);
+            this.buttonSetInitial1woa.Name = "buttonSetInitial1woa";
+            this.buttonSetInitial1woa.Size = new System.Drawing.Size(119, 47);
+            this.buttonSetInitial1woa.TabIndex = 13;
+            this.buttonSetInitial1woa.Text = "Set Initial";
+            this.buttonSetInitial1woa.UseVisualStyleBackColor = true;
+            // 
+            // labelBeetle1
+            // 
+            this.labelBeetle1.AutoSize = true;
+            this.labelBeetle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelBeetle1.Location = new System.Drawing.Point(124, 16);
+            this.labelBeetle1.Name = "labelBeetle1";
+            this.labelBeetle1.Size = new System.Drawing.Size(285, 39);
+            this.labelBeetle1.TabIndex = 12;
+            this.labelBeetle1.Text = "Beetle System 1";
+            // 
+            // numericUpDownRz1woa
+            // 
+            this.numericUpDownRz1woa.DecimalPlaces = 1;
+            this.numericUpDownRz1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRz1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRz1woa.Location = new System.Drawing.Point(363, 191);
+            this.numericUpDownRz1woa.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numericUpDownRz1woa.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRz1woa.Name = "numericUpDownRz1woa";
+            this.numericUpDownRz1woa.Size = new System.Drawing.Size(119, 32);
+            this.numericUpDownRz1woa.TabIndex = 11;
+            // 
+            // labelRz1woa
+            // 
+            this.labelRz1woa.AutoSize = true;
+            this.labelRz1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRz1woa.Location = new System.Drawing.Point(358, 158);
+            this.labelRz1woa.Name = "labelRz1woa";
+            this.labelRz1woa.Size = new System.Drawing.Size(43, 29);
+            this.labelRz1woa.TabIndex = 10;
+            this.labelRz1woa.Text = "Rz";
+            // 
+            // numericUpDownRy1woa
+            // 
+            this.numericUpDownRy1woa.DecimalPlaces = 1;
+            this.numericUpDownRy1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRy1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRy1woa.Location = new System.Drawing.Point(213, 191);
+            this.numericUpDownRy1woa.Maximum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.numericUpDownRy1woa.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRy1woa.Name = "numericUpDownRy1woa";
+            this.numericUpDownRy1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownRy1woa.TabIndex = 9;
+            // 
+            // labelRy1woa
+            // 
+            this.labelRy1woa.AutoSize = true;
+            this.labelRy1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRy1woa.Location = new System.Drawing.Point(208, 158);
+            this.labelRy1woa.Name = "labelRy1woa";
+            this.labelRy1woa.Size = new System.Drawing.Size(43, 29);
+            this.labelRy1woa.TabIndex = 8;
+            this.labelRy1woa.Text = "Ry";
+            // 
+            // numericUpDownRx1woa
+            // 
+            this.numericUpDownRx1woa.DecimalPlaces = 1;
+            this.numericUpDownRx1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownRx1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownRx1woa.Location = new System.Drawing.Point(64, 191);
+            this.numericUpDownRx1woa.Maximum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.numericUpDownRx1woa.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownRx1woa.Name = "numericUpDownRx1woa";
+            this.numericUpDownRx1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownRx1woa.TabIndex = 7;
+            // 
+            // labelRx1woa
+            // 
+            this.labelRx1woa.AutoSize = true;
+            this.labelRx1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRx1woa.Location = new System.Drawing.Point(59, 158);
+            this.labelRx1woa.Name = "labelRx1woa";
+            this.labelRx1woa.Size = new System.Drawing.Size(43, 29);
+            this.labelRx1woa.TabIndex = 6;
+            this.labelRx1woa.Text = "Rx";
+            // 
+            // numericUpDownZ1woa
+            // 
+            this.numericUpDownZ1woa.DecimalPlaces = 4;
+            this.numericUpDownZ1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownZ1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.numericUpDownZ1woa.Location = new System.Drawing.Point(363, 107);
+            this.numericUpDownZ1woa.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownZ1woa.Minimum = new decimal(new int[] {
+            130,
+            0,
+            0,
+            0});
+            this.numericUpDownZ1woa.Name = "numericUpDownZ1woa";
+            this.numericUpDownZ1woa.Size = new System.Drawing.Size(119, 32);
+            this.numericUpDownZ1woa.TabIndex = 5;
+            this.numericUpDownZ1woa.Value = new decimal(new int[] {
+            138,
+            0,
+            0,
+            0});
+            // 
+            // labelZ1woa
+            // 
+            this.labelZ1woa.AutoSize = true;
+            this.labelZ1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelZ1woa.Location = new System.Drawing.Point(358, 74);
+            this.labelZ1woa.Name = "labelZ1woa";
+            this.labelZ1woa.Size = new System.Drawing.Size(28, 29);
+            this.labelZ1woa.TabIndex = 4;
+            this.labelZ1woa.Text = "Z";
+            // 
+            // numericUpDownY1woa
+            // 
+            this.numericUpDownY1woa.DecimalPlaces = 4;
+            this.numericUpDownY1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownY1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.numericUpDownY1woa.Location = new System.Drawing.Point(213, 107);
+            this.numericUpDownY1woa.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.numericUpDownY1woa.Minimum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownY1woa.Name = "numericUpDownY1woa";
+            this.numericUpDownY1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownY1woa.TabIndex = 3;
+            // 
+            // labelY1woa
+            // 
+            this.labelY1woa.AutoSize = true;
+            this.labelY1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelY1woa.Location = new System.Drawing.Point(208, 74);
+            this.labelY1woa.Name = "labelY1woa";
+            this.labelY1woa.Size = new System.Drawing.Size(30, 29);
+            this.labelY1woa.TabIndex = 2;
+            this.labelY1woa.Text = "Y";
+            // 
+            // numericUpDownX1woa
+            // 
+            this.numericUpDownX1woa.DecimalPlaces = 4;
+            this.numericUpDownX1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownX1woa.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.numericUpDownX1woa.Location = new System.Drawing.Point(64, 107);
+            this.numericUpDownX1woa.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.numericUpDownX1woa.Minimum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownX1woa.Name = "numericUpDownX1woa";
+            this.numericUpDownX1woa.Size = new System.Drawing.Size(100, 32);
+            this.numericUpDownX1woa.TabIndex = 1;
+            // 
+            // labelX1woa
+            // 
+            this.labelX1woa.AutoSize = true;
+            this.labelX1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelX1woa.Location = new System.Drawing.Point(59, 74);
+            this.labelX1woa.Name = "labelX1woa";
+            this.labelX1woa.Size = new System.Drawing.Size(31, 29);
+            this.labelX1woa.TabIndex = 0;
+            this.labelX1woa.Text = "X";
             // 
             // refreshTimer
             // 
@@ -1669,14 +2113,13 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(240F, 240F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(3210, 1778);
+            this.ClientSize = new System.Drawing.Size(1284, 711);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1706,6 +2149,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFigure)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPz1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRz1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRy1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRx1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZ1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY1woa)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX1woa)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1809,6 +2263,37 @@
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.ComboBox comboBoxFixtureNum;
         private System.Windows.Forms.Label labelBeetleFixture;
+        private System.Windows.Forms.Button buttonSetPositionSyn;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.NumericUpDown numericUpDownX1woa;
+        private System.Windows.Forms.Label labelX1woa;
+        private System.Windows.Forms.Label labelBeetle1;
+        private System.Windows.Forms.NumericUpDown numericUpDownRz1woa;
+        private System.Windows.Forms.Label labelRz1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownRy1woa;
+        private System.Windows.Forms.Label labelRy1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownRx1woa;
+        private System.Windows.Forms.Label labelRx1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownZ1woa;
+        private System.Windows.Forms.Label labelZ1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownY1woa;
+        private System.Windows.Forms.Label labelY1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownPz1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownPy1woa;
+        private System.Windows.Forms.NumericUpDown numericUpDownPx1woa;
+        private System.Windows.Forms.Button buttonGo1woa;
+        private System.Windows.Forms.Button buttonGoSyn1woa;
+        private System.Windows.Forms.Button buttonSetInitial1woa;
+        private System.Windows.Forms.Label labelPz1woa;
+        private System.Windows.Forms.Label labelPy1woa;
+        private System.Windows.Forms.Label labelPx1woa;
+        private System.Windows.Forms.Button buttonSetPivot1woa;
+        private System.Windows.Forms.Button buttonPiezoSearch1woa;
+        private System.Windows.Forms.Button buttonPiezoReset1woa;
+        private System.Windows.Forms.Label labelPiezoPosValue1woa;
+        private System.Windows.Forms.Label labelPiezoPos1woa;
+        private System.Windows.Forms.ComboBox comboBoxBeetleSelect;
+        private System.Windows.Forms.Label labelSystemSelect;
     }
 }
 

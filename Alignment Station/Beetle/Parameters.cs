@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Ports;
 
 namespace Beetle
 {
@@ -76,6 +75,12 @@ namespace Beetle
             pivotPoint[0] = Properties.Fixture.Default.PivotX;
             pivotPoint[1] = Properties.Fixture.Default.PivotY;
             pivotPoint[2] = Properties.Fixture.Default.PivotZ;
+            position[0] = Properties.Fixture.Default.InitialX;
+            position[1] = Properties.Fixture.Default.InitialY;
+            position[2] = Properties.Fixture.Default.InitialZ;
+            position[3] = Properties.Fixture.Default.InitialRx;
+            position[4] = Properties.Fixture.Default.InitialRy;
+            position[5] = Properties.Fixture.Default.InitialRz;
             beetleFixtureNumber = Properties.Fixture.Default.BeetleFixtureNum;
 
             PowerMeter.lossReference = Properties.Powermeter.Default.Reference;

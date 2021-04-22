@@ -79,8 +79,8 @@ namespace Beetle
                     break;
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-                //ZSteppingSearch();
-                ZSearch();
+                ZSteppingSearch();
+                //ZSearch();
             }
 
             beetleControl.NormalTrajSpeed();
