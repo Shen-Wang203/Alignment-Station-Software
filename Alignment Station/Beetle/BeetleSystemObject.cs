@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Beetle
+﻿namespace Beetle
 {
     class BeetleSystemObject
     {
@@ -11,6 +9,7 @@ namespace Beetle
         public BeetleCuring bc;
         public PiezoControl piezoControl;
         private BeetleDetection beetleDetection;
+        public WOAAlignment woa;
 
         public BeetleSystemObject()
         {
@@ -32,6 +31,8 @@ namespace Beetle
             ba = new BeetleAlignment(parameters, beetleControl, piezoControl);
             bc = new BeetleCuring(parameters, beetleControl, piezoControl);
         }
+
+        public void WOAInit() => woa = new WOAAlignment(parameters, beetleControl, piezoControl);
 
     }
 }

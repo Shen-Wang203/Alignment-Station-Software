@@ -340,7 +340,8 @@ namespace Beetle
         {
             double[] Tmm = mathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
             int[] targetCounts = TranslateToCounts(Tmm);
-            position.CopyTo(parameters.position, 0);
+            if (checkOnTarget)
+                position.CopyTo(parameters.position, 0);
             GotoTargetCounts(targetCounts, freedom: 'a', mode: mode, doubleCheck: doubleCheck, stopInBetween: stopInBetween, ignoreError: ignoreError, checkOnTarget: checkOnTarget, speed: speed);
         }
 
@@ -408,6 +409,7 @@ namespace Beetle
 
         // ZAbs is the platform z absolute position in mm
         // will update Parameters.position
+        // if speed is smaller than 0 means to keep the speed as it is.
         public void ZMoveTo(double ZAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, bool normToFace = true, int speed = 400)
         {
             sbyte zDirec;
@@ -496,7 +498,7 @@ namespace Beetle
             }
             int timeoutloop, timeout = 50;
             if (mode == 't')
-                timeout = 300; // traj mode time out is about 30s
+                timeout = 60; // traj mode time out is about 30s
             SetOnTargetFlag(freedom);
             // try three times on doublecheck
             for (int i = 0; i < 3; i++)
@@ -504,9 +506,23 @@ namespace Beetle
                 SendCounts(targetCounts, mode: mode, speed: speed);
                 // timeout for about 5s
                 timeoutloop = 0;
-                while (checkOnTarget && timeoutloop < timeout)
+                while (checkOnTarget && timeoutloop < timeout && !parameters.errorFlag)
                 {
-                    Thread.Sleep(100);
+                    if (mode == 't')
+                    {
+                        // come to here only when: 1. in Syn-Mode; 2. in XYZ scan search. 
+                        Thread.Sleep(500);
+                        // Purpose for the following code: 
+                        // At least 3 motors will move and should stop at same time. Check onTargetFlag, if over 4 motors are in position the others are not, then
+                        // errors may exist on those motors. So check the error here to break the loop earlier. 
+                        sbyte sum = 0;
+                        for (sbyte ii = 0; ii < 6; ii++)
+                            sum += onTargetFlag[ii];
+                        if (sum > 4)
+                            CheckErrors();
+                    }
+                    else
+                        Thread.Sleep(100);
                     if (OnTarget(targetCounts))
                         break;
                     timeoutloop++;
@@ -610,7 +626,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
                 return "";
                 // TODO: exit this threading directly
             }
@@ -622,7 +638,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
             return message;
         }
@@ -640,7 +656,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
                 return "";
             }
             try
@@ -652,7 +668,7 @@ namespace Beetle
                 message = "";
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
             return message;
         }
@@ -670,7 +686,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
                 return "";
             }
             try
@@ -682,7 +698,7 @@ namespace Beetle
                 message = "";
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
             return message;
         }
@@ -697,7 +713,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
         } 
 
@@ -712,7 +728,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
         }
 
@@ -726,7 +742,7 @@ namespace Beetle
             {
                 MessageBox.Show(e.Message + "\nBeetle COM Port Failed");
                 parameters.errorFlag = true;
-                parameters.errors = "Beetle COM Port Failed";
+                parameters.errors = "\nBeetle COM Port Failed";
             }
         }
 
@@ -755,10 +771,12 @@ namespace Beetle
 
             int[] delta = new int[6] { Math.Abs(counts[0] - countsReal[0]), Math.Abs(counts[1] - countsReal[1]), Math.Abs(counts[2] - countsReal[2]),
                                         Math.Abs(counts[3] - countsReal[3]), Math.Abs(counts[4] - countsReal[4]), Math.Abs(counts[5] - countsReal[5])};
-            zTrajT1xCountRange = delta[0];
             // Change each axial's speed so that all axial can stop at the same time
             if (mode == 't' && speed > 0)
+            {
                 SpeedCalForTraj(delta, speed);
+                zTrajT1xCountRange = delta[0]; // used to track position at Z traj scan mode
+            }
             else if (!normalSpeedFlag && speed > 0)
                 NormalTrajSpeed();
 

@@ -9,7 +9,7 @@
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="Reference" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">-18.591</Value>
+      <Value Profile="(Default)">-0.0993</Value>
     </Setting>
   </Settings>
 </SettingsFile>

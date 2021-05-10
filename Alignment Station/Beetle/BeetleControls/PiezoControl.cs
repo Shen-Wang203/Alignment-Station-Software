@@ -70,11 +70,17 @@ namespace Beetle
             parameters.piezoPosition[ch] = dacValue;
         }
 
-        public void Reset()
+        // axis 0-2 means x,y,z; 3 means all axials
+        public void Reset(byte axis = 3)
         {
-            Send(0, 0x800);
-            Send(1, 0x800);
-            Send(2, 0x800);
+            if (axis == 3)
+            {
+                Send(0, 0x800);
+                Send(1, 0x800);
+                Send(2, 0x800);
+            }
+            else
+                Send(axis, 0x800);
         }
 
         public void TestRun()

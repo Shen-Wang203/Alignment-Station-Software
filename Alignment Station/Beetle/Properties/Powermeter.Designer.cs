@@ -49,7 +49,7 @@ namespace Beetle.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-18.591")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-0.0993")]
         public double Reference {
             get {
                 return ((double)(this["Reference"]));

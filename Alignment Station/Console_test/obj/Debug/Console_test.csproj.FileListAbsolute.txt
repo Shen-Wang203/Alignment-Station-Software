@@ -22,3 +22,11 @@ C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Console_test\obj\Debug\
 C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CopyComplete
 C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.exe
 C:\Users\sw623\Desktop\WFH\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\bin\Debug\Console_test.exe.config
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\bin\Debug\Console_test.exe
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\bin\Debug\Console_test.pdb
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.csprojAssemblyReference.cache
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CoreCompileInputs.cache
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.csproj.CopyComplete
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.exe
+C:\Users\swanggamma01\Desktop\Alignment Stage\C# Software\Alignment Station\Console_test\obj\Debug\Console_test.pdb

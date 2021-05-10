@@ -13,6 +13,9 @@ namespace Beetle
         private bool stopReadPM = false;
         private bool chartsOn = false;
         private bool tabBC = false; // whether on Beetle Control tab
+        private bool numericUpDownEditting = false;
+        private bool beetle1Connected = false;
+        private bool beetle2Connected = false;
         private DateTime thisTime, startTime;
         private TimeSpan timeElapsed;
 
@@ -45,21 +48,14 @@ namespace Beetle
             bt.parameters.LoadAll();
             if (!bt.Connection())
             {
-                buttonCalibration.Enabled = false;
-                buttonClearError.Enabled = false;
-                //buttonTest.Enabled = false;
-                buttonClose.Enabled = false;
-                buttonCancleRun.Enabled = false;
-                ButtonReset.Enabled = false;
-                ButtonAlignment.Enabled = false;
-                ButtonPreCuring.Enabled = false;
-                ButtonCuring.Enabled = false;
-                // disable buttons on stage tab
-                buttonSetPosition.Enabled = false;
-                buttonSetInitial.Enabled = false;
-                buttonClearErrorBC.Enabled = false;
-                buttonPiezoReset.Enabled = false;
-                buttonPiezoSearch.Enabled = false;
+                ButtonEnables(false);
+                beetle1Connected = false;
+                labelControlBoxNum.Text = "Connected to Control Box *";
+            }
+            else
+            {
+                beetle1Connected = true;
+                labelControlBoxNum.Text = "Connected to Control Box " + bt.parameters.beetleControlBoxNum;
             }
 
             // comboBox Initial index
@@ -115,9 +111,8 @@ namespace Beetle
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            bt.parameters.Save();
-            if (beetle2 != null)
-                beetle2.parameters.Save();
+            // Always only save beetle1's parameters
+            beetle1.parameters.Save();
         }
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
@@ -210,13 +205,16 @@ namespace Beetle
                 }
                 labelPiezoPositionValueBC.Text = bt.parameters.piezoPosition[0].ToString() + ", " + bt.parameters.piezoPosition[1].ToString() +
                                 ", " + bt.parameters.piezoPosition[2].ToString();
-                numericUpDownX.Value = (decimal)bt.parameters.position[0];
-                numericUpDownY.Value = (decimal)bt.parameters.position[1];
-                numericUpDownZ.Value = (decimal)bt.parameters.position[2];
-                numericUpDownRx.Value = (decimal)bt.parameters.position[3];
-                numericUpDownRy.Value = (decimal)bt.parameters.position[4];
-                numericUpDownRz.Value = (decimal)bt.parameters.position[5];
 
+                if (!numericUpDownEditting)
+                {
+                    numericUpDownX.Value = (decimal)bt.parameters.position[0];
+                    numericUpDownY.Value = (decimal)bt.parameters.position[1];
+                    numericUpDownZ.Value = (decimal)bt.parameters.position[2];
+                    numericUpDownRx.Value = (decimal)bt.parameters.position[3];
+                    numericUpDownRy.Value = (decimal)bt.parameters.position[4];
+                    numericUpDownRz.Value = (decimal)bt.parameters.position[5];
+                }
                 MotorChartsUpdate();
             }
 
@@ -267,9 +265,18 @@ namespace Beetle
                 bt.piezoControl.Reset();
                 Thread.Sleep(500);
 
-                if (bt.ba == null)
-                    bt.AlignCuringInit();
-                runThread = new Thread(bt.ba.AlignmentRun);
+                if (bt.parameters.productName != "WOA")
+                {
+                    if (bt.ba == null)
+                        bt.AlignCuringInit();
+                    runThread = new Thread(bt.ba.AlignmentRun);
+                }
+                else
+                {
+                    if (bt.woa == null)
+                        bt.WOAInit();
+                    runThread = new Thread(bt.woa.Run);
+                }
                 runThread.Start();
 
                 ButtonAlignment.BackColor = Color.Yellow;
@@ -398,6 +405,7 @@ namespace Beetle
             PowerMeter.lossReference = PowerMeter.Read("dBm");
             richTextBoxErrorMsg.Text += "Reference Set\n";
             bt.parameters.SaveReference();
+            numericUpDownReference.Value = (decimal)PowerMeter.lossReference;
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -450,7 +458,13 @@ namespace Beetle
             bt.beetleControl.GotoPosition(pp, mode: 't', checkOnTarget: false);
         }
 
-        private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e) => bt.parameters.productName = comboBoxProductSelect.Text;
+        private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bt.parameters.productName = comboBoxProductSelect.Text;
+            if (bt.ba == null)
+                bt.AlignCuringInit();
+            bt.ba.ProductSelect();
+        }
 
         private void comboBoxUsePiezo_SelectedIndexChanged(object sender, EventArgs e) => bt.parameters.usePiezo = comboBoxUsePiezo.SelectedIndex == 0;
 
@@ -475,6 +489,8 @@ namespace Beetle
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
             runThread = new Thread(bt.beetleControl.GotoTemp);
             runThread.Start();
+
+            numericUpDownEditting = false;
         }
 
         // The pivot point Z input value should be the distance between pivot point to top moving part top surface
@@ -512,11 +528,13 @@ namespace Beetle
                 return;
             }
 
-            runThread = new Thread(bt.ba.PiezoSearchRun);
+            if (bt.ba == null)
+                bt.AlignCuringInit();
+            runThread = new Thread(bt.ba.PiezoSearchXYZRun);
             runThread.Start();
         }
 
-        private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e)=> bt.parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
+        private void comboBoxPiezoStep_SelectedIndexChanged(object sender, EventArgs e) => bt.parameters.piezoStepSize = ushort.Parse(comboBoxPiezoStep.SelectedItem.ToString());
 
         private void richTextBoxErrorMsg_TextChanged(object sender, EventArgs e)
         {
@@ -544,6 +562,8 @@ namespace Beetle
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
             runThread = new Thread(bt.beetleControl.GotoTempSyn);
             runThread.Start();
+
+            numericUpDownEditting = false;
         }
 
         private void comboBoxBeetleSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -552,32 +572,36 @@ namespace Beetle
             {
                 beetle2 = new BeetleSystemObject();
                 beetle2.parameters.LoadAll();
-                if (!beetle2.Connection())
+                if (beetle2.Detect())
                 {
-                    buttonCalibration.Enabled = false;
-                    buttonClearError.Enabled = false;
-                    //buttonTest.Enabled = false;
-                    buttonClose.Enabled = false;
-                    buttonCancleRun.Enabled = false;
-                    ButtonReset.Enabled = false;
-                    ButtonAlignment.Enabled = false;
-                    ButtonPreCuring.Enabled = false;
-                    ButtonCuring.Enabled = false;
-                    // disable buttons on stage tab
-                    buttonSetPosition.Enabled = false;
-                    buttonSetInitial.Enabled = false;
-                    buttonClearErrorBC.Enabled = false;
-                    buttonPiezoReset.Enabled = false;
-                    buttonPiezoSearch.Enabled = false;
+                    //beetle2.parameters.SaveCOMPorts();
+                    richTextBoxErrorMsg.Text += "COM Ports Detected\n";
                 }
+                if (beetle2.Connection())
+                {
+                    ButtonEnables(true);
+                    beetle2Connected = true;
+                }
+                else
+                {
+                    ButtonEnables(false);
+                    beetle2Connected = false;
+                }    
             }
 
             if (comboBoxBeetleSelect.SelectedIndex == 1)
+            {
                 bt = beetle1;
+                ButtonEnables(beetle1Connected);
+            }
             else if (comboBoxBeetleSelect.SelectedIndex == 2)
+            {
                 bt = beetle2;
+                ButtonEnables(beetle2Connected);
+            }
             else
                 return;
+            labelControlBoxNum.Text = "Connected to Control Box " + bt.parameters.beetleControlBoxNum;
             ReloadBeetleInfo();
         }
 
@@ -594,15 +618,66 @@ namespace Beetle
             numericUpDownPy.Value = (decimal)bt.parameters.pivotPoint[1];
             numericUpDownPz.Value = (decimal)bt.parameters.pivotPoint[2] - 8;
 
+            numericUpDownReference.Value = (decimal)PowerMeter.lossReference;
+
             comboBoxFixtureNum.SelectedIndex = bt.parameters.beetleFixtureNumber;
             comboBoxPiezoStep.SelectedIndex = bt.parameters.piezoStepSize / 2 - 1;
         }
+
+        private void numericUpDown_Click(object sender, EventArgs e) => numericUpDownEditting = true;
 
         private void comboBoxPMChl_SelectedIndexChanged(object sender, EventArgs e)
         {
             PowerMeter.channel = (byte)(comboBoxPMChl.SelectedIndex + 1);
             PowerMeter.Open();
             bt.parameters.SavePMChl();
+        }
+
+        private void buttonSetRef_Click(object sender, EventArgs e)
+        {
+            PowerMeter.lossReference = (double)numericUpDownReference.Value;
+            richTextBoxErrorMsg.Text += "Reference Set\n";
+            bt.parameters.SaveReference();
+        }
+
+        private void ButtonEnables(bool enable)
+        {
+            if (enable)
+            {
+                buttonCalibration.Enabled = true;
+                buttonClearError.Enabled = true;
+                buttonTest.Enabled = true;
+                buttonClose.Enabled = true;
+                buttonCancleRun.Enabled = true;
+                ButtonReset.Enabled = true;
+                ButtonAlignment.Enabled = true;
+                ButtonPreCuring.Enabled = true;
+                ButtonCuring.Enabled = true;
+                // disable buttons on stage tab
+                buttonSetPosition.Enabled = true;
+                buttonSetInitial.Enabled = true;
+                buttonClearErrorBC.Enabled = true;
+                buttonPiezoReset.Enabled = true;
+                buttonPiezoSearch.Enabled = true;
+            }
+            else
+            {
+                buttonCalibration.Enabled = false;
+                buttonClearError.Enabled = false;
+                //buttonTest.Enabled = false;
+                buttonClose.Enabled = false;
+                buttonCancleRun.Enabled = false;
+                ButtonReset.Enabled = false;
+                ButtonAlignment.Enabled = false;
+                ButtonPreCuring.Enabled = false;
+                ButtonCuring.Enabled = false;
+                // disable buttons on stage tab
+                buttonSetPosition.Enabled = false;
+                buttonSetInitial.Enabled = false;
+                buttonClearErrorBC.Enabled = false;
+                buttonPiezoReset.Enabled = false;
+                buttonPiezoSearch.Enabled = false;
+            }
         }
     }
 }

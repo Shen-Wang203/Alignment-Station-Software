@@ -44,5 +44,8 @@
     <Setting Name="ArdnCOM" Type="System.String" Scope="User">
       <Value Profile="(Default)">COM4</Value>
     </Setting>
+    <Setting Name="BeetleControlBoxNum" Type="System.String" Scope="User">
+      <Value Profile="(Default)">*</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

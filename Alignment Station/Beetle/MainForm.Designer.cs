@@ -41,6 +41,9 @@
             this.buttonTest = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageAlignCuring = new System.Windows.Forms.TabPage();
+            this.buttonSetRef = new System.Windows.Forms.Button();
+            this.pictureBoxCam = new System.Windows.Forms.PictureBox();
+            this.numericUpDownReference = new System.Windows.Forms.NumericUpDown();
             this.comboBoxPMChl = new System.Windows.Forms.ComboBox();
             this.labelPMChl = new System.Windows.Forms.Label();
             this.labelPiezoPositionValue = new System.Windows.Forms.Label();
@@ -76,8 +79,8 @@
             this.label_camSelect = new System.Windows.Forms.Label();
             this.buttonConnectPM = new System.Windows.Forms.Button();
             this.comboBoxCamSelect = new System.Windows.Forms.ComboBox();
-            this.pictureBoxCam = new System.Windows.Forms.PictureBox();
             this.tabPageStageControl = new System.Windows.Forms.TabPage();
+            this.labelControlBoxNum = new System.Windows.Forms.Label();
             this.comboBoxBeetleSelect = new System.Windows.Forms.ComboBox();
             this.labelSystemSelect = new System.Windows.Forms.Label();
             this.buttonSetPositionSyn = new System.Windows.Forms.Button();
@@ -160,9 +163,10 @@
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPageAlignCuring.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReference)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).BeginInit();
             this.tabPageStageControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPy)).BeginInit();
@@ -351,6 +355,9 @@
             // tabPageAlignCuring
             // 
             this.tabPageAlignCuring.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+            this.tabPageAlignCuring.Controls.Add(this.buttonSetRef);
+            this.tabPageAlignCuring.Controls.Add(this.pictureBoxCam);
+            this.tabPageAlignCuring.Controls.Add(this.numericUpDownReference);
             this.tabPageAlignCuring.Controls.Add(this.comboBoxPMChl);
             this.tabPageAlignCuring.Controls.Add(this.labelPMChl);
             this.tabPageAlignCuring.Controls.Add(this.labelPiezoPositionValue);
@@ -373,7 +380,6 @@
             this.tabPageAlignCuring.Controls.Add(this.label_camSelect);
             this.tabPageAlignCuring.Controls.Add(this.buttonConnectPM);
             this.tabPageAlignCuring.Controls.Add(this.comboBoxCamSelect);
-            this.tabPageAlignCuring.Controls.Add(this.pictureBoxCam);
             this.tabPageAlignCuring.Controls.Add(this.labelILValue);
             this.tabPageAlignCuring.Controls.Add(this.ButtonReset);
             this.tabPageAlignCuring.Controls.Add(this.ButtonAlignment);
@@ -387,6 +393,54 @@
             this.tabPageAlignCuring.TabIndex = 2;
             this.tabPageAlignCuring.Text = "Alignment & Curing";
             // 
+            // buttonSetRef
+            // 
+            this.buttonSetRef.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(100)))));
+            this.buttonSetRef.FlatAppearance.BorderSize = 0;
+            this.buttonSetRef.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(64)))), ((int)(((byte)(150)))));
+            this.buttonSetRef.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSetRef.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSetRef.Location = new System.Drawing.Point(828, 40);
+            this.buttonSetRef.Name = "buttonSetRef";
+            this.buttonSetRef.Size = new System.Drawing.Size(110, 25);
+            this.buttonSetRef.TabIndex = 45;
+            this.buttonSetRef.Text = "Set Ref:";
+            this.buttonSetRef.UseVisualStyleBackColor = false;
+            this.buttonSetRef.Click += new System.EventHandler(this.buttonSetRef_Click);
+            // 
+            // pictureBoxCam
+            // 
+            this.pictureBoxCam.Location = new System.Drawing.Point(322, 37);
+            this.pictureBoxCam.Name = "pictureBoxCam";
+            this.pictureBoxCam.Size = new System.Drawing.Size(500, 375);
+            this.pictureBoxCam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxCam.TabIndex = 10;
+            this.pictureBoxCam.TabStop = false;
+            // 
+            // numericUpDownReference
+            // 
+            this.numericUpDownReference.DecimalPlaces = 5;
+            this.numericUpDownReference.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownReference.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+            this.numericUpDownReference.Location = new System.Drawing.Point(945, 41);
+            this.numericUpDownReference.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownReference.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownReference.Name = "numericUpDownReference";
+            this.numericUpDownReference.Size = new System.Drawing.Size(83, 23);
+            this.numericUpDownReference.TabIndex = 44;
+            // 
             // comboBoxPMChl
             // 
             this.comboBoxPMChl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
@@ -398,9 +452,9 @@
             "CH1",
             "CH2",
             "CH3"});
-            this.comboBoxPMChl.Location = new System.Drawing.Point(957, 23);
+            this.comboBoxPMChl.Location = new System.Drawing.Point(957, 10);
             this.comboBoxPMChl.Name = "comboBoxPMChl";
-            this.comboBoxPMChl.Size = new System.Drawing.Size(58, 24);
+            this.comboBoxPMChl.Size = new System.Drawing.Size(71, 24);
             this.comboBoxPMChl.TabIndex = 42;
             this.comboBoxPMChl.SelectedIndexChanged += new System.EventHandler(this.comboBoxPMChl_SelectedIndexChanged);
             // 
@@ -408,7 +462,7 @@
             // 
             this.labelPMChl.AutoSize = true;
             this.labelPMChl.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPMChl.Location = new System.Drawing.Point(828, 22);
+            this.labelPMChl.Location = new System.Drawing.Point(825, 10);
             this.labelPMChl.Name = "labelPMChl";
             this.labelPMChl.Size = new System.Drawing.Size(132, 25);
             this.labelPMChl.TabIndex = 41;
@@ -574,7 +628,8 @@
             this.comboBoxProductSelect.FormattingEnabled = true;
             this.comboBoxProductSelect.Items.AddRange(new object[] {
             "MM 1xN",
-            "SM 1xN"});
+            "SM 1xN",
+            "WOA"});
             this.comboBoxProductSelect.Location = new System.Drawing.Point(92, 371);
             this.comboBoxProductSelect.Name = "comboBoxProductSelect";
             this.comboBoxProductSelect.Size = new System.Drawing.Size(84, 24);
@@ -592,7 +647,7 @@
             this.buttonReference.Name = "buttonReference";
             this.buttonReference.Size = new System.Drawing.Size(160, 56);
             this.buttonReference.TabIndex = 17;
-            this.buttonReference.Text = "Reference";
+            this.buttonReference.Text = "Take Reference";
             this.buttonReference.UseVisualStyleBackColor = false;
             this.buttonReference.Click += new System.EventHandler(this.buttonReference_Click);
             // 
@@ -820,18 +875,10 @@
             this.comboBoxCamSelect.TabIndex = 11;
             this.comboBoxCamSelect.SelectedIndexChanged += new System.EventHandler(this.comboBoxCamSelect_SelectedIndexChanged);
             // 
-            // pictureBoxCam
-            // 
-            this.pictureBoxCam.Location = new System.Drawing.Point(322, 37);
-            this.pictureBoxCam.Name = "pictureBoxCam";
-            this.pictureBoxCam.Size = new System.Drawing.Size(500, 375);
-            this.pictureBoxCam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBoxCam.TabIndex = 10;
-            this.pictureBoxCam.TabStop = false;
-            // 
             // tabPageStageControl
             // 
             this.tabPageStageControl.BackColor = System.Drawing.Color.White;
+            this.tabPageStageControl.Controls.Add(this.labelControlBoxNum);
             this.tabPageStageControl.Controls.Add(this.comboBoxBeetleSelect);
             this.tabPageStageControl.Controls.Add(this.labelSystemSelect);
             this.tabPageStageControl.Controls.Add(this.buttonSetPositionSyn);
@@ -877,6 +924,18 @@
             this.tabPageStageControl.Size = new System.Drawing.Size(1282, 682);
             this.tabPageStageControl.TabIndex = 1;
             this.tabPageStageControl.Text = "Stage Control";
+            // 
+            // labelControlBoxNum
+            // 
+            this.labelControlBoxNum.AutoSize = true;
+            this.labelControlBoxNum.BackColor = System.Drawing.Color.Transparent;
+            this.labelControlBoxNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelControlBoxNum.ForeColor = System.Drawing.Color.Black;
+            this.labelControlBoxNum.Location = new System.Drawing.Point(744, 646);
+            this.labelControlBoxNum.Name = "labelControlBoxNum";
+            this.labelControlBoxNum.Size = new System.Drawing.Size(213, 20);
+            this.labelControlBoxNum.TabIndex = 54;
+            this.labelControlBoxNum.Text = "Connected to Control Box #3";
             // 
             // comboBoxBeetleSelect
             // 
@@ -927,7 +986,7 @@
             this.labelRy.BackColor = System.Drawing.Color.Transparent;
             this.labelRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRy.ForeColor = System.Drawing.Color.Black;
-            this.labelRy.Location = new System.Drawing.Point(550, 326);
+            this.labelRy.Location = new System.Drawing.Point(543, 326);
             this.labelRy.Name = "labelRy";
             this.labelRy.Size = new System.Drawing.Size(41, 26);
             this.labelRy.TabIndex = 50;
@@ -939,7 +998,7 @@
             this.labelRz.BackColor = System.Drawing.Color.Transparent;
             this.labelRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRz.ForeColor = System.Drawing.Color.Black;
-            this.labelRz.Location = new System.Drawing.Point(743, 138);
+            this.labelRz.Location = new System.Drawing.Point(737, 138);
             this.labelRz.Name = "labelRz";
             this.labelRz.Size = new System.Drawing.Size(41, 26);
             this.labelRz.TabIndex = 49;
@@ -951,7 +1010,7 @@
             this.labelRx.BackColor = System.Drawing.Color.Transparent;
             this.labelRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRx.ForeColor = System.Drawing.Color.Black;
-            this.labelRx.Location = new System.Drawing.Point(861, 301);
+            this.labelRx.Location = new System.Drawing.Point(858, 301);
             this.labelRx.Name = "labelRx";
             this.labelRx.Size = new System.Drawing.Size(41, 26);
             this.labelRx.TabIndex = 48;
@@ -1095,7 +1154,7 @@
             0,
             -2147483648});
             this.numericUpDownPx.Name = "numericUpDownPx";
-            this.numericUpDownPx.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownPx.Size = new System.Drawing.Size(72, 28);
             this.numericUpDownPx.TabIndex = 31;
             // 
             // buttonSetPivot
@@ -1106,7 +1165,7 @@
             this.buttonSetPivot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetPivot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetPivot.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetPivot.Location = new System.Drawing.Point(676, 1);
+            this.buttonSetPivot.Location = new System.Drawing.Point(700, 1);
             this.buttonSetPivot.Name = "buttonSetPivot";
             this.buttonSetPivot.Size = new System.Drawing.Size(99, 58);
             this.buttonSetPivot.TabIndex = 22;
@@ -1125,7 +1184,7 @@
             0,
             0,
             65536});
-            this.numericUpDownPy.Location = new System.Drawing.Point(535, 31);
+            this.numericUpDownPy.Location = new System.Drawing.Point(541, 31);
             this.numericUpDownPy.Maximum = new decimal(new int[] {
             200,
             0,
@@ -1137,7 +1196,7 @@
             0,
             -2147483648});
             this.numericUpDownPy.Name = "numericUpDownPy";
-            this.numericUpDownPy.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownPy.Size = new System.Drawing.Size(72, 28);
             this.numericUpDownPy.TabIndex = 32;
             // 
             // buttonClearErrorBC
@@ -1148,7 +1207,7 @@
             this.buttonClearErrorBC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClearErrorBC.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonClearErrorBC.ForeColor = System.Drawing.Color.Black;
-            this.buttonClearErrorBC.Location = new System.Drawing.Point(781, 1);
+            this.buttonClearErrorBC.Location = new System.Drawing.Point(808, 1);
             this.buttonClearErrorBC.Name = "buttonClearErrorBC";
             this.buttonClearErrorBC.Size = new System.Drawing.Size(99, 58);
             this.buttonClearErrorBC.TabIndex = 37;
@@ -1167,7 +1226,7 @@
             0,
             0,
             65536});
-            this.numericUpDownPz.Location = new System.Drawing.Point(608, 31);
+            this.numericUpDownPz.Location = new System.Drawing.Point(620, 31);
             this.numericUpDownPz.Maximum = new decimal(new int[] {
             200,
             0,
@@ -1179,7 +1238,7 @@
             0,
             -2147483648});
             this.numericUpDownPz.Name = "numericUpDownPz";
-            this.numericUpDownPz.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownPz.Size = new System.Drawing.Size(72, 28);
             this.numericUpDownPz.TabIndex = 33;
             // 
             // buttonSetPosition
@@ -1363,7 +1422,11 @@
             "6",
             "8",
             "10",
-            "12"});
+            "12",
+            "14",
+            "16",
+            "18",
+            "20"});
             this.comboBoxPiezoStep.Location = new System.Drawing.Point(396, 560);
             this.comboBoxPiezoStep.Name = "comboBoxPiezoStep";
             this.comboBoxPiezoStep.Size = new System.Drawing.Size(45, 24);
@@ -1478,19 +1541,20 @@
             this.numericUpDownY.Name = "numericUpDownY";
             this.numericUpDownY.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownY.TabIndex = 24;
+            this.numericUpDownY.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownRz
             // 
             this.numericUpDownRz.BackColor = System.Drawing.Color.Cyan;
             this.numericUpDownRz.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.numericUpDownRz.DecimalPlaces = 1;
+            this.numericUpDownRz.DecimalPlaces = 2;
             this.numericUpDownRz.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownRz.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
-            this.numericUpDownRz.Location = new System.Drawing.Point(787, 138);
+            131072});
+            this.numericUpDownRz.Location = new System.Drawing.Point(779, 138);
             this.numericUpDownRz.Maximum = new decimal(new int[] {
             6,
             0,
@@ -1502,8 +1566,9 @@
             0,
             -2147483648});
             this.numericUpDownRz.Name = "numericUpDownRz";
-            this.numericUpDownRz.Size = new System.Drawing.Size(61, 28);
+            this.numericUpDownRz.Size = new System.Drawing.Size(69, 28);
             this.numericUpDownRz.TabIndex = 28;
+            this.numericUpDownRz.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // label7
             // 
@@ -1511,7 +1576,7 @@
             this.label7.BackColor = System.Drawing.Color.Transparent;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Black;
-            this.label7.Location = new System.Drawing.Point(530, 4);
+            this.label7.Location = new System.Drawing.Point(536, 4);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(40, 26);
             this.label7.TabIndex = 17;
@@ -1529,14 +1594,14 @@
             // 
             this.numericUpDownRy.BackColor = System.Drawing.Color.Cyan;
             this.numericUpDownRy.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.numericUpDownRy.DecimalPlaces = 1;
+            this.numericUpDownRy.DecimalPlaces = 2;
             this.numericUpDownRy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownRy.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
-            this.numericUpDownRy.Location = new System.Drawing.Point(593, 327);
+            131072});
+            this.numericUpDownRy.Location = new System.Drawing.Point(586, 327);
             this.numericUpDownRy.Maximum = new decimal(new int[] {
             7,
             0,
@@ -1548,8 +1613,9 @@
             0,
             -2147483648});
             this.numericUpDownRy.Name = "numericUpDownRy";
-            this.numericUpDownRy.Size = new System.Drawing.Size(62, 28);
+            this.numericUpDownRy.Size = new System.Drawing.Size(69, 28);
             this.numericUpDownRy.TabIndex = 27;
+            this.numericUpDownRy.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // cartesianChartMotorA
             // 
@@ -1565,7 +1631,7 @@
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(604, 4);
+            this.label6.Location = new System.Drawing.Point(616, 4);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(40, 26);
             this.label6.TabIndex = 18;
@@ -1602,19 +1668,20 @@
             0,
             0,
             0});
+            this.numericUpDownZ.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownRx
             // 
             this.numericUpDownRx.BackColor = System.Drawing.Color.Cyan;
             this.numericUpDownRx.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.numericUpDownRx.DecimalPlaces = 1;
+            this.numericUpDownRx.DecimalPlaces = 2;
             this.numericUpDownRx.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numericUpDownRx.Increment = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
-            65536});
-            this.numericUpDownRx.Location = new System.Drawing.Point(904, 302);
+            131072});
+            this.numericUpDownRx.Location = new System.Drawing.Point(899, 302);
             this.numericUpDownRx.Maximum = new decimal(new int[] {
             7,
             0,
@@ -1626,8 +1693,9 @@
             0,
             -2147483648});
             this.numericUpDownRx.Name = "numericUpDownRx";
-            this.numericUpDownRx.Size = new System.Drawing.Size(61, 28);
+            this.numericUpDownRx.Size = new System.Drawing.Size(66, 28);
             this.numericUpDownRx.TabIndex = 26;
+            this.numericUpDownRx.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownX
             // 
@@ -1654,6 +1722,7 @@
             this.numericUpDownX.Name = "numericUpDownX";
             this.numericUpDownX.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownX.TabIndex = 23;
+            this.numericUpDownX.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // pictureBoxFigure
             // 
@@ -1733,6 +1802,7 @@
             this.buttonPiezoSearch1woa.TabIndex = 24;
             this.buttonPiezoSearch1woa.Text = "Piezo Search";
             this.buttonPiezoSearch1woa.UseVisualStyleBackColor = true;
+            this.buttonPiezoSearch1woa.Click += new System.EventHandler(this.buttonPiezoSearch_Click);
             // 
             // buttonPiezoReset1woa
             // 
@@ -1747,9 +1817,9 @@
             // buttonSetPivot1woa
             // 
             this.buttonSetPivot1woa.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSetPivot1woa.Location = new System.Drawing.Point(196, 376);
+            this.buttonSetPivot1woa.Location = new System.Drawing.Point(196, 381);
             this.buttonSetPivot1woa.Name = "buttonSetPivot1woa";
-            this.buttonSetPivot1woa.Size = new System.Drawing.Size(117, 64);
+            this.buttonSetPivot1woa.Size = new System.Drawing.Size(117, 59);
             this.buttonSetPivot1woa.TabIndex = 22;
             this.buttonSetPivot1woa.Text = "Set Pivot Point";
             this.buttonSetPivot1woa.UseVisualStyleBackColor = true;
@@ -2129,10 +2199,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPageAlignCuring.ResumeLayout(false);
             this.tabPageAlignCuring.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReference)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCam)).EndInit();
             this.tabPageStageControl.ResumeLayout(false);
             this.tabPageStageControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPx)).EndInit();
@@ -2294,6 +2365,9 @@
         private System.Windows.Forms.Label labelPiezoPos1woa;
         private System.Windows.Forms.ComboBox comboBoxBeetleSelect;
         private System.Windows.Forms.Label labelSystemSelect;
+        private System.Windows.Forms.Label labelControlBoxNum;
+        private System.Windows.Forms.NumericUpDown numericUpDownReference;
+        private System.Windows.Forms.Button buttonSetRef;
     }
 }
 

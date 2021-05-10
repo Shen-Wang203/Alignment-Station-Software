@@ -27,11 +27,11 @@ namespace Beetle
             set { parameters.lossCriteria = value; }
         }
 
-        public void AlignmentRun() => Run(criteriaSelect: "global");
+        public void AlignmentRun() => Run(criteriaSelect: "global", backDistanceAfterSearching: 0);
 
         public void PreCuringRun() => Run(criteriaSelect: "currentMax", backDistanceAfterSearching: 0, runFromContact: false, useScanMode: false);
 
-        public void Test() => AxisSquareSearch();
+        public void Test() => XYSquareSearch();
 
         // Start search from the current position, and stopped at the best position
         // criteria select: 
@@ -79,8 +79,8 @@ namespace Beetle
                     break;
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-                ZSteppingSearch();
-                //ZSearch();
+                //ZSteppingSearch();
+                ZSearch();
             }
 
             beetleControl.NormalTrajSpeed();
@@ -211,7 +211,7 @@ namespace Beetle
                     Console.WriteLine("Y Scan Search Failed");
                     Parameters.Log("Y Scan Search Failed");
                     // if x and y scan search all failed, use square search one time
-                    if (parameters.lossCurrentMax < -37.0 && !AxisSquareSearch())
+                    if (parameters.lossCurrentMax < -37.0 && !XYSquareSearch())
                     {
                         Console.WriteLine("Square Search Failed");
                         Parameters.Log("Square Search Failed");
@@ -245,7 +245,7 @@ namespace Beetle
         { 
             if (searchMode == "scan")
             {
-                if (!AxisScanSearch(axis: 2))
+                if (!AxisScanSearch(axis: 2, scanLossTarget: -0.8f))  // if z scan loss is smaller than -0.8dB, exit directly
                 {
                     Console.WriteLine("Z Scan Search Failed");
                     Parameters.Log("Z Scan Search Failed");
@@ -256,15 +256,15 @@ namespace Beetle
                 ZSteppingSearch();
         }
 
-        public void PiezoSearchRun()
+        public void PiezoSearchXYZRun()
         {
             parameters.piezoRunning = true;
             parameters.errorFlag = false;
             parameters.errors = "";
             PiezoSteppingSearch(0, targetLess: true);
             PiezoSteppingSearch(1, targetLess: true);
-            PiezoSteppingSearch(0, targetLess: true);
-            PiezoSteppingSearch(1, targetLess: true);
+            //PiezoSteppingSearch(0, targetLess: true);
+            //PiezoSteppingSearch(1, targetLess: true);
             PiezoSteppingSearch(2, targetLess: true);
             parameters.piezoRunning = false;
         }

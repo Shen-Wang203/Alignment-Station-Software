@@ -21,6 +21,11 @@ namespace Console_test
                 dacValue = (ushort)x;
                 Console.WriteLine((dacValue & 0x0f00) >> 8);
             }
+
+            int directionTrend;
+            int piezoAxis = 0;
+            directionTrend = piezoAxis == 0 ? 1 : piezoAxis == 1 ? 2 : 3;
+            Console.WriteLine(directionTrend);
         }
 
         private static bool PiezoSteppingSearch()

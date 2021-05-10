@@ -190,5 +190,17 @@ namespace Beetle.Properties {
                 this["ArdnCOM"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*")]
+        public string BeetleControlBoxNum {
+            get {
+                return ((string)(this["BeetleControlBoxNum"]));
+            }
+            set {
+                this["BeetleControlBoxNum"] = value;
+            }
+        }
     }
 }

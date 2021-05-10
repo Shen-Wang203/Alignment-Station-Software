@@ -49,7 +49,7 @@ namespace Beetle
                     beetlePorts.Add(port);
                 }
             }
-            if (beetlePorts.Count % 4 != 0)
+            if (beetlePorts.Count < 4 )
             {
                 MessageBox.Show("Missing Beetle Control Box or Arduino for Piezo");
                 return false;
@@ -85,6 +85,7 @@ namespace Beetle
                         MessageBox.Show("Failed to Find Beetle Control Boxes");
                         return false;
                     }
+                    parameters.beetleControlBoxNum = num.ToString();
                     break;
                 }
                 else if (dialogResult == DialogResult.No)
@@ -121,6 +122,7 @@ namespace Beetle
             {
                 //Console.WriteLine("Wrong Connection On " + portName);
                 //MessageBox.Show(e.Message + "\nFail to Connect COM Port");
+                // if ports have been opened already, then it will return empty too
                 return "";
             }
             port.Close();

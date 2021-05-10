@@ -12,13 +12,14 @@ namespace Beetle
         public string beetleT3ComPortName = "";
         public string arduinoComPortName = ""; // for piezo control
         public byte beetleFixtureNumber = 3;
+        public string beetleControlBoxNum = "*";
         // Pivot point coordinates is relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance
         public double[] pivotPoint = { 0, 0, 42, 0 };
         public double[] position = { 0, 0, 140, 2.4, -1.0, 0 }; // Position in mm { x, y, z, Rx, Ry, Rz}
         public double[] initialPosition = { 0, 0, 138, 0, 0, 0 }; // This is the starting(Or Initial) position
         public ushort[] piezoPosition = { 0x800, 0x800, 0x800 }; // Piezo position (x, y, z) in DAC value ranging from 0x000 to 0xfff. 
         public bool usePiezo = false;
-        public byte piezoZvsGap = 1; // if piezo z DAC value increase, gap is larger, then 1; is z DAC value incease, gap is smaller, then -1
+        //public byte piezoZvsGap = 1; // if piezo z DAC value increase, gap is larger, then 1; is z DAC value incease, gap is smaller, then -1
         public bool piezoRunning = false;
         public ushort piezoStepSize = 6; // in DAC value
 
@@ -34,21 +35,23 @@ namespace Beetle
 
         // Product Parameters
         public string productName = "MM 1xN";
-        // Product type and its Gap or focal length (to be complete)
+        // Product type and its back length when starts from contact, this back length should be longer than this product's focal length.
         // Gap or focal length can be get through productName: Parameters.product[Parameters.productName]
         public Dictionary<string, float> productGap =
             new Dictionary<string, float>()
             {
-                { "VOA", 0.05f },
-                { "SM 1xN", 0.2f },
-                { "MM 1xN", 0.14f },
-                { "UWDM", 0.05f }
+                { "VOA", 0.1f },
+                { "SM 1xN", 0.25f },
+                { "MM 1xN", 0.18f },
+                { "UWDM", 0.1f },
+                { "WOA", 0.07f }
             };
 
         public void Save()
         {
             SaveCOMPorts();
             Properties.Fixture.Default.BeetleFixtureNum = beetleFixtureNumber;
+            Properties.Fixture.Default.BeetleControlBoxNum = beetleControlBoxNum;
 
             Properties.Powermeter.Default.Reference = PowerMeter.lossReference;
             Properties.Powermeter.Default.Addr = PowerMeter.addr;
@@ -82,6 +85,7 @@ namespace Beetle
             position[4] = Properties.Fixture.Default.InitialRy;
             position[5] = Properties.Fixture.Default.InitialRz;
             beetleFixtureNumber = Properties.Fixture.Default.BeetleFixtureNum;
+            beetleControlBoxNum = Properties.Fixture.Default.BeetleControlBoxNum;
 
             PowerMeter.lossReference = Properties.Powermeter.Default.Reference;
             PowerMeter.addr = Properties.Powermeter.Default.Addr;

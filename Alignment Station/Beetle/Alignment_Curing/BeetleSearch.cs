@@ -62,7 +62,7 @@ namespace Beetle
             piezoControl = pc;
         }
         
-        protected void ProductSelect()
+        public void ProductSelect()
         {
             /* Add more if product extended
             *  productCondition has four types:
@@ -80,6 +80,8 @@ namespace Beetle
                 productCondition = 3;
             else if (parameters.productName == "UWDM")
                 productCondition = 2;
+            else if (parameters.productName == "WOA")
+                productCondition = 2;
             else
             {
                 Console.WriteLine("Unsupported product");
@@ -90,7 +92,7 @@ namespace Beetle
 
         // Square shape search where the center is current position
         // will return true is loss imporved for 10dB
-        protected bool AxisSquareSearch()
+        protected bool XYSquareSearch()
         {
             Console.WriteLine("Square Search Started");
             Parameters.Log("Square Search Started");
@@ -138,9 +140,12 @@ namespace Beetle
         // radius in mm
         // starting from the current position and exit at the best position (if return true)
         // loss is updated at Parameters.loss and match current position (if return true)
+        // scanLossTarget means when the loss reach this target, the scan will exit
+        // limitationAxial means which axial will be bounded with limitation, if value is not 0-2 then none axial will be bounded
         // TODO: Use threading to do scan and power fetch
-        protected bool AxisScanSearch(sbyte axis)
+        protected bool AxisScanSearch(sbyte axis, float scanLossTarget = -0.3f, sbyte limitationAxial = 2)
         {
+            parameters.errorFlag = false;
             if (axis == 0)
             {
                 Console.WriteLine("Scan Search X Started");
@@ -179,10 +184,15 @@ namespace Beetle
                 p1 = parameters.position[axis] + zScanSearchRadius; // z scan always go plus direction first
                 p2 = parameters.position[axis] - zScanSearchRadius;
             }
+            if (axis == limitationAxial)
+            { 
+                p1 = p1 > limitZ ? limitZ - 0.002 : p1;
+                p2 = p2 > limitZ ? limitZ - 0.002 : p2;
+            }
 
             double[] p = new double[2] { p1, p2 };
             p0 = parameters.position[axis];
-            // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
+            // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement
             count0 = axis == 2 ? beetleControl.countsReal[0] : beetleControl.countsReal[axis];
 
             for (int i = 0; i < 2; i ++)
@@ -200,8 +210,19 @@ namespace Beetle
                 loss.Clear();
                 pos.Clear();
                 loss0 = PowerMeter.Read();
-                while (Math.Abs(parameters.position[axis] - p[i]) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
+                while (true)
                 {
+                    if (!(Math.Abs(parameters.position[axis] - p[i]) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag))
+                    {
+                        trend = 1; // set as 1 so that it will not go to origin
+                        Console.WriteLine("Exit Due to Error or Reach Search End");
+                        Parameters.Log("Exit Due to Error or Reach Search End");
+                        Console.WriteLine(parameters.errorFlag);
+                        Console.WriteLine(parameters.position[axis]);
+                        Console.WriteLine(p[i]);
+                        break;
+                    }
+
                     if (axis < 2)
                     {
                         beetleControl.RealCountsFetch(axis); // 0 is T1x, 1 is T1y
@@ -211,15 +232,20 @@ namespace Beetle
                     {
                         beetleControl.RealCountsFetch(0); // z uses T1x axial to guess position
                         // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
-                        parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
+                        parameters.position[axis] = p0 + Math.Abs(p[i] - p0) * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
                     }
                     Console.WriteLine($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     Parameters.Log($"Pos: {Math.Round(parameters.position[axis], 4)}");
                     pos.Add(parameters.position[axis]);
                     loss.Add(PowerMeter.Read());
-                    if (parameters.position[axis] >= limitZ)
+
+                    // if scan loss is smaller than target, exit directly
+                    if (loss[loss.Count - 1] > scanLossTarget)
+                    {
+                        trend = 1;
                         break;
-                    
+                    }
+
                     if ((loss[loss.Count - 1] - loss0) <= -LossBound(loss0))
                     {
                         trend -= 1;
@@ -233,6 +259,7 @@ namespace Beetle
                     }
                     else
                         unchange += 1;
+
                     // when trend <= -2 means wrong direction, trend = 1 means has max
                     if (trend <= -2 || trend == 1)
                         break;
@@ -247,6 +274,7 @@ namespace Beetle
                 // if has max, go to the max position
                 if (trend == 1)
                 {
+                    beetleControl.DisengageMotors();
                     Console.WriteLine("Has Max");
                     Parameters.Log("Has Max");
                     double Pr;
@@ -255,7 +283,7 @@ namespace Beetle
                         //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * scanSearchRadius * xDirectionTrend * 0.1;
                         Pr = pos[loss.IndexOf(loss.Max())];
                         //beetleControl.XMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
-                        beetleControl.XMoveTo(Pr, mode: 't', checkOnTarget: false);
+                        beetleControl.XMoveTo(Pr, mode: 't', checkOnTarget: false, speed: 800);
                         xDirectionTrend *= (-2 * i + 1);
                     }
                     else if (axis == 1)
@@ -263,7 +291,7 @@ namespace Beetle
                         //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * scanSearchRadius * yDirectionTrend * 0.1;
                         Pr = pos[loss.IndexOf(loss.Max())];
                         //beetleControl.YMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
-                        beetleControl.YMoveTo(Pr, mode: 't', checkOnTarget: false);
+                        beetleControl.YMoveTo(Pr, mode: 't', checkOnTarget: false, speed: 800);
                         yDirectionTrend *= (-2 * i + 1);
                     }
                     else
@@ -271,10 +299,13 @@ namespace Beetle
                         //Pr = pos[loss.IndexOf(loss.Max())] + (2 * i - 1) * zScanSearchRadius * 0.1;
                         Pr = pos[loss.IndexOf(loss.Max())];
                         //beetleControl.ZMoveTo(pos[loss.IndexOf(loss.Max())], doubleCheck: false, stopInBetween: stopInBetweenFlag);
-                        beetleControl.ZMoveTo(Pr, mode: 't', checkOnTarget: false, speed: -1);
+                        beetleControl.ZMoveTo(Pr, mode: 't', checkOnTarget: false, speed: -1); // make spped as -1 to keep the speed so that they can move back as the way it moves forward
                     }
 
-                    while (Math.Abs(parameters.position[axis] - Pr) > beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
+                    Console.WriteLine($"Goes to Pr: {Pr}");
+                    Parameters.Log($"Goes to Pr: {Pr}");
+                    // TODO: if running within this loop for sometime or loss keeps the same, exit directly 
+                    while (Math.Abs(parameters.position[axis] - Pr) > 4 * beetleControl.tolerance * beetleControl.encoderResolution && !parameters.errorFlag)
                     {
                         if (axis < 2)
                         {
@@ -285,8 +316,10 @@ namespace Beetle
                         {
                             beetleControl.RealCountsFetch(0); // z uses T1x axial to guess position
                             // Z position is estimated through how much T1x has moved relative to its total range, and scale to Z total movement 
-                            parameters.position[axis] = p0 + zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
+                            parameters.position[axis] = p0 + Math.Abs(p[i] - p0) * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
                         }
+                        Console.WriteLine($"Pos: {Math.Round(parameters.position[axis], 4)}");
+                        Parameters.Log($"Pos: {Math.Round(parameters.position[axis], 4)}");
                         if (PowerMeter.Read() > loss.Max() - 0.02)
                         {
                             beetleControl.DisengageMotors();
@@ -295,13 +328,14 @@ namespace Beetle
                     }
                     beetleControl.RealCountsFetch(6); // update the countsReal for all axial, this is important for XMoveTo and YMoveTo with checkOnTarget to be false
                     parameters.position[axis] = axis < 2 ? p0 + (beetleControl.countsReal[axis] - count0) * beetleControl.encoderResolution : 
-                                                            zScanSearchRadius * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
+                                                           p0 + Math.Abs(p[i] - p0) * Math.Abs(beetleControl.countsReal[0] - count0) / beetleControl.zTrajT1xCountRange;
                     StatusCheck(PowerMeter.Read());
                     return true;
                 }
                 // else go the other direction
                 else
                 {
+                    beetleControl.DisengageMotors(); // Disengage first to avoid unexpected issues
                     Console.WriteLine("Return to Original");
                     Parameters.Log("Return to Original");
                     // return to original position first
@@ -830,7 +864,7 @@ namespace Beetle
             return false;
         }
 
-        protected static double LossBound(double lossRef)
+        protected virtual double LossBound(double lossRef)
         {
             lossRef = Math.Abs(lossRef);
             if (lossRef < 0.7)
@@ -856,7 +890,7 @@ namespace Beetle
                 return (0.00003 * lossRef * lossRef * lossRef - 0.0011 * lossRef * lossRef + 0.0245 * lossRef - 0.018) * 0.5;
         }
 
-        private static double ZLossBound(double lossRef)
+        protected virtual double ZLossBound(double lossRef)
         {
             if (productCondition == 1)
             {
@@ -882,7 +916,7 @@ namespace Beetle
                 return LossBoundSmall(lossRef);
         }
 
-        private static double XYLossBound(double lossRef)
+        protected virtual double XYLossBound(double lossRef)
         {
             if (productCondition <= 2)
                 return LossBound(lossRef);
@@ -895,7 +929,7 @@ namespace Beetle
         // *************************************************************
         // Need to reset the piezo to 0x800 for every run
         // for axis: x is 0, y is 1, z is 2
-        protected bool PiezoSteppingSearch(byte axis, bool targetLess = false)
+        protected bool PiezoSteppingSearch(byte axis, bool targetLess = false, bool forWOA = false)
         {
             if (axis == 0)
             {
@@ -912,9 +946,9 @@ namespace Beetle
                 Console.WriteLine("Piezo Stepping Search Z Started");
                 Parameters.Log("Piezo Stepping Search Z Started");
             }
-            float zAmp = 2;
+            float zAmp = 2; // Z needs larger step size
             if (targetLess)
-                zAmp = 1;
+                zAmp = 1; // Z is the same step size not for curing
             loss.Clear();
             pos.Clear();
             double loss0, bound, diff;
@@ -928,21 +962,29 @@ namespace Beetle
                 return true;
             while (!parameters.errorFlag)
             {
-                if (p > 0xfff)
-                {
-                    Console.WriteLine("Reach Piezo Range Limit");
-                    Parameters.Log("Reach Piezo Range Limit");
-                    return false;
-                    // TODO: add motor compensation
-                }
-
                 if (axis == 0)
                     p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * xDirectionTrend);
                 else if (axis == 1)
                     p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * yDirectionTrend);
                 else
-                    // z needs larger (3x) step size
                     p = (ushort)(parameters.piezoPosition[axis] + parameters.piezoStepSize * zAmp * zDirectionTrend);
+
+                if (p > 0xff0 || p < 0x00f)
+                {
+                    Console.WriteLine("Reach Piezo Range Limit");
+                    Parameters.Log("Reach Piezo Range Limit");
+                    // *************
+                    // This part should be modificed based on actual situations
+                    if (axis == 0)
+                        Compensate(axis, beetleAxis: 2, sameDirection: true);
+                    else if (axis == 1)
+                        Compensate(axis, beetleAxis: 1, sameDirection: false);
+                    else if (axis == 2)
+                        Compensate(axis, beetleAxis: 0, sameDirection: true);
+                    // *************
+                    return false;
+                }
+
                 piezoControl.Send(axis, p);
 
                 Thread.Sleep(40); // delay 40ms
@@ -951,7 +993,7 @@ namespace Beetle
                 if (!targetLess && LossMeetCriteria())
                     return true;
 
-                if (targetLess)
+                if (targetLess || forWOA)
                     bound = PiezoLossBound(loss0);
                 else
                     bound = XYLossBound(loss0);
@@ -1030,12 +1072,44 @@ namespace Beetle
             return true;
         }
 
-        private static double PiezoLossBound(double lossRef)
+        protected virtual double PiezoLossBound(double lossRef)
         {
             if (productCondition <= 2)
-                return 0.002;
+                return 0.05;
             else
-                return 0.0007;
+                return 0.007;
+        }
+
+        // sameDirection means ADC value increase, Beetle axial value increase too.
+        // need to shift 1/3 of the full piezo range, which is about 50/3 = 16um
+        private void Compensate(byte piezoAxis, byte beetleAxis, bool sameDirection)
+        {
+            piezoControl.Reset(piezoAxis);
+            int directionTrend;
+            float compRange = 0.014f;
+            directionTrend = piezoAxis == 0 ? xDirectionTrend : piezoAxis == 1 ? yDirectionTrend : zDirectionTrend;
+            if (beetleAxis == 0)
+            {
+                // is xDirectionTrend is 1, then piezoPosition is larger then 0xfff; if is -1, then piezoPosition is smaller than 0
+                if (sameDirection)
+                    beetleControl.XMoveTo(parameters.position[0] + compRange * directionTrend);
+                else
+                    beetleControl.XMoveTo(parameters.position[0] - compRange * directionTrend);
+            }
+            else if (beetleAxis == 1)
+            {
+                if (sameDirection)
+                    beetleControl.YMoveTo(parameters.position[1] + compRange * directionTrend);
+                else
+                    beetleControl.YMoveTo(parameters.position[1] - compRange * directionTrend);
+            }
+            else if (beetleAxis == 2)
+            {
+                if (sameDirection)
+                    beetleControl.ZMoveTo(parameters.position[2] + compRange * directionTrend, mode: 't', speed: 10000);
+                else
+                    beetleControl.ZMoveTo(parameters.position[2] - compRange * directionTrend, mode: 't', speed: 10000);
+            }
         }
 
     }
