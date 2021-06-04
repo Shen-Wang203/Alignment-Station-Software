@@ -144,6 +144,16 @@ namespace Beetle
                 T3Port.Close();
         }
 
+        public void OpenPorts()
+        {
+            if (T1Port != null)
+                T1Port.Open();
+            if (T2Port != null)
+                T2Port.Open();
+            if (T3Port != null)
+                T3Port.Open();
+        }
+
         public void ClearErrors()
         {
             parameters.errors = "";
@@ -300,7 +310,7 @@ namespace Beetle
         // axial: 0-5
         public void SetTrajSpeed(byte axial, int vel)
         {
-            string cmd = "";
+            string cmd;
             if (axial == 0)
             {
                 cmd = "w axis0.trap_traj.config.vel_limit " + vel.ToString();
@@ -336,6 +346,7 @@ namespace Beetle
         // position is the platform position
         // will update Parameters.position
         // speed only works for mode 't'
+        // mode has three type: 'p' means stepping; 't' means synchronize move, all motor stop at the same time; 'j' means trajectory move, motors don't need to stop at the same time
         public void GotoPosition(double[] position, bool stopInBetween = true, bool ignoreError = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 100000)
         {
             double[] Tmm = mathModel.FindAxialPosition(position[0], position[1], position[2], position[3], position[4], position[5]);
@@ -481,7 +492,9 @@ namespace Beetle
 
         public void GotoTemp() => GotoPosition(tempP, stopInBetween: true);
 
-        public void GotoTempSyn() => GotoPosition(tempP, stopInBetween: true, mode: 't', speed: 5000);
+        public void GotoTempSyn() => GotoPosition(tempP, stopInBetween: true, mode: 't', speed: 8000);
+
+        public void GotoTempTraj() => GotoPosition(tempP, stopInBetween: true, mode: 'j', speed: 8000); // trajectory movement for all motors, doesn't need to stop at the same time
 
         // return false when timeout or driver board errors or out of range
         // freedom should be 'x' or 'y' or 'a', meaning sending counts in x or y or all freedom
@@ -497,7 +510,7 @@ namespace Beetle
                 return false;
             }
             int timeoutloop, timeout = 50;
-            if (mode == 't')
+            if (mode != 'p')
                 timeout = 60; // traj mode time out is about 30s
             SetOnTargetFlag(freedom);
             // try three times on doublecheck
@@ -851,6 +864,7 @@ namespace Beetle
         private void SpeedCalForTraj(int[] deltaCount, int speed)
         {
             int m = deltaCount.Max();
+            m = m == 0 ? 1 : m;
             // Axial that needs to travel longest has 300 speed
             // Other axial will scale based on their relative deltacounts
             for (byte i = 0; i < 6; i ++)

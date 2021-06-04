@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+            <section name="Beetle.Properties.Alignment" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+            <section name="Beetle.Alignment" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+            <section name="Beetle.Properties.Powermeter" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+            <section name="Beetle.Properties.Fixture" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+            <section name="Beetle.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+    </startup>
+    <userSettings>
+        <Beetle.Properties.Alignment>
+            <setting name="LossCriteria" serializeAs="String">
+                <value>-0.1</value>
+            </setting>
+            <setting name="ProductName" serializeAs="String">
+                <value>MM 1xN</value>
+            </setting>
+            <setting name="DoubleCheck" serializeAs="String">
+                <value>False</value>
+            </setting>
+            <setting name="StopInBetween" serializeAs="String">
+                <value>False</value>
+            </setting>
+        </Beetle.Properties.Alignment>
+        <Beetle.Alignment>
+            <setting name="LossCriteria" serializeAs="String">
+                <value>-0.2</value>
+            </setting>
+            <setting name="ProductName" serializeAs="String">
+                <value>MM 1xN</value>
+            </setting>
+        </Beetle.Alignment>
+        <Beetle.Properties.Powermeter>
+            <setting name="Channel" serializeAs="String">
+                <value>2</value>
+            </setting>
+            <setting name="Addr" serializeAs="String">
+                <value>12</value>
+            </setting>
+            <setting name="Reference" serializeAs="String">
+                <value>-0.0993</value>
+            </setting>
+        </Beetle.Properties.Powermeter>
+        <Beetle.Properties.Fixture>
+            <setting name="T1COM" serializeAs="String">
+                <value>COM10</value>
+            </setting>
+            <setting name="T2COM" serializeAs="String">
+                <value>COM9</value>
+            </setting>
+            <setting name="T3COM" serializeAs="String">
+                <value>COM15</value>
+            </setting>
+            <setting name="InitialX" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="InitialY" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="InitialZ" serializeAs="String">
+                <value>140</value>
+            </setting>
+            <setting name="InitialRx" serializeAs="String">
+                <value>2</value>
+            </setting>
+            <setting name="InitialRy" serializeAs="String">
+                <value>-1</value>
+            </setting>
+            <setting name="InitialRz" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PivotX" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PivotY" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="PivotZ" serializeAs="String">
+                <value>42</value>
+            </setting>
+            <setting name="BeetleFixtureNum" serializeAs="String">
+                <value>3</value>
+            </setting>
+            <setting name="ArdnCOM" serializeAs="String">
+                <value>COM4</value>
+            </setting>
+            <setting name="BeetleControlBoxNum" serializeAs="String">
+                <value>*</value>
+            </setting>
+        </Beetle.Properties.Fixture>
+    </userSettings>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Drawing.Common" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.0.0.2" newVersion="4.0.0.2" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>

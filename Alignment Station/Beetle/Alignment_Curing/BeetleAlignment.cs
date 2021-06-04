@@ -16,8 +16,8 @@ namespace Beetle
          * 2. lossStage1 ~ lossStage2: use InterpolationSerach method, change ZSteppingSearch parameters 
          * 3. lossStage2 ~ lossCriteria: use InterpolationSearch method, change ZSteppingSearch parameters 
         */
-        private float lossStage1 = -4.0f;
-        private float lossStage2 = -2.0f;
+        protected float lossStage1 = -4.0f;
+        protected float lossStage2 = -2.0f;
 
         private string searchMode = "scan"; // defaul scan mode
 
@@ -40,7 +40,8 @@ namespace Beetle
         // runFromContact: start searching from the current position where ferrule and lens cap are very close to each other
         // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
-        private void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true)
+        // gapNattowDirection: 1 means when z becomes larger, gap is smaller; -1 means when z becomes smaller, gap is smaller
+        protected void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true, sbyte gapNarrowDiretion = 1)
         {
             ProductSelect();
 
@@ -65,8 +66,8 @@ namespace Beetle
             if (runFromContact)
             {
                 // Assume the starting position is at contact, need to go back for some distance first based on focal length
-                limitZ = parameters.position[2] + 0.03;
-                beetleControl.ZMoveTo(limitZ - parameters.productGap[parameters.productName]);
+                limitZ = parameters.position[2] + 0.1 * gapNarrowDiretion;
+                beetleControl.ZMoveTo(parameters.position[2] - parameters.productGap[parameters.productName] * gapNarrowDiretion);
             }
 
             loss.Add(PowerMeter.Read());
@@ -79,8 +80,8 @@ namespace Beetle
                     break;
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-                //ZSteppingSearch();
-                ZSearch();
+                ZSteppingSearch(gapNarrowDirection: gapNarrowDiretion);
+                //ZSearch(); //this method is not stable yet
             }
 
             beetleControl.NormalTrajSpeed();
@@ -89,11 +90,11 @@ namespace Beetle
 
             if (backDistanceAfterSearching != 0)
                 // after searching, go back for some distance in order for another run after applying epoxy.
-                beetleControl.ZMoveTo(parameters.position[2] - backDistanceAfterSearching);
+                beetleControl.ZMoveTo(parameters.position[2] - backDistanceAfterSearching * gapNarrowDiretion);
             beetleControl.DisengageMotors();
         }
 
-        private void ParameterReset()
+        protected virtual void ParameterReset()
         {
             lossFailToImprove = 0;
             secondTry = false;
@@ -108,7 +109,9 @@ namespace Beetle
 
             beetleControl.globalErrorCount = 0;
 
-            // for multimmode step size is larger
+            spd = parameters.productName == "WOA" ? 100 : 400;
+            
+            // for multimode step size is larger
             if (productCondition >= 3)
             {
                 xyStepSizeAmp = 3.0f;

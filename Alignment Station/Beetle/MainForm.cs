@@ -18,6 +18,7 @@ namespace Beetle
         private bool beetle2Connected = false;
         private DateTime thisTime, startTime;
         private TimeSpan timeElapsed;
+        private bool clickGo = false;
 
         private FilterInfoCollection filterInfoCollecion;
         private VideoCaptureDevice videoCaptureDevice;
@@ -65,6 +66,7 @@ namespace Beetle
             comboBoxMotorSelectMid.SelectedIndex = 6;
             comboBoxMotorSelectBot.SelectedIndex = 6;
             comboBoxPMChl.SelectedIndex = 0;
+            comboBoxStepSize.SelectedIndex = 0;
 
             ReloadBeetleInfo();
         }
@@ -73,7 +75,7 @@ namespace Beetle
         {
             Bitmap pic = (Bitmap)eventArgs.Frame.Clone();
             // Rotate or flip. Other options include Rotate180FlipX, Rotate180FlipXY etc.
-            pic.RotateFlip(RotateFlipType.Rotate180FlipX);
+            //pic.RotateFlip(RotateFlipType.Rotate180FlipX);
             if (tabBC)
                 pictureBoxCamBC.Image = pic;
             else
@@ -117,7 +119,7 @@ namespace Beetle
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
         {
-            if (!tabBC)
+            if (tabControl1.SelectedIndex == 0)
             {
                 if (bt.parameters.errors != "")
                 {
@@ -251,7 +253,7 @@ namespace Beetle
 
         private void ButtonAlignment_Click(object sender, EventArgs e)
         {
-            if (PowerMeter.loss > -40)
+            if (PowerMeter.loss > -40 || bt.parameters.productName == "WOA")
             {
                 Parameters.Log("\r\n");
                 Parameters.Log("***************************");
@@ -262,8 +264,8 @@ namespace Beetle
                 stopReadPM = false;
                 startTime = DateTime.Now;
 
-                bt.piezoControl.Reset();
-                Thread.Sleep(500);
+                //bt.piezoControl.Reset();
+                //Thread.Sleep(500);
 
                 if (bt.parameters.productName != "WOA")
                 {
@@ -275,7 +277,7 @@ namespace Beetle
                 {
                     if (bt.woa == null)
                         bt.WOAInit();
-                    runThread = new Thread(bt.woa.Run);
+                    runThread = new Thread(bt.woa.SingleRun);
                 }
                 runThread.Start();
 
@@ -397,6 +399,12 @@ namespace Beetle
                 buttonClearErrorBC.Enabled = true;
                 buttonPiezoReset.Enabled = true;
                 buttonPiezoSearch.Enabled = true;
+
+                if (comboBoxBeetleSelect.SelectedIndex <= 1)
+                    beetle1Connected = true;
+                else
+                    beetle2Connected = true;
+                labelControlBoxNum.Text = "Connected to Control Box " + bt.parameters.beetleControlBoxNum;
             }
         }
 
@@ -477,7 +485,9 @@ namespace Beetle
                 buttonChartOnOff.Text = "Live Chart Off";
         }
 
-        private void buttonSetPosition_Click(object sender, EventArgs e)
+        private void buttonSetPosition_Click(object sender, EventArgs e) => StepAction('p');
+
+        private void StepAction(char mode)
         {
             if (runThread != null && runThread.IsAlive)
             {
@@ -485,12 +495,34 @@ namespace Beetle
                 return;
             }
 
-            bt.beetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value, 
+            bt.beetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value,
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
-            runThread = new Thread(bt.beetleControl.GotoTemp);
+            if (mode == 't')
+                runThread = new Thread(bt.beetleControl.GotoTempSyn);
+            else if (mode == 'j')
+                runThread = new Thread(bt.beetleControl.GotoTempTraj);
+            else
+                runThread = new Thread(bt.beetleControl.GotoTemp);
             runThread.Start();
 
             numericUpDownEditting = false;
+        }
+
+        private void buttonSetPositionSyn_Click(object sender, EventArgs e)
+        {
+            StepAction('t');
+        }
+
+        private void numericUpDownNotXY_ValueChanged(object sender, EventArgs e)
+        {
+            if (clickGo && numericUpDownEditting)
+                StepAction('t');
+        }
+
+        private void numericUpDownXY_ValueChanged(object sender, EventArgs e)
+        {
+            if (clickGo && numericUpDownEditting)
+                StepAction('j');
         }
 
         // The pivot point Z input value should be the distance between pivot point to top moving part top surface
@@ -524,7 +556,7 @@ namespace Beetle
         {
             if (runThread != null && runThread.IsAlive)
             {
-                MessageBox.Show("Another Process Runing");
+                MessageBox.Show("Another Process is Runing");
                 return;
             }
 
@@ -550,43 +582,53 @@ namespace Beetle
             bt.beetleControl.FixtureInit();
         }
 
-        private void buttonSetPositionSyn_Click(object sender, EventArgs e)
+        private void comboBoxBeetleSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (runThread != null && runThread.IsAlive)
             {
-                MessageBox.Show("Another Process Runing");
+                MessageBox.Show("Another Process is Runing");
                 return;
             }
 
-            bt.beetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value,
-                    (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
-            runThread = new Thread(bt.beetleControl.GotoTempSyn);
-            runThread.Start();
+            // when switch system, clickGo needs to be false to avoid unexpected errors and move the switched system
+            if (clickGo)
+            {
+                clickGo = false;
+                buttonClickGo.Text = "ClickGo: False";
+                numericUpDownX.Increment = (decimal)0.001;
+                numericUpDownY.Increment = (decimal)0.001;
+                numericUpDownZ.Increment = (decimal)0.001;
+                numericUpDownRx.Increment = (decimal)0.05;
+                numericUpDownRy.Increment = (decimal)0.05;
+                numericUpDownRz.Increment = (decimal)0.05;
+            }
 
-            numericUpDownEditting = false;
-        }
-
-        private void comboBoxBeetleSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
             if (comboBoxBeetleSelect.SelectedIndex == 2 && beetle2 == null)
             {
+                // Close all ports first then reconnect
+                beetle1.beetleControl.ClosePorts();
+                beetle1.piezoControl.ClosePort();
+
                 beetle2 = new BeetleSystemObject();
                 beetle2.parameters.LoadAll();
                 if (beetle2.Detect())
                 {
                     //beetle2.parameters.SaveCOMPorts();
                     richTextBoxErrorMsg.Text += "COM Ports Detected\n";
+                    if (beetle2.Connection())
+                    {
+                        ButtonEnables(true);
+                        beetle2Connected = true;
+                    }
+                    else
+                    {
+                        ButtonEnables(false);
+                        beetle2Connected = false;
+                    }
                 }
-                if (beetle2.Connection())
-                {
-                    ButtonEnables(true);
-                    beetle2Connected = true;
-                }
-                else
-                {
-                    ButtonEnables(false);
-                    beetle2Connected = false;
-                }    
+
+                beetle1.beetleControl.OpenPorts();
+                beetle1.piezoControl.OpenPort();
             }
 
             if (comboBoxBeetleSelect.SelectedIndex == 1)
@@ -640,6 +682,33 @@ namespace Beetle
             bt.parameters.SaveReference();
         }
 
+        private void buttonClickGo_Click(object sender, EventArgs e)
+        {
+            clickGo = !clickGo;
+            if (clickGo)
+            { 
+                buttonClickGo.Text = "ClickGo: True";
+                numericUpDownX.Increment = (decimal)0.05;
+                numericUpDownY.Increment = (decimal)0.05;
+                numericUpDownZ.Increment = (decimal)0.05;
+                numericUpDownRx.Increment = (decimal)0.1;
+                numericUpDownRy.Increment = (decimal)0.1;
+                numericUpDownRz.Increment = (decimal)0.1;
+
+                comboBoxStepSize.SelectedIndex = 0;
+            }
+            else
+            {
+                buttonClickGo.Text = "ClickGo: False";
+                numericUpDownX.Increment = (decimal)0.001;
+                numericUpDownY.Increment = (decimal)0.001;
+                numericUpDownZ.Increment = (decimal)0.001;
+                numericUpDownRx.Increment = (decimal)0.05;
+                numericUpDownRy.Increment = (decimal)0.05;
+                numericUpDownRz.Increment = (decimal)0.05;
+            }
+        }
+
         private void ButtonEnables(bool enable)
         {
             if (enable)
@@ -679,5 +748,129 @@ namespace Beetle
                 buttonPiezoSearch.Enabled = false;
             }
         }
+
+        private void comboBoxStepSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            decimal stp = decimal.Parse(comboBoxStepSize.SelectedItem.ToString());
+            stp *= (decimal)0.001;
+            numericUpDownX.Increment = stp;
+            numericUpDownY.Increment = stp;
+            numericUpDownZ.Increment = stp;
+        }
+
+        // WOA tab
+        private void buttonInitPos_Click(object sender, EventArgs e)
+        {
+            bt.beetleControl.tempP = new double[6] { -2, -2, 139, 0, 0, 0};
+            bt.beetleControl.GotoTemp();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonPumpOutAway_Click(object sender, EventArgs e)
+        {
+            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
+            bt.beetleControl.tempP[1] -= 1;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[0] = -3;
+            bt.beetleControl.tempP[1] = -3;
+            bt.beetleControl.GotoTemp();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonPumpOutEngage_Click(object sender, EventArgs e)
+        {
+            bt.beetleControl.tempP = new double[6] { -0.4, -0.5, 139.12, 0, 0, 0 };
+            bt.beetleControl.GotoTempTraj();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonPumpInAway_Click(object sender, EventArgs e)
+        {
+            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
+            bt.beetleControl.tempP[2] = 140;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[0] = -3;
+            bt.beetleControl.tempP[1] = -3;
+            bt.beetleControl.GotoTemp();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonPumpInEngage_Click(object sender, EventArgs e)
+        {
+            // -0.35, 3.5, 137.5
+            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
+            bt.beetleControl.tempP[2] -= 1;
+            bt.beetleControl.GotoTempTraj();
+            //bt.beetleControl.tempP[0] = -0.35;
+            bt.beetleControl.tempP[1] += 6;
+            bt.beetleControl.GotoTemp();
+            bt.beetleControl.tempP[2] += 1;
+            bt.beetleControl.GotoTempTraj();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonAngleEdgePos_Click(object sender, EventArgs e)
+        {
+            // -.35, -2.5, 137.5
+            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
+            bt.beetleControl.tempP[2] = 139;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[0] = -0.35;
+            bt.beetleControl.tempP[1] = -2.5;
+            bt.beetleControl.GotoTemp();
+            bt.beetleControl.tempP[2] = 137.5;
+            bt.beetleControl.GotoTempTraj();
+            numericUpDownEditting = false;
+        }
+
+        private void PivotPointRightPumpSet()
+        {
+            double[] p = { 122.5, 16.5, 37, 0 };
+            bt.mathModel.SetPivotPoint = p; // this line will copy the correct value to parameter.pivotpoint, so no need to copy to parameter again.
+
+            numericUpDownPx.Value = (decimal)p[0];
+            numericUpDownPy.Value = (decimal)p[1];
+            numericUpDownPz.Value = (decimal)p[2];
+        }
+
+        private void buttonPPRightSignal_Click(object sender, EventArgs e)
+        {
+            double[] p = { 122.5, 19.5, 40, 0 };
+            bt.mathModel.SetPivotPoint = p; // this line will copy the correct value to parameter.pivotpoint
+
+            numericUpDownPx.Value = (decimal)p[0];
+            numericUpDownPy.Value = (decimal)p[1];
+            numericUpDownPz.Value = (decimal)p[2];
+        }
+
+        private void PivotPointLeftSet()
+        {
+            double[] p = { 127.7, 2.4, 45, 0 };
+            bt.mathModel.SetPivotPoint = p; // this line will copy the correct value to parameter.pivotpoint
+
+            numericUpDownPx.Value = (decimal)p[0];
+            numericUpDownPy.Value = (decimal)p[1];
+            numericUpDownPz.Value = (decimal)p[2];
+        }
+
+        private void buttonRightConfig_Click(object sender, EventArgs e)
+        {
+            bt.parameters.beetleFixtureNumber = 5;
+            comboBoxFixtureNum.SelectedIndex = bt.parameters.beetleFixtureNumber;
+            comboBoxProductSelect.SelectedIndex = 2;
+
+            PivotPointRightPumpSet();
+        }
+
+        private void buttonLeftConfig_Click(object sender, EventArgs e)
+        {
+            bt.parameters.beetleFixtureNumber = 0;
+            comboBoxFixtureNum.SelectedIndex = bt.parameters.beetleFixtureNumber;
+            comboBoxProductSelect.SelectedIndex = 2;
+
+            PivotPointLeftSet();
+        }
+
+
     }
 }

@@ -104,14 +104,15 @@ namespace Beetle
         // Serial Number Identification, return serial number + \r
         private static string SerialNumberIdentify(string portName)
         {
-            SerialPort port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One)
-            {
-                ReadTimeout = 200,
-                WriteTimeout = 200
-            };
             string x;
+            SerialPort port;
             try
             {
+                port = new SerialPort(portName, 115200, Parity.None, 8, StopBits.One)
+                {
+                    ReadTimeout = 200,
+                    WriteTimeout = 200
+                };
                 port.Open();
                 port.WriteLine("i");
                 port.ReadLine();
@@ -125,7 +126,8 @@ namespace Beetle
                 // if ports have been opened already, then it will return empty too
                 return "";
             }
-            port.Close();
+            if (port != null)
+                port.Close();
             int found = x.IndexOf(": ");
             return x.Substring(found + 2);
         }

@@ -80,6 +80,9 @@
             this.buttonConnectPM = new System.Windows.Forms.Button();
             this.comboBoxCamSelect = new System.Windows.Forms.ComboBox();
             this.tabPageStageControl = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxStepSize = new System.Windows.Forms.ComboBox();
+            this.buttonClickGo = new System.Windows.Forms.Button();
             this.labelControlBoxNum = new System.Windows.Forms.Label();
             this.comboBoxBeetleSelect = new System.Windows.Forms.ComboBox();
             this.labelSystemSelect = new System.Windows.Forms.Label();
@@ -133,6 +136,15 @@
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.pictureBoxFigure = new System.Windows.Forms.PictureBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonRightConfig = new System.Windows.Forms.Button();
+            this.buttonLeftConfig = new System.Windows.Forms.Button();
+            this.buttonPPRightSignal = new System.Windows.Forms.Button();
+            this.buttonInitPos = new System.Windows.Forms.Button();
+            this.buttonAngleEdgePos = new System.Windows.Forms.Button();
+            this.buttonPumpInAway = new System.Windows.Forms.Button();
+            this.buttonPumpInEngage = new System.Windows.Forms.Button();
+            this.buttonPumpOutAway = new System.Windows.Forms.Button();
+            this.buttonPumpOutEngage = new System.Windows.Forms.Button();
             this.labelPiezoPosValue1woa = new System.Windows.Forms.Label();
             this.labelPiezoPos1woa = new System.Windows.Forms.Label();
             this.buttonPiezoSearch1woa = new System.Windows.Forms.Button();
@@ -878,6 +890,9 @@
             // tabPageStageControl
             // 
             this.tabPageStageControl.BackColor = System.Drawing.Color.White;
+            this.tabPageStageControl.Controls.Add(this.label2);
+            this.tabPageStageControl.Controls.Add(this.comboBoxStepSize);
+            this.tabPageStageControl.Controls.Add(this.buttonClickGo);
             this.tabPageStageControl.Controls.Add(this.labelControlBoxNum);
             this.tabPageStageControl.Controls.Add(this.comboBoxBeetleSelect);
             this.tabPageStageControl.Controls.Add(this.labelSystemSelect);
@@ -924,6 +939,51 @@
             this.tabPageStageControl.Size = new System.Drawing.Size(1282, 682);
             this.tabPageStageControl.TabIndex = 1;
             this.tabPageStageControl.Text = "Stage Control";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(458, 440);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(93, 20);
+            this.label2.TabIndex = 57;
+            this.label2.Text = "Step(um): ";
+            // 
+            // comboBoxStepSize
+            // 
+            this.comboBoxStepSize.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.comboBoxStepSize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxStepSize.FormattingEnabled = true;
+            this.comboBoxStepSize.Items.AddRange(new object[] {
+            "50",
+            "20",
+            "10",
+            "2"});
+            this.comboBoxStepSize.Location = new System.Drawing.Point(462, 463);
+            this.comboBoxStepSize.Name = "comboBoxStepSize";
+            this.comboBoxStepSize.Size = new System.Drawing.Size(49, 24);
+            this.comboBoxStepSize.TabIndex = 56;
+            this.comboBoxStepSize.SelectedIndexChanged += new System.EventHandler(this.comboBoxStepSize_SelectedIndexChanged);
+            // 
+            // buttonClickGo
+            // 
+            this.buttonClickGo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.buttonClickGo.FlatAppearance.BorderSize = 0;
+            this.buttonClickGo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.buttonClickGo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClickGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonClickGo.ForeColor = System.Drawing.Color.Black;
+            this.buttonClickGo.Location = new System.Drawing.Point(462, 386);
+            this.buttonClickGo.Name = "buttonClickGo";
+            this.buttonClickGo.Size = new System.Drawing.Size(122, 29);
+            this.buttonClickGo.TabIndex = 55;
+            this.buttonClickGo.Text = "ClickGo: False";
+            this.buttonClickGo.UseVisualStyleBackColor = false;
+            this.buttonClickGo.Click += new System.EventHandler(this.buttonClickGo_Click);
             // 
             // labelControlBoxNum
             // 
@@ -1541,6 +1601,7 @@
             this.numericUpDownY.Name = "numericUpDownY";
             this.numericUpDownY.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownY.TabIndex = 24;
+            this.numericUpDownY.ValueChanged += new System.EventHandler(this.numericUpDownXY_ValueChanged);
             this.numericUpDownY.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownRz
@@ -1568,6 +1629,7 @@
             this.numericUpDownRz.Name = "numericUpDownRz";
             this.numericUpDownRz.Size = new System.Drawing.Size(69, 28);
             this.numericUpDownRz.TabIndex = 28;
+            this.numericUpDownRz.ValueChanged += new System.EventHandler(this.numericUpDownNotXY_ValueChanged);
             this.numericUpDownRz.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // label7
@@ -1615,6 +1677,7 @@
             this.numericUpDownRy.Name = "numericUpDownRy";
             this.numericUpDownRy.Size = new System.Drawing.Size(69, 28);
             this.numericUpDownRy.TabIndex = 27;
+            this.numericUpDownRy.ValueChanged += new System.EventHandler(this.numericUpDownNotXY_ValueChanged);
             this.numericUpDownRy.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // cartesianChartMotorA
@@ -1668,6 +1731,7 @@
             0,
             0,
             0});
+            this.numericUpDownZ.ValueChanged += new System.EventHandler(this.numericUpDownNotXY_ValueChanged);
             this.numericUpDownZ.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownRx
@@ -1695,6 +1759,7 @@
             this.numericUpDownRx.Name = "numericUpDownRx";
             this.numericUpDownRx.Size = new System.Drawing.Size(66, 28);
             this.numericUpDownRx.TabIndex = 26;
+            this.numericUpDownRx.ValueChanged += new System.EventHandler(this.numericUpDownNotXY_ValueChanged);
             this.numericUpDownRx.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // numericUpDownX
@@ -1722,6 +1787,7 @@
             this.numericUpDownX.Name = "numericUpDownX";
             this.numericUpDownX.Size = new System.Drawing.Size(100, 28);
             this.numericUpDownX.TabIndex = 23;
+            this.numericUpDownX.ValueChanged += new System.EventHandler(this.numericUpDownXY_ValueChanged);
             this.numericUpDownX.Click += new System.EventHandler(this.numericUpDown_Click);
             // 
             // pictureBoxFigure
@@ -1738,6 +1804,15 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.buttonRightConfig);
+            this.tabPage1.Controls.Add(this.buttonLeftConfig);
+            this.tabPage1.Controls.Add(this.buttonPPRightSignal);
+            this.tabPage1.Controls.Add(this.buttonInitPos);
+            this.tabPage1.Controls.Add(this.buttonAngleEdgePos);
+            this.tabPage1.Controls.Add(this.buttonPumpInAway);
+            this.tabPage1.Controls.Add(this.buttonPumpInEngage);
+            this.tabPage1.Controls.Add(this.buttonPumpOutAway);
+            this.tabPage1.Controls.Add(this.buttonPumpOutEngage);
             this.tabPage1.Controls.Add(this.labelPiezoPosValue1woa);
             this.tabPage1.Controls.Add(this.labelPiezoPos1woa);
             this.tabPage1.Controls.Add(this.buttonPiezoSearch1woa);
@@ -1772,6 +1847,105 @@
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "WOA";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // buttonRightConfig
+            // 
+            this.buttonRightConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonRightConfig.Location = new System.Drawing.Point(896, 107);
+            this.buttonRightConfig.Name = "buttonRightConfig";
+            this.buttonRightConfig.Size = new System.Drawing.Size(119, 57);
+            this.buttonRightConfig.TabIndex = 37;
+            this.buttonRightConfig.Text = "Right Beetle Config";
+            this.buttonRightConfig.UseVisualStyleBackColor = true;
+            this.buttonRightConfig.Click += new System.EventHandler(this.buttonRightConfig_Click);
+            // 
+            // buttonLeftConfig
+            // 
+            this.buttonLeftConfig.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLeftConfig.Location = new System.Drawing.Point(651, 107);
+            this.buttonLeftConfig.Name = "buttonLeftConfig";
+            this.buttonLeftConfig.Size = new System.Drawing.Size(119, 57);
+            this.buttonLeftConfig.TabIndex = 36;
+            this.buttonLeftConfig.Text = "Left Beetle Config";
+            this.buttonLeftConfig.UseVisualStyleBackColor = true;
+            this.buttonLeftConfig.Click += new System.EventHandler(this.buttonLeftConfig_Click);
+            // 
+            // buttonPPRightSignal
+            // 
+            this.buttonPPRightSignal.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPPRightSignal.Location = new System.Drawing.Point(896, 214);
+            this.buttonPPRightSignal.Name = "buttonPPRightSignal";
+            this.buttonPPRightSignal.Size = new System.Drawing.Size(119, 57);
+            this.buttonPPRightSignal.TabIndex = 35;
+            this.buttonPPRightSignal.Text = "Pivot Point Right Signal";
+            this.buttonPPRightSignal.UseVisualStyleBackColor = true;
+            this.buttonPPRightSignal.Click += new System.EventHandler(this.buttonPPRightSignal_Click);
+            // 
+            // buttonInitPos
+            // 
+            this.buttonInitPos.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonInitPos.Location = new System.Drawing.Point(651, 16);
+            this.buttonInitPos.Name = "buttonInitPos";
+            this.buttonInitPos.Size = new System.Drawing.Size(119, 57);
+            this.buttonInitPos.TabIndex = 32;
+            this.buttonInitPos.Text = "Init Pos";
+            this.buttonInitPos.UseVisualStyleBackColor = true;
+            this.buttonInitPos.Click += new System.EventHandler(this.buttonInitPos_Click);
+            // 
+            // buttonAngleEdgePos
+            // 
+            this.buttonAngleEdgePos.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonAngleEdgePos.Location = new System.Drawing.Point(651, 293);
+            this.buttonAngleEdgePos.Name = "buttonAngleEdgePos";
+            this.buttonAngleEdgePos.Size = new System.Drawing.Size(119, 62);
+            this.buttonAngleEdgePos.TabIndex = 31;
+            this.buttonAngleEdgePos.Text = "Angle Edge Pos";
+            this.buttonAngleEdgePos.UseVisualStyleBackColor = true;
+            this.buttonAngleEdgePos.Click += new System.EventHandler(this.buttonAngleEdgePos_Click);
+            // 
+            // buttonPumpInAway
+            // 
+            this.buttonPumpInAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPumpInAway.Location = new System.Drawing.Point(651, 214);
+            this.buttonPumpInAway.Name = "buttonPumpInAway";
+            this.buttonPumpInAway.Size = new System.Drawing.Size(119, 57);
+            this.buttonPumpInAway.TabIndex = 30;
+            this.buttonPumpInAway.Text = "Pump In Away";
+            this.buttonPumpInAway.UseVisualStyleBackColor = true;
+            this.buttonPumpInAway.Click += new System.EventHandler(this.buttonPumpInAway_Click);
+            // 
+            // buttonPumpInEngage
+            // 
+            this.buttonPumpInEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPumpInEngage.Location = new System.Drawing.Point(651, 376);
+            this.buttonPumpInEngage.Name = "buttonPumpInEngage";
+            this.buttonPumpInEngage.Size = new System.Drawing.Size(119, 62);
+            this.buttonPumpInEngage.TabIndex = 29;
+            this.buttonPumpInEngage.Text = "Pump In Engage";
+            this.buttonPumpInEngage.UseVisualStyleBackColor = true;
+            this.buttonPumpInEngage.Click += new System.EventHandler(this.buttonPumpInEngage_Click);
+            // 
+            // buttonPumpOutAway
+            // 
+            this.buttonPumpOutAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPumpOutAway.Location = new System.Drawing.Point(896, 293);
+            this.buttonPumpOutAway.Name = "buttonPumpOutAway";
+            this.buttonPumpOutAway.Size = new System.Drawing.Size(119, 57);
+            this.buttonPumpOutAway.TabIndex = 28;
+            this.buttonPumpOutAway.Text = "Pump Out Away";
+            this.buttonPumpOutAway.UseVisualStyleBackColor = true;
+            this.buttonPumpOutAway.Click += new System.EventHandler(this.buttonPumpOutAway_Click);
+            // 
+            // buttonPumpOutEngage
+            // 
+            this.buttonPumpOutEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonPumpOutEngage.Location = new System.Drawing.Point(896, 376);
+            this.buttonPumpOutEngage.Name = "buttonPumpOutEngage";
+            this.buttonPumpOutEngage.Size = new System.Drawing.Size(119, 62);
+            this.buttonPumpOutEngage.TabIndex = 27;
+            this.buttonPumpOutEngage.Text = "Pump Out Engage";
+            this.buttonPumpOutEngage.UseVisualStyleBackColor = true;
+            this.buttonPumpOutEngage.Click += new System.EventHandler(this.buttonPumpOutEngage_Click);
             // 
             // labelPiezoPosValue1woa
             // 
@@ -2368,6 +2542,18 @@
         private System.Windows.Forms.Label labelControlBoxNum;
         private System.Windows.Forms.NumericUpDown numericUpDownReference;
         private System.Windows.Forms.Button buttonSetRef;
+        private System.Windows.Forms.Button buttonPumpOutAway;
+        private System.Windows.Forms.Button buttonPumpOutEngage;
+        private System.Windows.Forms.Button buttonAngleEdgePos;
+        private System.Windows.Forms.Button buttonPumpInAway;
+        private System.Windows.Forms.Button buttonPumpInEngage;
+        private System.Windows.Forms.Button buttonInitPos;
+        private System.Windows.Forms.Button buttonClickGo;
+        private System.Windows.Forms.Button buttonPPRightSignal;
+        private System.Windows.Forms.Button buttonRightConfig;
+        private System.Windows.Forms.Button buttonLeftConfig;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBoxStepSize;
     }
 }
 
