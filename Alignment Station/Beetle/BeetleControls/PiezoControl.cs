@@ -51,6 +51,8 @@ namespace Beetle
                 ardnPort.Open();
         }
 
+        public bool PortIsOpen() => ardnPort.IsOpen;
+
         // ch is 0-2 representing x, y, z
         // dacValue is the DAC value which is 0- 0xfff
         // total command has two byte, 0x#***, wherr the # position is ch (0-2) and * positions is the code

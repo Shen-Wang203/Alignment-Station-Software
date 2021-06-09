@@ -32,7 +32,6 @@ namespace Beetle
             InitializeComponent();
 
             bt = beetle1;
-            ChartsInit();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -47,6 +46,7 @@ namespace Beetle
                 comboBoxCamSelect.SelectedIndex = 0; // this will triger comboBoxCamSelect_SelectedIndexChanged function
 
             bt.parameters.LoadAll();
+
             if (!bt.Connection())
             {
                 ButtonEnables(false);
@@ -115,6 +115,14 @@ namespace Beetle
         {
             // Always only save beetle1's parameters
             beetle1.parameters.Save();
+            beetle1.beetleControl.ClosePorts();
+            beetle1.piezoControl.ClosePort();
+            if (beetle2 != null)
+            {
+                beetle2.parameters.Save_2();
+                beetle2.beetleControl.ClosePorts();
+                beetle2.piezoControl.ClosePort();
+            }
         }
 
         private void RefreshTimer_Tick(object sender, EventArgs e)
@@ -217,7 +225,9 @@ namespace Beetle
                     numericUpDownRy.Value = (decimal)bt.parameters.position[4];
                     numericUpDownRz.Value = (decimal)bt.parameters.position[5];
                 }
-                MotorChartsUpdate();
+                
+                if (chartInitFlag)
+                    MotorChartsUpdate();
             }
 
         }
@@ -377,11 +387,14 @@ namespace Beetle
 
         private void ControlBoxDetection_Click(object sender, EventArgs e)
         {
-            if (bt.Detect())
+            beetle1.beetleControl.ClosePorts();
+            beetle1.piezoControl.ClosePort();
+            if (beetle2 != null)
             {
-                bt.parameters.SaveCOMPorts();
-                richTextBoxErrorMsg.Text += "COM Ports Saved\n";
+                beetle2.beetleControl.ClosePorts();
+                beetle2.piezoControl.ClosePort();
             }
+            bt.Detect();
             if (bt.Connection())
             {
                 buttonCalibration.Enabled = true;
@@ -405,6 +418,18 @@ namespace Beetle
                 else
                     beetle2Connected = true;
                 labelControlBoxNum.Text = "Connected to Control Box " + bt.parameters.beetleControlBoxNum;
+            }
+
+            if (!beetle1.beetleControl.PortsIsOpen())
+                beetle1.beetleControl.OpenPorts();
+            if (!beetle1.piezoControl.PortIsOpen()) 
+                beetle1.piezoControl.OpenPort();
+            if (beetle2 != null)
+            {
+                if (!beetle2.beetleControl.PortsIsOpen())
+                    beetle2.beetleControl.OpenPorts();
+                if (!beetle2.piezoControl.PortIsOpen())
+                    beetle2.piezoControl.OpenPort();
             }
         }
 
@@ -478,6 +503,8 @@ namespace Beetle
 
         private void buttonChartOnOff_Click(object sender, EventArgs e)
         {
+            if (!chartInitFlag)
+                ChartsInit();
             chartsOn = !chartsOn;
             if (chartsOn)
                 buttonChartOnOff.Text = "Live Chart On";
@@ -605,30 +632,45 @@ namespace Beetle
 
             if (comboBoxBeetleSelect.SelectedIndex == 2 && beetle2 == null)
             {
-                // Close all ports first then reconnect
-                beetle1.beetleControl.ClosePorts();
-                beetle1.piezoControl.ClosePort();
-
                 beetle2 = new BeetleSystemObject();
-                beetle2.parameters.LoadAll();
-                if (beetle2.Detect())
+                //beetle2.parameters.LoadAll();
+                beetle2.parameters.LoadAll_2();
+
+                if (beetle2.Connection())
                 {
-                    //beetle2.parameters.SaveCOMPorts();
-                    richTextBoxErrorMsg.Text += "COM Ports Detected\n";
-                    if (beetle2.Connection())
+                    ButtonEnables(true);
+                    beetle2Connected = true;
+                }
+                else
+                {
+                    // Close all ports first then reconnect
+                    beetle1.beetleControl.ClosePorts();
+                    beetle1.piezoControl.ClosePort();
+                    if (beetle2.Detect())
                     {
-                        ButtonEnables(true);
-                        beetle2Connected = true;
+                        //beetle2.parameters.SaveCOMPorts();
+                        richTextBoxErrorMsg.Text += "COM Ports Detected\n";
+                        if (beetle2.Connection())
+                        {
+                            ButtonEnables(true);
+                            beetle2Connected = true;
+                        }
+                        else
+                        {
+                            ButtonEnables(false);
+                            beetle2Connected = false;
+                        }
                     }
-                    else
+                    try
                     {
-                        ButtonEnables(false);
-                        beetle2Connected = false;
+                        beetle1.beetleControl.OpenPorts();
+                        beetle1.piezoControl.OpenPort();
+                    }
+                    catch (Exception)
+                    {
+                        beetle1Connected = false;
                     }
                 }
-
-                beetle1.beetleControl.OpenPorts();
-                beetle1.piezoControl.OpenPort();
             }
 
             if (comboBoxBeetleSelect.SelectedIndex == 1)
@@ -688,14 +730,9 @@ namespace Beetle
             if (clickGo)
             { 
                 buttonClickGo.Text = "ClickGo: True";
-                numericUpDownX.Increment = (decimal)0.05;
-                numericUpDownY.Increment = (decimal)0.05;
-                numericUpDownZ.Increment = (decimal)0.05;
                 numericUpDownRx.Increment = (decimal)0.1;
                 numericUpDownRy.Increment = (decimal)0.1;
                 numericUpDownRz.Increment = (decimal)0.1;
-
-                comboBoxStepSize.SelectedIndex = 0;
             }
             else
             {
@@ -766,25 +803,7 @@ namespace Beetle
             numericUpDownEditting = false;
         }
 
-        private void buttonPumpOutAway_Click(object sender, EventArgs e)
-        {
-            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
-            bt.beetleControl.tempP[1] -= 1;
-            bt.beetleControl.GotoTempTraj();
-            bt.beetleControl.tempP[0] = -3;
-            bt.beetleControl.tempP[1] = -3;
-            bt.beetleControl.GotoTemp();
-            numericUpDownEditting = false;
-        }
-
-        private void buttonPumpOutEngage_Click(object sender, EventArgs e)
-        {
-            bt.beetleControl.tempP = new double[6] { -0.4, -0.5, 139.12, 0, 0, 0 };
-            bt.beetleControl.GotoTempTraj();
-            numericUpDownEditting = false;
-        }
-
-        private void buttonPumpInAway_Click(object sender, EventArgs e)
+        private void buttonRightAway_Click(object sender, EventArgs e)
         {
             bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
             bt.beetleControl.tempP[2] = 140;
@@ -795,7 +814,25 @@ namespace Beetle
             numericUpDownEditting = false;
         }
 
-        private void buttonPumpInEngage_Click(object sender, EventArgs e)
+        private void buttonRightEngage_Click(object sender, EventArgs e)
+        {
+            bt.beetleControl.tempP = new double[6] { -0.75, -0.1, 138.82, 0, 0, 0 };
+            bt.beetleControl.GotoTempTraj();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonLeftAway_Click(object sender, EventArgs e)
+        {
+            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
+            bt.beetleControl.tempP[2] = 140;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[0] = -3;
+            bt.beetleControl.tempP[1] = -3;
+            bt.beetleControl.GotoTemp();
+            numericUpDownEditting = false;
+        }
+
+        private void buttonLeftEngage_Click(object sender, EventArgs e)
         {
             // -0.35, 3.5, 137.5
             bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);

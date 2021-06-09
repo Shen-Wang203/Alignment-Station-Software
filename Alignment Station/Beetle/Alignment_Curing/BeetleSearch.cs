@@ -641,7 +641,7 @@ namespace Beetle
         // starting from the current position
         // loss is updated at Parameters.loss and match current position (if return true)
         // return false when reach Z limit the second time
-        protected bool ZSteppingSearch(sbyte gapNarrowDirection = 1)
+        protected bool ZSteppingSearch(sbyte gapNarrowDirection = 1, bool forWOA = false)
         {
             Console.WriteLine("Z Stepping Started");
             Parameters.Log("Z Stepping Started");
@@ -677,16 +677,25 @@ namespace Beetle
                     }
                     secondTry = true;
                     lossFailToImprove = 0;
-                    z -= (step + 0.07) * gapNarrowDirection;
-                    beetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
-                    Console.WriteLine("Reach Limit, Go Back 0.07 for second try");
+                    if (forWOA)
+                    { 
+                        z = limitZ;
+                        Console.WriteLine("Reach Z Limit, Go to Limit for second try");
+                        Parameters.Log("Reach Z Limit, Go to Limit for second try");
+                    }
+                    else
+                    {
+                        z -= (step + 0.07) * gapNarrowDirection;
+                        Console.WriteLine("Reach Limit, Go Back 0.07 for second try");
+                        Parameters.Log("Reach Limit, Go Back 0.07 for second try");
+                    }
+                    beetleControl.ZMoveTo(z, ignoreError: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag, mode: 't', speed: 3000);
                     Console.WriteLine($"z: {Math.Round(z, 5)}");
-                    Parameters.Log("Reach Limit, Go Back 0.07 for second try");
                     Parameters.Log($"z: {Math.Round(z, 5)}");
                     break;
                 }
 
-                beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag, mode: 't', speed: 3000);
                 Thread.Sleep(150); // delay 150ms
                 loss.Add(PowerMeter.Read());
                 pos.Add(parameters.position[2]);
@@ -730,7 +739,7 @@ namespace Beetle
                     if (successNum != 0)
                     {
                         // go back to the previous points
-                        beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag);
+                        beetleControl.ZMoveTo(z, ignoreError: true, applyBacklash: true, doubleCheck: doubleCheckFlag, stopInBetween: stopInBetweenFlag, mode: 'j', speed: 3000);
                         Thread.Sleep(150); // delay 150ms
                         loss.Add(PowerMeter.Read());
                         pos.Add(parameters.position[2]);
@@ -1114,16 +1123,16 @@ namespace Beetle
             {
                 // is xDirectionTrend is 1, then piezoPosition is larger then 0xfff; if is -1, then piezoPosition is smaller than 0
                 if (sameDirection)
-                    beetleControl.XMoveTo(parameters.position[0] + compRange * directionTrend);
+                    beetleControl.XMoveTo(parameters.position[0] + compRange * directionTrend, mode: 't', speed: 2000);
                 else
-                    beetleControl.XMoveTo(parameters.position[0] - compRange * directionTrend);
+                    beetleControl.XMoveTo(parameters.position[0] - compRange * directionTrend, mode: 't', speed: 2000);
             }
             else if (beetleAxis == 1)
             {
                 if (sameDirection)
-                    beetleControl.YMoveTo(parameters.position[1] + compRange * directionTrend);
+                    beetleControl.YMoveTo(parameters.position[1] + compRange * directionTrend, mode: 't', speed: 2000);
                 else
-                    beetleControl.YMoveTo(parameters.position[1] - compRange * directionTrend);
+                    beetleControl.YMoveTo(parameters.position[1] - compRange * directionTrend, mode: 't', speed: 2000);
             }
             else if (beetleAxis == 2)
             {

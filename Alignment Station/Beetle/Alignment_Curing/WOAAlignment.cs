@@ -18,7 +18,9 @@ namespace Beetle
 
         public void SingleRun()
         {
-            Run(criteriaSelect: "global", backDistanceAfterSearching: 0.01, runFromContact: true, useScanMode: true, gapNarrowDiretion: -1);
+            Console.WriteLine("WOA Search");
+            Parameters.Log("WOA Search");
+            Run(criteriaSelect: "global", backDistanceAfterSearching: 0.01, runFromContact: true, useScanMode: true, gapNarrowDiretion: -1, forWOA: true);
 
             Console.WriteLine("Starts Piezo Search");
             Parameters.Log("Starts Piezo Search");
@@ -49,9 +51,11 @@ namespace Beetle
             beetleControl.globalErrorCount = 0;
 
             // TODO: need to be tunned
-            xyStepSizeAmp = .5f;
+            xyStepSizeAmp = 1.0f;
             lossStage1 = -20.0f;
-            lossStage2 = -18.0f;
+            lossStage2 = -15.0f;
+
+            scanSearchRadius = 0.1;
         }
 
         protected override void StatusCheck(double loss0)

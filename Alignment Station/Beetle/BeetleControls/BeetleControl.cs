@@ -154,6 +154,8 @@ namespace Beetle
                 T3Port.Open();
         }
 
+        public bool PortsIsOpen() => T1Port.IsOpen && T2Port.IsOpen && T3Port.IsOpen;
+
         public void ClearErrors()
         {
             parameters.errors = "";

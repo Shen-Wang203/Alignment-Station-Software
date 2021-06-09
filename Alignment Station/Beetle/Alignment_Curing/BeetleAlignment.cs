@@ -41,7 +41,7 @@ namespace Beetle
         // backDistanceAfterSearching: means the distance to go back after searching, this is for another search after applying epoxy
         // useScanMode: in XYSearch, whether to use ScanSearch. This can be achieved by changing the lossStage1 value to a larger one
         // gapNattowDirection: 1 means when z becomes larger, gap is smaller; -1 means when z becomes smaller, gap is smaller
-        protected void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true, sbyte gapNarrowDiretion = 1)
+        protected void Run(string criteriaSelect = "global", double backDistanceAfterSearching = 0.01, bool runFromContact = true, bool useScanMode = true, sbyte gapNarrowDiretion = 1, bool forWOA = false)
         {
             ProductSelect();
 
@@ -65,9 +65,12 @@ namespace Beetle
 
             if (runFromContact)
             {
-                // Assume the starting position is at contact, need to go back for some distance first based on focal length
-                limitZ = parameters.position[2] + 0.1 * gapNarrowDiretion;
-                beetleControl.ZMoveTo(parameters.position[2] - parameters.productGap[parameters.productName] * gapNarrowDiretion);
+                if (forWOA)
+                    limitZ = parameters.position[2];
+                else
+                    // Assume the starting position is at contact, need to go back for some distance first based on focal length
+                    limitZ = parameters.position[2] + 0.1 * gapNarrowDiretion;
+                beetleControl.ZMoveTo(parameters.position[2] - parameters.productGap[parameters.productName] * gapNarrowDiretion, mode:'t', speed: 2000);
             }
 
             loss.Add(PowerMeter.Read());
@@ -80,7 +83,7 @@ namespace Beetle
                     break;
                 if (ParameterUpdate(loss[loss.Count - 1]))
                     break;
-                ZSteppingSearch(gapNarrowDirection: gapNarrowDiretion);
+                ZSteppingSearch(gapNarrowDirection: gapNarrowDiretion, forWOA: forWOA);
                 //ZSearch(); //this method is not stable yet
             }
 

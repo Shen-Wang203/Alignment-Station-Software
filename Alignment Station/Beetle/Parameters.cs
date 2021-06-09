@@ -44,7 +44,7 @@ namespace Beetle
                 { "SM 1xN", 0.25f },
                 { "MM 1xN", 0.18f },
                 { "UWDM", 0.1f },
-                { "WOA", 0.05f }
+                { "WOA", 0.005f }
             };
 
         public void Save()
@@ -52,6 +52,22 @@ namespace Beetle
             SaveCOMPorts();
             Properties.Fixture.Default.BeetleFixtureNum = beetleFixtureNumber;
             Properties.Fixture.Default.BeetleControlBoxNum = beetleControlBoxNum;
+
+            Properties.Powermeter.Default.Reference = PowerMeter.lossReference;
+            Properties.Powermeter.Default.Addr = PowerMeter.addr;
+            Properties.Powermeter.Default.Channel = PowerMeter.channel;
+
+            Properties.Alignment.Default.LossCriteria = lossCriteria;
+            Properties.Alignment.Default.ProductName = productName;
+            Properties.Alignment.Default.DoubleCheck = doublecheckFlag;
+            Properties.Alignment.Default.StopInBetween = stopInBetweenFlag;
+        }
+
+        public void Save_2()
+        {
+            SaveCOMPorts_2();
+            Properties.Fixture.Default.BeetleFixtureNum_2 = beetleFixtureNumber;
+            Properties.Fixture.Default.BeetleControlBoxNum_2 = beetleControlBoxNum;
 
             Properties.Powermeter.Default.Reference = PowerMeter.lossReference;
             Properties.Powermeter.Default.Addr = PowerMeter.addr;
@@ -100,6 +116,44 @@ namespace Beetle
             Log("Parameters Loaded");
         }
 
+        // TODO: load and save system 2 all other parameters
+        public void LoadAll_2()
+        {
+            beetleT1ComPortName = Properties.Fixture.Default.T1COM_2;
+            beetleT2ComPortName = Properties.Fixture.Default.T2COM_2;
+            beetleT3ComPortName = Properties.Fixture.Default.T3COM_2;
+            arduinoComPortName = Properties.Fixture.Default.ArdnCOM_2;
+            initialPosition[0] = Properties.Fixture.Default.InitialX;
+            initialPosition[1] = Properties.Fixture.Default.InitialY;
+            initialPosition[2] = Properties.Fixture.Default.InitialZ;
+            initialPosition[3] = Properties.Fixture.Default.InitialRx;
+            initialPosition[4] = Properties.Fixture.Default.InitialRy;
+            initialPosition[5] = Properties.Fixture.Default.InitialRz;
+            pivotPoint[0] = Properties.Fixture.Default.PivotX;
+            pivotPoint[1] = Properties.Fixture.Default.PivotY;
+            pivotPoint[2] = Properties.Fixture.Default.PivotZ;
+            position[0] = Properties.Fixture.Default.InitialX;
+            position[1] = Properties.Fixture.Default.InitialY;
+            position[2] = Properties.Fixture.Default.InitialZ;
+            position[3] = Properties.Fixture.Default.InitialRx;
+            position[4] = Properties.Fixture.Default.InitialRy;
+            position[5] = Properties.Fixture.Default.InitialRz;
+            beetleFixtureNumber = Properties.Fixture.Default.BeetleFixtureNum_2;
+            beetleControlBoxNum = Properties.Fixture.Default.BeetleControlBoxNum_2;
+
+            PowerMeter.lossReference = Properties.Powermeter.Default.Reference;
+            PowerMeter.addr = Properties.Powermeter.Default.Addr;
+            PowerMeter.channel = Properties.Powermeter.Default.Channel;
+
+            lossCriteria = Properties.Alignment.Default.LossCriteria;
+            productName = Properties.Alignment.Default.ProductName;
+            doublecheckFlag = Properties.Alignment.Default.DoubleCheck;
+            stopInBetweenFlag = Properties.Alignment.Default.StopInBetween;
+
+            Console.WriteLine("Sys2 Parameters Loaded");
+            Log("Sys2 Parameters Loaded");
+        }
+
         public void SaveCOMPorts()
         {
             Properties.Fixture.Default.T1COM = beetleT1ComPortName;
@@ -109,6 +163,19 @@ namespace Beetle
 
             Properties.Fixture.Default.Save();
             Console.WriteLine("COM Ports Saved");
+            //Log("COM Ports Saved");
+        }
+
+        // for system 2
+        public void SaveCOMPorts_2()
+        {
+            Properties.Fixture.Default.T1COM_2 = beetleT1ComPortName;
+            Properties.Fixture.Default.T2COM_2 = beetleT2ComPortName;
+            Properties.Fixture.Default.T3COM_2 = beetleT3ComPortName;
+            Properties.Fixture.Default.ArdnCOM_2 = arduinoComPortName;
+
+            Properties.Fixture.Default.Save();
+            Console.WriteLine("SYS2 COM Ports Saved");
             //Log("COM Ports Saved");
         }
 

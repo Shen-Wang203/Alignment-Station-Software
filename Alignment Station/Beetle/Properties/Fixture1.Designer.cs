@@ -202,5 +202,77 @@ namespace Beetle.Properties {
                 this["BeetleControlBoxNum"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM6")]
+        public string T1COM_2 {
+            get {
+                return ((string)(this["T1COM_2"]));
+            }
+            set {
+                this["T1COM_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM7")]
+        public string T2COM_2 {
+            get {
+                return ((string)(this["T2COM_2"]));
+            }
+            set {
+                this["T2COM_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM8")]
+        public string T3COM_2 {
+            get {
+                return ((string)(this["T3COM_2"]));
+            }
+            set {
+                this["T3COM_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM5")]
+        public string ArdnCOM_2 {
+            get {
+                return ((string)(this["ArdnCOM_2"]));
+            }
+            set {
+                this["ArdnCOM_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public byte BeetleFixtureNum_2 {
+            get {
+                return ((byte)(this["BeetleFixtureNum_2"]));
+            }
+            set {
+                this["BeetleFixtureNum_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string BeetleControlBoxNum_2 {
+            get {
+                return ((string)(this["BeetleControlBoxNum_2"]));
+            }
+            set {
+                this["BeetleControlBoxNum_2"] = value;
+            }
+        }
     }
 }

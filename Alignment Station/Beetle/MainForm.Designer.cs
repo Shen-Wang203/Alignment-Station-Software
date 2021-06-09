@@ -141,10 +141,10 @@
             this.buttonPPRightSignal = new System.Windows.Forms.Button();
             this.buttonInitPos = new System.Windows.Forms.Button();
             this.buttonAngleEdgePos = new System.Windows.Forms.Button();
-            this.buttonPumpInAway = new System.Windows.Forms.Button();
-            this.buttonPumpInEngage = new System.Windows.Forms.Button();
-            this.buttonPumpOutAway = new System.Windows.Forms.Button();
-            this.buttonPumpOutEngage = new System.Windows.Forms.Button();
+            this.buttonLeftAway = new System.Windows.Forms.Button();
+            this.buttonLeftEngage = new System.Windows.Forms.Button();
+            this.buttonRightAway = new System.Windows.Forms.Button();
+            this.buttonRightEngage = new System.Windows.Forms.Button();
             this.labelPiezoPosValue1woa = new System.Windows.Forms.Label();
             this.labelPiezoPos1woa = new System.Windows.Forms.Label();
             this.buttonPiezoSearch1woa = new System.Windows.Forms.Button();
@@ -1809,10 +1809,10 @@
             this.tabPage1.Controls.Add(this.buttonPPRightSignal);
             this.tabPage1.Controls.Add(this.buttonInitPos);
             this.tabPage1.Controls.Add(this.buttonAngleEdgePos);
-            this.tabPage1.Controls.Add(this.buttonPumpInAway);
-            this.tabPage1.Controls.Add(this.buttonPumpInEngage);
-            this.tabPage1.Controls.Add(this.buttonPumpOutAway);
-            this.tabPage1.Controls.Add(this.buttonPumpOutEngage);
+            this.tabPage1.Controls.Add(this.buttonLeftAway);
+            this.tabPage1.Controls.Add(this.buttonLeftEngage);
+            this.tabPage1.Controls.Add(this.buttonRightAway);
+            this.tabPage1.Controls.Add(this.buttonRightEngage);
             this.tabPage1.Controls.Add(this.labelPiezoPosValue1woa);
             this.tabPage1.Controls.Add(this.labelPiezoPos1woa);
             this.tabPage1.Controls.Add(this.buttonPiezoSearch1woa);
@@ -1903,49 +1903,49 @@
             this.buttonAngleEdgePos.UseVisualStyleBackColor = true;
             this.buttonAngleEdgePos.Click += new System.EventHandler(this.buttonAngleEdgePos_Click);
             // 
-            // buttonPumpInAway
+            // buttonLeftAway
             // 
-            this.buttonPumpInAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPumpInAway.Location = new System.Drawing.Point(651, 214);
-            this.buttonPumpInAway.Name = "buttonPumpInAway";
-            this.buttonPumpInAway.Size = new System.Drawing.Size(119, 57);
-            this.buttonPumpInAway.TabIndex = 30;
-            this.buttonPumpInAway.Text = "Pump In Away";
-            this.buttonPumpInAway.UseVisualStyleBackColor = true;
-            this.buttonPumpInAway.Click += new System.EventHandler(this.buttonPumpInAway_Click);
+            this.buttonLeftAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLeftAway.Location = new System.Drawing.Point(651, 214);
+            this.buttonLeftAway.Name = "buttonLeftAway";
+            this.buttonLeftAway.Size = new System.Drawing.Size(119, 57);
+            this.buttonLeftAway.TabIndex = 30;
+            this.buttonLeftAway.Text = "Left Away";
+            this.buttonLeftAway.UseVisualStyleBackColor = true;
+            this.buttonLeftAway.Click += new System.EventHandler(this.buttonLeftAway_Click);
             // 
-            // buttonPumpInEngage
+            // buttonLeftEngage
             // 
-            this.buttonPumpInEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPumpInEngage.Location = new System.Drawing.Point(651, 376);
-            this.buttonPumpInEngage.Name = "buttonPumpInEngage";
-            this.buttonPumpInEngage.Size = new System.Drawing.Size(119, 62);
-            this.buttonPumpInEngage.TabIndex = 29;
-            this.buttonPumpInEngage.Text = "Pump In Engage";
-            this.buttonPumpInEngage.UseVisualStyleBackColor = true;
-            this.buttonPumpInEngage.Click += new System.EventHandler(this.buttonPumpInEngage_Click);
+            this.buttonLeftEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLeftEngage.Location = new System.Drawing.Point(651, 376);
+            this.buttonLeftEngage.Name = "buttonLeftEngage";
+            this.buttonLeftEngage.Size = new System.Drawing.Size(119, 62);
+            this.buttonLeftEngage.TabIndex = 29;
+            this.buttonLeftEngage.Text = "Left Engage";
+            this.buttonLeftEngage.UseVisualStyleBackColor = true;
+            this.buttonLeftEngage.Click += new System.EventHandler(this.buttonLeftEngage_Click);
             // 
-            // buttonPumpOutAway
+            // buttonRightAway
             // 
-            this.buttonPumpOutAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPumpOutAway.Location = new System.Drawing.Point(896, 293);
-            this.buttonPumpOutAway.Name = "buttonPumpOutAway";
-            this.buttonPumpOutAway.Size = new System.Drawing.Size(119, 57);
-            this.buttonPumpOutAway.TabIndex = 28;
-            this.buttonPumpOutAway.Text = "Pump Out Away";
-            this.buttonPumpOutAway.UseVisualStyleBackColor = true;
-            this.buttonPumpOutAway.Click += new System.EventHandler(this.buttonPumpOutAway_Click);
+            this.buttonRightAway.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonRightAway.Location = new System.Drawing.Point(896, 293);
+            this.buttonRightAway.Name = "buttonRightAway";
+            this.buttonRightAway.Size = new System.Drawing.Size(119, 57);
+            this.buttonRightAway.TabIndex = 28;
+            this.buttonRightAway.Text = "Right Away";
+            this.buttonRightAway.UseVisualStyleBackColor = true;
+            this.buttonRightAway.Click += new System.EventHandler(this.buttonRightAway_Click);
             // 
-            // buttonPumpOutEngage
+            // buttonRightEngage
             // 
-            this.buttonPumpOutEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonPumpOutEngage.Location = new System.Drawing.Point(896, 376);
-            this.buttonPumpOutEngage.Name = "buttonPumpOutEngage";
-            this.buttonPumpOutEngage.Size = new System.Drawing.Size(119, 62);
-            this.buttonPumpOutEngage.TabIndex = 27;
-            this.buttonPumpOutEngage.Text = "Pump Out Engage";
-            this.buttonPumpOutEngage.UseVisualStyleBackColor = true;
-            this.buttonPumpOutEngage.Click += new System.EventHandler(this.buttonPumpOutEngage_Click);
+            this.buttonRightEngage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonRightEngage.Location = new System.Drawing.Point(896, 376);
+            this.buttonRightEngage.Name = "buttonRightEngage";
+            this.buttonRightEngage.Size = new System.Drawing.Size(119, 62);
+            this.buttonRightEngage.TabIndex = 27;
+            this.buttonRightEngage.Text = "Right Engage";
+            this.buttonRightEngage.UseVisualStyleBackColor = true;
+            this.buttonRightEngage.Click += new System.EventHandler(this.buttonRightEngage_Click);
             // 
             // labelPiezoPosValue1woa
             // 
@@ -2542,11 +2542,11 @@
         private System.Windows.Forms.Label labelControlBoxNum;
         private System.Windows.Forms.NumericUpDown numericUpDownReference;
         private System.Windows.Forms.Button buttonSetRef;
-        private System.Windows.Forms.Button buttonPumpOutAway;
-        private System.Windows.Forms.Button buttonPumpOutEngage;
+        private System.Windows.Forms.Button buttonRightAway;
+        private System.Windows.Forms.Button buttonRightEngage;
         private System.Windows.Forms.Button buttonAngleEdgePos;
-        private System.Windows.Forms.Button buttonPumpInAway;
-        private System.Windows.Forms.Button buttonPumpInEngage;
+        private System.Windows.Forms.Button buttonLeftAway;
+        private System.Windows.Forms.Button buttonLeftEngage;
         private System.Windows.Forms.Button buttonInitPos;
         private System.Windows.Forms.Button buttonClickGo;
         private System.Windows.Forms.Button buttonPPRightSignal;

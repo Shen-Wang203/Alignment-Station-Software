@@ -80,9 +80,9 @@ namespace Beetle
                         parameters.beetleT3ComPortName = beetlePorts[beetleSerialNum.FindIndex(element => element == T3[num])];
                         parameters.arduinoComPortName = beetlePorts[beetleSerialNum.FindIndex(element => element == Pa[num])];
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        MessageBox.Show("Failed to Find Beetle Control Boxes");
+                        MessageBox.Show(e.Message + "\nFailed to Find Beetle Control Boxes");
                         return false;
                     }
                     parameters.beetleControlBoxNum = num.ToString();

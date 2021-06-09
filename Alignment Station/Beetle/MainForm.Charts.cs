@@ -9,6 +9,7 @@ namespace Beetle
 {
     public partial class MainForm
     {
+        private bool chartInitFlag = false;
         private SeriesCollection seriesXY, seriesZ, seriesA, seriesB, seriesC;
         private double[] oldPosition = { 0,0,0,0,0,0 };
         private byte weightValue = 12;
@@ -16,6 +17,7 @@ namespace Beetle
 
         private void ChartsInit()
         {
+            chartInitFlag = true;
             seriesXY = new SeriesCollection
             {
                 new ScatterSeries
@@ -313,20 +315,35 @@ namespace Beetle
 
         private void comboBoxMotorSelectTop_SelectedIndexChanged(object sender, EventArgs e)
         {
-            seriesA[0].Values.Clear();
-            seriesA[1].Values.Clear();
+            if (comboBoxMotorSelectTop.SelectedIndex != 6)
+            {
+                if (seriesA == null)
+                    ChartsInit();
+                seriesA[0].Values.Clear();
+                seriesA[1].Values.Clear();
+            }
         }
 
         private void comboBoxMotorSelectMid_SelectedIndexChanged(object sender, EventArgs e)
         {
-            seriesB[0].Values.Clear();
-            seriesB[1].Values.Clear();
+            if (comboBoxMotorSelectMid.SelectedIndex != 6)
+            {
+                if (seriesB == null)
+                    ChartsInit();
+                seriesB[0].Values.Clear();
+                seriesB[1].Values.Clear();
+            }
         }
 
         private void comboBoxMotorSelectBot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            seriesC[0].Values.Clear();
-            seriesC[1].Values.Clear();
+            if (comboBoxMotorSelectBot.SelectedIndex != 6)
+            {
+                if (seriesC == null)
+                    ChartsInit();
+                seriesC[0].Values.Clear();
+                seriesC[1].Values.Clear();
+            }
         }
 
     }
