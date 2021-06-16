@@ -2,12 +2,12 @@
 
 namespace Beetle
 {
-    class WOAAlignment : BeetleAlignment
+    class WOAAlignment : BeetleSearch
     {
         public WOAAlignment(Parameters prmts, BeetleControl bc, PiezoControl pc) : base(prmts, bc, pc)
         { }
 
-        public void WOAPiezoSearch()
+        private void WOAPiezoSearch()
         {
             parameters.errorFlag = false;
             parameters.errors = "";
@@ -20,7 +20,9 @@ namespace Beetle
         {
             Console.WriteLine("WOA Search");
             Parameters.Log("WOA Search");
-            Run(criteriaSelect: "global", backDistanceAfterSearching: 0.01, runFromContact: true, useScanMode: true, gapNarrowDiretion: -1, forWOA: true);
+
+            if (!WOABeetleSearch())
+                return;
 
             Console.WriteLine("Starts Piezo Search");
             Parameters.Log("Starts Piezo Search");
@@ -39,23 +41,35 @@ namespace Beetle
             beetleControl.DisengageMotors();
         }
 
-        protected override void ParameterReset()
+        private bool WOABeetleSearch()
         {
-            lossFailToImprove = 0;
-            secondTry = false;
-            doubleCheckFlag = parameters.doublecheckFlag;
-            stopInBetweenFlag = parameters.stopInBetweenFlag;
+            // Start position needs the ferrule to contact the chip
+            limitZ = parameters.position[2] - 0.02;
+            beetleControl.ZMoveTo(parameters.position[2] + parameters.productGap[parameters.productName], mode: 't', speed: 2000);
+            parameters.position.CopyTo(beetleControl.tempP, 0);
 
-            parameters.errorFlag = false;
-
-            beetleControl.globalErrorCount = 0;
-
-            // TODO: need to be tunned
-            xyStepSizeAmp = 1.0f;
-            lossStage1 = -20.0f;
-            lossStage2 = -15.0f;
-
+            // XY scan and square scan if nended
             scanSearchRadius = 0.1;
+            spd = 100;
+            if (!AxisScanSearch(axis: 0))
+            {
+                Console.WriteLine("X Scan Search Failed");
+                Parameters.Log("X Scan Search Failed");
+            }
+            if (!AxisScanSearch(axis: 1))
+            {
+                Console.WriteLine("Y Scan Search Failed");
+                Parameters.Log("Y Scan Search Failed");
+                // if x and y scan search all failed, use square search one time
+                if (!XYSquareSearch(singleRange: 0.01))
+                {
+                    Console.WriteLine("Square Search Failed");
+                    Parameters.Log("Square Search Failed");
+                    beetleControl.GotoTempTraj(); // return to original position
+                    return false;
+                }
+            }
+            return true;
         }
 
         protected override void StatusCheck(double loss0)
@@ -68,25 +82,16 @@ namespace Beetle
             }
             else
             {
-                if ((loss0 < (4 * parameters.lossCurrentMax) && loss0 < -10) || loss0 < -45)
-                {
-                    parameters.errors = "\nUnexpected High Loss";
-                    Console.WriteLine("Unexpected High Loss");
-                    Parameters.Log("Unexpected High Loss");
-                    parameters.errorFlag = true;
-                }
+                //if ((loss0 < (4 * parameters.lossCurrentMax) && loss0 < -10) || loss0 < -60)
+                //{
+                //    parameters.errors = "\nUnexpected High Loss";
+                //    Console.WriteLine("Unexpected High Loss");
+                //    Parameters.Log("Unexpected High Loss");
+                //    parameters.errorFlag = true;
+                //}
 
                 lossFailToImprove += 1;
-                if (lossFailToImprove == 6 && !parameters.piezoRunning)
-                {
-                    lossFailToImprove = 0;
-                    parameters.errors = "Beetle Search Failed to find better Loss, Go to Best Position";
-                    Console.WriteLine("Beetle Search Failed to find better Loss, Go to Best Position");
-                    Parameters.Log("Beetle Search Failed to find better Loss, Go to Best Position");
-                    parameters.errorFlag = true;
-                    beetleControl.GotoPosition(posCurrentMax);
-                }
-                else if (lossFailToImprove >= 12 && parameters.piezoRunning)
+                if (lossFailToImprove >= 12 && parameters.piezoRunning)
                 {
                     lossFailToImprove = 0;
                     parameters.errors = "Piezo Search Failed to find better Loss";
@@ -106,8 +111,8 @@ namespace Beetle
         protected override double PiezoLossBound(double lossRef)
         {
             lossRef = Math.Abs(lossRef);
-            if (0.05 * lossRef > 0.7)
-                return 0.7;
+            if (0.05 * lossRef > 0.4)
+                return 0.4;
             else if (lossRef < 3)
                 return 0.02;
             else

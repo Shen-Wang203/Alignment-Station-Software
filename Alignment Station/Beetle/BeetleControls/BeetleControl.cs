@@ -33,7 +33,7 @@ namespace Beetle
         public double encoderResolution = 50e-6; // in mm/counts
         public int[] countsReal = new int[6] { 0, 0, 0, 0, 0, 0 }; // {T1x, T1y, T2x, T2y, T3x, T3y}, updates only at RealCountsFetch() or OnTarget()
         public int[] countsTarget = new int[6] { 0, 0, 0, 0, 0, 0 };
-        public double[] tempP;
+        public double[] tempP = new double[6] { 0, 0, 140, 0, 0, 0};
         public int zTrajT1xCountRange = 0;
 
         public BeetleControl(Parameters prmts, BeetleMathModel mm)
@@ -45,59 +45,59 @@ namespace Beetle
 
         public void FixtureInit()
         { 
-            int x1 = 183000, x2 = 183000, x3 = 183000, y1 = 183000, y2 = 183000, y3 = 183000;
+            int x1 = 185000, x2 = 185000, x3 = 185000, y1 = 185000, y2 = 185000, y3 = 185000;
             double A1x, A1y, A2x, A2y, A3x, A3y;
-            switch(parameters.beetleFixtureNumber)
-            {
-                case 1:
-                    x1 = 193050;
-                    y1 = 187450;
-                    x2 = 192010;
-                    y2 = 189780;
-                    x3 = 183700;
-                    y3 = 187400;
-                    break;
-                case 2:
-                    x1 = 192120;
-                    y1 = 187570;
-                    x2 = 186840;
-                    y2 = 187150;
-                    x3 = 183500;
-                    y3 = 183820;
-                    break;
-                case 3:
-                    x1 = 188040;
-                    y1 = 183300;
-                    x2 = 180030;
-                    y2 = 183880;
-                    x3 = 185180;
-                    y3 = 184270;
-                    break;
-                case 4:
-                    x1 = 188920;
-                    y1 = 188310;
-                    x2 = 184950;
-                    y2 = 181650;
-                    x3 = 183790;
-                    y3 = 183540;
-                    break;
-                case 5:
-                    x1 = 188710;
-                    y1 = 180590;
-                    x2 = 180400;
-                    y2 = 187880;
-                    x3 = 182640;
-                    y3 = 180670;
-                    break;
-                case 0:
-                    x1 = 188030;
-                    y1 = 180000;
-                    x2 = 183400;
-                    y2 = 190250;
-                    x3 = 194300;
-                    y3 = 179350;
-                    break;
-            }
+            //switch(parameters.beetleFixtureNumber)
+            //{
+            //    case 1:
+            //        x1 = 193050;
+            //        y1 = 187450;
+            //        x2 = 192010;
+            //        y2 = 189780;
+            //        x3 = 183700;
+            //        y3 = 187400;
+            //        break;
+            //    case 2:
+            //        x1 = 192120;
+            //        y1 = 187570;
+            //        x2 = 186840;
+            //        y2 = 187150;
+            //        x3 = 183500;
+            //        y3 = 183820;
+            //        break;
+            //    case 3:
+            //        x1 = 188040;
+            //        y1 = 183300;
+            //        x2 = 180030;
+            //        y2 = 183880;
+            //        x3 = 185180;
+            //        y3 = 184270;
+            //        break;
+            //    case 4:
+            //        x1 = 188920;
+            //        y1 = 188310;
+            //        x2 = 184950;
+            //        y2 = 181650;
+            //        x3 = 183790;
+            //        y3 = 183540;
+            //        break;
+            //    case 5:
+            //        x1 = 188710;
+            //        y1 = 180590;
+            //        x2 = 180400;
+            //        y2 = 187880;
+            //        x3 = 182640;
+            //        y3 = 180670;
+            //        break;
+            //    case 0:
+            //        x1 = 188030;
+            //        y1 = 180000;
+            //        x2 = 183400;
+            //        y2 = 190250;
+            //        x3 = 194300;
+            //        y3 = 179350;
+            //        break;
+            //}
             A1x = x1 - (-85.796144) / encoderResolution;
             A1y = y1 - 9.55 / encoderResolution;
             A2x = x2 + 38.123072 / encoderResolution;
@@ -176,13 +176,33 @@ namespace Beetle
 
         public void Calibration()
         {
+            ClearErrors();
             string xstr = "w axis0.requested_state 3";
             string ystr = "w axis1.requested_state 3";
             T123SendOnly(xstr, ystr);
             motorEngageFlag = new sbyte[6] { 1, 1, 1, 1, 1, 1 }; // indicating that the motor is running
             Thread.Sleep(15000);
-            CheckErrors();
+
+            xstr = "r axis0.encoder.is_ready";
+            ystr = "r axis1.encoder.is_ready";
+            byte sum = 0;
+            sum += byte.Parse(T1Talk(xstr));
+            sum += byte.Parse(T2Talk(xstr));
+            sum += byte.Parse(T3Talk(xstr));
+            sum += byte.Parse(T1Talk(ystr));
+            sum += byte.Parse(T2Talk(ystr));
+            sum += byte.Parse(T3Talk(ystr));
             motorEngageFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // indicating the motor is in idle
+            if (sum != 6)
+            {
+                CheckErrors();
+                MessageBox.Show("Calibratio Failed, Reset Motor Position and Try Again");
+            }
+            else
+            {
+                parameters.errorFlag = false;
+                parameters.errors = "";
+            }
         }
 
         // axial can be 0(all axis) or 0-5 axis
@@ -632,6 +652,8 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private string T1Talk(string str)
         {
+            if (parameters.errorFlag)
+                return "";
             string message = "";
             try
             { 
@@ -643,7 +665,6 @@ namespace Beetle
                 parameters.errorFlag = true;
                 parameters.errors = "\nBeetle COM Port Failed";
                 return "";
-                // TODO: exit this threading directly
             }
             try
             {
@@ -662,6 +683,8 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private string T2Talk(string str)
         {
+            if (parameters.errorFlag)
+                return "";
             string message = "";
             try
             {
@@ -692,6 +715,8 @@ namespace Beetle
         // If the return is a description, print it out using WriteLine(), don't use Write()
         private string T3Talk(string str)
         {
+            if (parameters.errorFlag)
+                return "";
             string message = "";
             try
             {
@@ -720,6 +745,8 @@ namespace Beetle
 
         private void T1SendOnly(string str)
         {
+            if (parameters.errorFlag)
+                return;
             try
             {
                 T1Port.WriteLine(str);
@@ -735,6 +762,8 @@ namespace Beetle
 
         private void T2SendOnly(string str)
         {
+            if (parameters.errorFlag)
+                return;
             try
             {
                 T2Port.WriteLine(str);
@@ -749,6 +778,8 @@ namespace Beetle
 
         private void T3SendOnly(string str)
         {
+            if (parameters.errorFlag)
+                return;
             try
             {
                 T3Port.WriteLine(str);
@@ -869,8 +900,12 @@ namespace Beetle
             m = m == 0 ? 1 : m;
             // Axial that needs to travel longest has 300 speed
             // Other axial will scale based on their relative deltacounts
-            for (byte i = 0; i < 6; i ++)
-                SetTrajSpeed(i, speed * deltaCount[i] / m);
+            for (byte i = 0; i < 6; i++)
+            {
+                // if some axial don't need to move then don't change its speed
+                if (deltaCount[i] > tolerance)
+                    SetTrajSpeed(i, speed * deltaCount[i] / m);
+            }
             normalSpeedFlag = false;
         }
 

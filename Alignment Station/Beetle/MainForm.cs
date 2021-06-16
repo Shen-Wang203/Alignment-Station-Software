@@ -19,6 +19,7 @@ namespace Beetle
         private DateTime thisTime, startTime;
         private TimeSpan timeElapsed;
         private bool clickGo = false;
+        private int dofIndicator = 0; // indicate which dof is controlled by keys now, 0-5 means xyzRxRyRz
 
         private FilterInfoCollection filterInfoCollecion;
         private VideoCaptureDevice videoCaptureDevice;
@@ -42,8 +43,9 @@ namespace Beetle
             filterInfoCollecion = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo filterInfo in filterInfoCollecion)
                 comboBoxCamSelect.Items.Add(filterInfo.Name);
-            if (comboBoxCamSelect.Items.Count != 0)
-                comboBoxCamSelect.SelectedIndex = 0; // this will triger comboBoxCamSelect_SelectedIndexChanged function
+            //if (comboBoxCamSelect.Items.Count > 1)
+            //    comboBoxCamSelect.SelectedIndex = 1; // this will triger comboBoxCamSelect_SelectedIndexChanged function
+            comboBoxCamSelect.SelectedIndex = 0;
 
             bt.parameters.LoadAll();
 
@@ -67,6 +69,8 @@ namespace Beetle
             comboBoxMotorSelectBot.SelectedIndex = 6;
             comboBoxPMChl.SelectedIndex = 0;
             comboBoxStepSize.SelectedIndex = 0;
+
+            labelX.ForeColor = Color.Red;
 
             ReloadBeetleInfo();
         }
@@ -94,21 +98,29 @@ namespace Beetle
         {
             if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
                 videoCaptureDevice.Stop();
-            videoCaptureDevice = new VideoCaptureDevice(filterInfoCollecion[comboBoxCamSelect.SelectedIndex].MonikerString);
-
-            VideoCapabilities[] videoCap = videoCaptureDevice.VideoCapabilities;
-            int maxWidth = 0;
-            foreach (var item in videoCap)
+            if (comboBoxCamSelect.SelectedIndex != 0)
             {
-                if (item.FrameSize.Width > maxWidth)
-                {
-                    maxWidth = item.FrameSize.Width;
-                    videoCaptureDevice.VideoResolution = item;
-                }
-            }
+                videoCaptureDevice = new VideoCaptureDevice(filterInfoCollecion[comboBoxCamSelect.SelectedIndex - 1].MonikerString);
 
-            videoCaptureDevice.NewFrame += VideoCaptureDevice_NewFrame;
-            videoCaptureDevice.Start();
+                VideoCapabilities[] videoCap = videoCaptureDevice.VideoCapabilities;
+                int maxWidth = 0;
+                foreach (var item in videoCap)
+                {
+                    if (item.FrameSize.Width > maxWidth)
+                    {
+                        maxWidth = item.FrameSize.Width;
+                        videoCaptureDevice.VideoResolution = item;
+                    }
+                }
+
+                videoCaptureDevice.NewFrame += VideoCaptureDevice_NewFrame;
+                videoCaptureDevice.Start();
+            }
+            else
+            {
+                pictureBoxCam.Image = pictureBoxCam.InitialImage;
+                pictureBoxCamBC.Image = pictureBoxCam.InitialImage;
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -234,6 +246,7 @@ namespace Beetle
 
         private void ButtonReset_Click(object sender, EventArgs e)
         {
+            bt.parameters.errorFlag = false;
             if (runThread != null && runThread.IsAlive)
             {
                 MessageBox.Show("Another Process Runing");
@@ -263,6 +276,8 @@ namespace Beetle
 
         private void ButtonAlignment_Click(object sender, EventArgs e)
         {
+            bt.parameters.productName = comboBoxProductSelect.Text;
+
             if (PowerMeter.loss > -40 || bt.parameters.productName == "WOA")
             {
                 Parameters.Log("\r\n");
@@ -273,6 +288,7 @@ namespace Beetle
 
                 stopReadPM = false;
                 startTime = DateTime.Now;
+                Thread.Sleep(500);
 
                 //bt.piezoControl.Reset();
                 //Thread.Sleep(500);
@@ -316,6 +332,7 @@ namespace Beetle
 
                 stopReadPM = false;
                 startTime = DateTime.Now;
+                Thread.Sleep(500);
 
                 if (bt.ba == null)
                     bt.AlignCuringInit();
@@ -347,6 +364,7 @@ namespace Beetle
 
             stopReadPM = false;
             startTime = DateTime.Now;
+            Thread.Sleep(500);
 
             if (bt.bc == null)
                 bt.AlignCuringInit();
@@ -485,10 +503,10 @@ namespace Beetle
 
         private void Test_Click(object sender, EventArgs e)
         {
-            double[] pp = new double[6];
-            bt.parameters.position.CopyTo(pp, 0);
-            pp[2] += 4;
-            bt.beetleControl.GotoPosition(pp, mode: 't', checkOnTarget: false);
+            //double[] pp = new double[6];
+            //bt.parameters.position.CopyTo(pp, 0);
+            //pp[2] += 4;
+            //bt.beetleControl.GotoPosition(pp, mode: 't', checkOnTarget: false);
         }
 
         private void comboBoxProductSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -516,6 +534,7 @@ namespace Beetle
 
         private void StepAction(char mode)
         {
+            bt.parameters.errorFlag = false;
             if (runThread != null && runThread.IsAlive)
             {
                 MessageBox.Show("Another Process Runing");
@@ -535,10 +554,7 @@ namespace Beetle
             numericUpDownEditting = false;
         }
 
-        private void buttonSetPositionSyn_Click(object sender, EventArgs e)
-        {
-            StepAction('t');
-        }
+        private void buttonSetPositionSyn_Click(object sender, EventArgs e) => StepAction('t');
 
         private void numericUpDownNotXY_ValueChanged(object sender, EventArgs e)
         {
@@ -550,6 +566,125 @@ namespace Beetle
         {
             if (clickGo && numericUpDownEditting)
                 StepAction('j');
+        }
+
+        private void tabControl1_KeyUp(object sender, KeyEventArgs e)
+        {
+            //Console.WriteLine(e.KeyCode);
+            if (e.KeyCode == Keys.Right)
+            {
+                dofIndicator += 1;
+                dofIndicator = dofIndicator <= 5 ? (dofIndicator >= 0 ? dofIndicator : 5) : 0;
+                labelX.ForeColor = Color.Black;
+                labelY.ForeColor = Color.Black;
+                labelZ.ForeColor = Color.Black;
+                labelRx.ForeColor = Color.Black;
+                labelRy.ForeColor = Color.Black;
+                labelRz.ForeColor = Color.Black;
+                switch (dofIndicator)
+                {
+                    case 0:
+                        labelX.ForeColor = Color.Red;
+                        break;
+                    case 1:
+                        labelY.ForeColor = Color.Red;
+                        break;
+                    case 2:
+                        labelZ.ForeColor = Color.Red;
+                        break;
+                    case 3:
+                        labelRx.ForeColor = Color.Red;
+                        break;
+                    case 4:
+                        labelRy.ForeColor = Color.Red;
+                        break;
+                    case 5:
+                        labelRz.ForeColor = Color.Red;
+                        break;
+                }
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                dofIndicator -= 1;
+                dofIndicator = dofIndicator <= 5 ? (dofIndicator >= 0? dofIndicator : 5) : 0;
+                labelX.ForeColor = Color.Black;
+                labelY.ForeColor = Color.Black;
+                labelZ.ForeColor = Color.Black;
+                labelRx.ForeColor = Color.Black;
+                labelRy.ForeColor = Color.Black;
+                labelRz.ForeColor = Color.Black;
+                switch (dofIndicator)
+                {
+                    case 0:
+                        labelX.ForeColor = Color.Red;
+                        break;
+                    case 1:
+                        labelY.ForeColor = Color.Red;
+                        break;
+                    case 2:
+                        labelZ.ForeColor = Color.Red;
+                        break;
+                    case 3:
+                        labelRx.ForeColor = Color.Red;
+                        break;
+                    case 4:
+                        labelRy.ForeColor = Color.Red;
+                        break;
+                    case 5:
+                        labelRz.ForeColor = Color.Red;
+                        break;
+                }
+            }
+            else if ((e.KeyCode == Keys.Oemplus || e.KeyCode == Keys.Add) && clickGo)
+            {
+                numericUpDownEditting = true;
+                switch (dofIndicator)
+                {
+                    case 0:
+                        numericUpDownX.Value += numericUpDownX.Increment;
+                        break;
+                    case 1:
+                        numericUpDownY.Value += numericUpDownY.Increment;
+                        break;
+                    case 2:
+                        numericUpDownZ.Value += numericUpDownZ.Increment;
+                        break;
+                    case 3:
+                        numericUpDownRx.Value += numericUpDownRx.Increment;
+                        break;
+                    case 4:
+                        numericUpDownRy.Value += numericUpDownRy.Increment;
+                        break;
+                    case 5:
+                        numericUpDownRz.Value += numericUpDownRz.Increment;
+                        break;
+                }
+            }
+            else if ((e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract) && clickGo)
+            {
+                numericUpDownEditting = true;
+                switch (dofIndicator)
+                {
+                    case 0:
+                        numericUpDownX.Value -= numericUpDownX.Increment;
+                        break;
+                    case 1:
+                        numericUpDownY.Value -= numericUpDownY.Increment;
+                        break;
+                    case 2:
+                        numericUpDownZ.Value -= numericUpDownZ.Increment;
+                        break;
+                    case 3:
+                        numericUpDownRx.Value -= numericUpDownRx.Increment;
+                        break;
+                    case 4:
+                        numericUpDownRy.Value -= numericUpDownRy.Increment;
+                        break;
+                    case 5:
+                        numericUpDownRz.Value -= numericUpDownRz.Increment;
+                        break;
+                }
+            }
         }
 
         // The pivot point Z input value should be the distance between pivot point to top moving part top surface
@@ -733,6 +868,11 @@ namespace Beetle
                 numericUpDownRx.Increment = (decimal)0.1;
                 numericUpDownRy.Increment = (decimal)0.1;
                 numericUpDownRz.Increment = (decimal)0.1;
+                decimal stp = decimal.Parse(comboBoxStepSize.SelectedItem.ToString());
+                stp *= (decimal)0.001;
+                numericUpDownX.Increment = stp;
+                numericUpDownY.Increment = stp;
+                numericUpDownZ.Increment = stp;
             }
             else
             {
@@ -805,43 +945,45 @@ namespace Beetle
 
         private void buttonRightAway_Click(object sender, EventArgs e)
         {
-            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
             bt.beetleControl.tempP[2] = 140;
+            bt.beetleControl.tempP[3] = 0;
+            bt.beetleControl.tempP[4] = 0;
+            bt.beetleControl.tempP[5] = 0;
+            bt.beetleControl.tempP[0] = -4;
+            bt.beetleControl.tempP[1] = -4;
             bt.beetleControl.GotoTempTraj();
-            bt.beetleControl.tempP[0] = -3;
-            bt.beetleControl.tempP[1] = -3;
-            bt.beetleControl.GotoTemp();
             numericUpDownEditting = false;
         }
 
         private void buttonRightEngage_Click(object sender, EventArgs e)
         {
-            bt.beetleControl.tempP = new double[6] { -0.75, -0.1, 138.82, 0, 0, 0 };
+            bt.beetleControl.tempP = new double[6] { -0.44, .48, 138.21, 0, 0, 0 };
             bt.beetleControl.GotoTempTraj();
             numericUpDownEditting = false;
         }
 
         private void buttonLeftAway_Click(object sender, EventArgs e)
         {
-            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
             bt.beetleControl.tempP[2] = 140;
+            bt.beetleControl.tempP[3] = 0;
+            bt.beetleControl.tempP[4] = 0;
+            bt.beetleControl.tempP[5] = 0;
             bt.beetleControl.GotoTempTraj();
-            bt.beetleControl.tempP[0] = -3;
-            bt.beetleControl.tempP[1] = -3;
-            bt.beetleControl.GotoTemp();
+            bt.beetleControl.tempP[0] = -4;
+            bt.beetleControl.tempP[1] = -4;
+            bt.beetleControl.GotoTempTraj();
             numericUpDownEditting = false;
         }
 
         private void buttonLeftEngage_Click(object sender, EventArgs e)
         {
-            // -0.35, 3.5, 137.5
-            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
-            bt.beetleControl.tempP[2] -= 1;
+            // -0.81, 3.99, 137.8
+            bt.beetleControl.tempP[2] = 139;
             bt.beetleControl.GotoTempTraj();
-            //bt.beetleControl.tempP[0] = -0.35;
-            bt.beetleControl.tempP[1] += 6;
-            bt.beetleControl.GotoTemp();
-            bt.beetleControl.tempP[2] += 1;
+            bt.beetleControl.tempP[0] = -0.81;
+            bt.beetleControl.tempP[1] = 3.99;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[2] = 137.8;
             bt.beetleControl.GotoTempTraj();
             numericUpDownEditting = false;
         }
@@ -849,13 +991,12 @@ namespace Beetle
         private void buttonAngleEdgePos_Click(object sender, EventArgs e)
         {
             // -.35, -2.5, 137.5
-            bt.parameters.position.CopyTo(bt.beetleControl.tempP, 0);
             bt.beetleControl.tempP[2] = 139;
             bt.beetleControl.GotoTempTraj();
-            bt.beetleControl.tempP[0] = -0.35;
+            bt.beetleControl.tempP[0] = -0.8;
             bt.beetleControl.tempP[1] = -2.5;
-            bt.beetleControl.GotoTemp();
-            bt.beetleControl.tempP[2] = 137.5;
+            bt.beetleControl.GotoTempTraj();
+            bt.beetleControl.tempP[2] = 138;
             bt.beetleControl.GotoTempTraj();
             numericUpDownEditting = false;
         }

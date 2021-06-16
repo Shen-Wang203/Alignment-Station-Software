@@ -91,7 +91,7 @@
             this.labelRz = new System.Windows.Forms.Label();
             this.labelRx = new System.Windows.Forms.Label();
             this.labelZ = new System.Windows.Forms.Label();
-            this.labelT = new System.Windows.Forms.Label();
+            this.labelY = new System.Windows.Forms.Label();
             this.labelX = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -224,7 +224,6 @@
             // ButtonAlignment
             // 
             this.ButtonAlignment.BackColor = System.Drawing.Color.Red;
-            this.ButtonAlignment.Enabled = false;
             this.ButtonAlignment.FlatAppearance.BorderSize = 0;
             this.ButtonAlignment.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange;
             this.ButtonAlignment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -363,6 +362,7 @@
             this.tabControl1.Size = new System.Drawing.Size(1290, 720);
             this.tabControl1.TabIndex = 10;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyUp);
             // 
             // tabPageAlignCuring
             // 
@@ -439,13 +439,8 @@
             0,
             196608});
             this.numericUpDownReference.Location = new System.Drawing.Point(945, 41);
-            this.numericUpDownReference.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
             this.numericUpDownReference.Minimum = new decimal(new int[] {
-            50,
+            100,
             0,
             0,
             -2147483648});
@@ -456,6 +451,7 @@
             // comboBoxPMChl
             // 
             this.comboBoxPMChl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+            this.comboBoxPMChl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPMChl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxPMChl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxPMChl.ForeColor = System.Drawing.Color.Silver;
@@ -567,6 +563,7 @@
             // comboBoxFixtureNum
             // 
             this.comboBoxFixtureNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.comboBoxFixtureNum.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFixtureNum.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxFixtureNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxFixtureNum.ForeColor = System.Drawing.Color.Silver;
@@ -634,6 +631,7 @@
             // comboBoxProductSelect
             // 
             this.comboBoxProductSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.comboBoxProductSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxProductSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxProductSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxProductSelect.ForeColor = System.Drawing.Color.Silver;
@@ -688,6 +686,7 @@
             // comboBoxUsePiezo
             // 
             this.comboBoxUsePiezo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.comboBoxUsePiezo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxUsePiezo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxUsePiezo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxUsePiezo.ForeColor = System.Drawing.Color.Silver;
@@ -727,7 +726,7 @@
             this.buttonCancleRun.Name = "buttonCancleRun";
             this.buttonCancleRun.Size = new System.Drawing.Size(160, 56);
             this.buttonCancleRun.TabIndex = 21;
-            this.buttonCancleRun.Text = "Cancle Run";
+            this.buttonCancleRun.Text = "Cancel Run";
             this.buttonCancleRun.UseVisualStyleBackColor = false;
             this.buttonCancleRun.Click += new System.EventHandler(this.buttonCancleRun_Click);
             // 
@@ -877,10 +876,13 @@
             // comboBoxCamSelect
             // 
             this.comboBoxCamSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(64)))));
+            this.comboBoxCamSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCamSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxCamSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxCamSelect.ForeColor = System.Drawing.Color.Silver;
             this.comboBoxCamSelect.FormattingEnabled = true;
+            this.comboBoxCamSelect.Items.AddRange(new object[] {
+            "OFF"});
             this.comboBoxCamSelect.Location = new System.Drawing.Point(492, 10);
             this.comboBoxCamSelect.Name = "comboBoxCamSelect";
             this.comboBoxCamSelect.Size = new System.Drawing.Size(195, 24);
@@ -901,7 +903,7 @@
             this.tabPageStageControl.Controls.Add(this.labelRz);
             this.tabPageStageControl.Controls.Add(this.labelRx);
             this.tabPageStageControl.Controls.Add(this.labelZ);
-            this.tabPageStageControl.Controls.Add(this.labelT);
+            this.tabPageStageControl.Controls.Add(this.labelY);
             this.tabPageStageControl.Controls.Add(this.labelX);
             this.tabPageStageControl.Controls.Add(this.label1);
             this.tabPageStageControl.Controls.Add(this.label14);
@@ -955,6 +957,7 @@
             // comboBoxStepSize
             // 
             this.comboBoxStepSize.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.comboBoxStepSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxStepSize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxStepSize.FormattingEnabled = true;
@@ -962,7 +965,8 @@
             "50",
             "20",
             "10",
-            "2"});
+            "2",
+            "0.5"});
             this.comboBoxStepSize.Location = new System.Drawing.Point(462, 463);
             this.comboBoxStepSize.Name = "comboBoxStepSize";
             this.comboBoxStepSize.Size = new System.Drawing.Size(49, 24);
@@ -999,6 +1003,7 @@
             // 
             // comboBoxBeetleSelect
             // 
+            this.comboBoxBeetleSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBeetleSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxBeetleSelect.FormattingEnabled = true;
             this.comboBoxBeetleSelect.Items.AddRange(new object[] {
@@ -1032,7 +1037,7 @@
             this.buttonSetPositionSyn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetPositionSyn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetPositionSyn.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetPositionSyn.Location = new System.Drawing.Point(462, 133);
+            this.buttonSetPositionSyn.Location = new System.Drawing.Point(462, 129);
             this.buttonSetPositionSyn.Name = "buttonSetPositionSyn";
             this.buttonSetPositionSyn.Size = new System.Drawing.Size(123, 41);
             this.buttonSetPositionSyn.TabIndex = 51;
@@ -1088,17 +1093,17 @@
             this.labelZ.TabIndex = 47;
             this.labelZ.Text = "Z";
             // 
-            // labelT
+            // labelY
             // 
-            this.labelT.AutoSize = true;
-            this.labelT.BackColor = System.Drawing.Color.Transparent;
-            this.labelT.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelT.ForeColor = System.Drawing.Color.Black;
-            this.labelT.Location = new System.Drawing.Point(525, 295);
-            this.labelT.Name = "labelT";
-            this.labelT.Size = new System.Drawing.Size(29, 26);
-            this.labelT.TabIndex = 46;
-            this.labelT.Text = "Y";
+            this.labelY.AutoSize = true;
+            this.labelY.BackColor = System.Drawing.Color.Transparent;
+            this.labelY.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelY.ForeColor = System.Drawing.Color.Black;
+            this.labelY.Location = new System.Drawing.Point(525, 295);
+            this.labelY.Name = "labelY";
+            this.labelY.Size = new System.Drawing.Size(29, 26);
+            this.labelY.TabIndex = 46;
+            this.labelY.Text = "Y";
             // 
             // labelX
             // 
@@ -1148,6 +1153,7 @@
             // 
             // comboBoxMotorSelectTop
             // 
+            this.comboBoxMotorSelectTop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMotorSelectTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxMotorSelectTop.FormattingEnabled = true;
             this.comboBoxMotorSelectTop.Items.AddRange(new object[] {
@@ -1310,9 +1316,9 @@
             this.buttonSetPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSetPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSetPosition.ForeColor = System.Drawing.Color.Black;
-            this.buttonSetPosition.Location = new System.Drawing.Point(462, 183);
+            this.buttonSetPosition.Location = new System.Drawing.Point(461, 176);
             this.buttonSetPosition.Name = "buttonSetPosition";
-            this.buttonSetPosition.Size = new System.Drawing.Size(123, 73);
+            this.buttonSetPosition.Size = new System.Drawing.Size(123, 41);
             this.buttonSetPosition.TabIndex = 13;
             this.buttonSetPosition.Text = "Go";
             this.buttonSetPosition.UseVisualStyleBackColor = false;
@@ -1332,6 +1338,7 @@
             // 
             // comboBoxMotorSelectMid
             // 
+            this.comboBoxMotorSelectMid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMotorSelectMid.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxMotorSelectMid.FormattingEnabled = true;
             this.comboBoxMotorSelectMid.Items.AddRange(new object[] {
@@ -1361,6 +1368,7 @@
             // 
             // comboBoxMotorSelectBot
             // 
+            this.comboBoxMotorSelectBot.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMotorSelectBot.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxMotorSelectBot.FormattingEnabled = true;
             this.comboBoxMotorSelectBot.Items.AddRange(new object[] {
@@ -1472,6 +1480,7 @@
             // comboBoxPiezoStep
             // 
             this.comboBoxPiezoStep.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.comboBoxPiezoStep.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPiezoStep.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxPiezoStep.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxPiezoStep.ForeColor = System.Drawing.Color.Silver;
@@ -2504,7 +2513,7 @@
         private System.Windows.Forms.Label labelRz;
         private System.Windows.Forms.Label labelRx;
         private System.Windows.Forms.Label labelZ;
-        private System.Windows.Forms.Label labelT;
+        private System.Windows.Forms.Label labelY;
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.ComboBox comboBoxFixtureNum;
         private System.Windows.Forms.Label labelBeetleFixture;

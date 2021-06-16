@@ -56,7 +56,7 @@ namespace Beetle
                 //Parameters.errorFlag = true;
                 loss = -90;
             }
-            if (loss > 10)
+            if (loss > 40)
             {
                 Thread.Sleep(50);
                 try
@@ -73,7 +73,7 @@ namespace Beetle
                     //Parameters.errorFlag = true;
                     loss = -90;
                 }
-                if (loss > 10)
+                if (loss > 40)
                     loss = -90.0;
             }
             if (loss < -90)
@@ -103,7 +103,7 @@ namespace Beetle
                 //Parameters.errorFlag = true;
                 loss = -90;
             }
-            if (loss < -90 || loss > 10)
+            if (loss < -90 || loss > 40)
                 loss = -90;
             loss -= lossReference;
             loss = Math.Round(loss, 4);

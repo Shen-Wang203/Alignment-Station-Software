@@ -6,6 +6,8 @@ namespace Beetle
 {
     class Parameters
     {
+        private static string logPath = string.Empty;
+
         // Fixture parameteres
         public string beetleT1ComPortName = "";
         public string beetleT2ComPortName = "";
@@ -21,7 +23,7 @@ namespace Beetle
         public bool usePiezo = false;
         //public byte piezoZvsGap = 1; // if piezo z DAC value increase, gap is larger, then 1; is z DAC value incease, gap is smaller, then -1
         public bool piezoRunning = false;
-        public ushort piezoStepSize = 6; // in DAC value
+        public ushort piezoStepSize = 18; // in DAC value
 
         // Alignment/Curing parameters
         public string errors = "";
@@ -44,7 +46,7 @@ namespace Beetle
                 { "SM 1xN", 0.25f },
                 { "MM 1xN", 0.18f },
                 { "UWDM", 0.1f },
-                { "WOA", 0.005f }
+                { "WOA", 0.01f }
             };
 
         public void Save()
@@ -116,7 +118,7 @@ namespace Beetle
             Log("Parameters Loaded");
         }
 
-        // TODO: load and save system 2 all other parameters
+        // TODO: save system 2 all other parameters
         public void LoadAll_2()
         {
             beetleT1ComPortName = Properties.Fixture.Default.T1COM_2;
@@ -220,9 +222,12 @@ namespace Beetle
 
         public static void Log(string logMessage)
         {
-            using (StreamWriter w = File.AppendText("log.txt"))
+            logPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //Console.WriteLine(logPath);
+
+            using (StreamWriter w = File.AppendText(Path.Combine(logPath,"BeetleLog.txt")))
             {
-                w.Write($"{DateTime.Now.ToLongTimeString()}: ");
+                w.Write($"{DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")}: ");
                 w.WriteLine($"{logMessage}");
             }
         }

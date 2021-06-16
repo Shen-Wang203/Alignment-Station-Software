@@ -23,8 +23,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.4.22.0</ApplicationVersion>
+    <ProductName>Beetle</ProductName>
+    <PublisherName>Shen Wang</PublisherName>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>0.4.31.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -49,8 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Beetle.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
