@@ -91,8 +91,9 @@ namespace Beetle
             }
         }
 
-        // Square shape search where the center is current position
-        // will return true is loss imporved for 10dB
+        // Square shape search in XY plane where the center is current position.
+        // will return true is loss imporved for 5dB
+        // this is good if xyscan search is failed and needs a larger area search
         protected bool XYSquareSearch(double singleRange = 0.05)
         {
             Console.WriteLine("Square Search Started");
@@ -112,9 +113,10 @@ namespace Beetle
 
                 beetleControl.XMoveTo(px[0], stopInBetween: false, mode: 't', speed: 2000);
 
+                Console.WriteLine($"****Square {ii} starts****");
                 for (int i = 1; i < 5; i ++)
                 {
-                    Console.WriteLine($"Square {i} starts");
+                    Console.WriteLine($"Edge {i} starts");
                     beetleControl.XMoveTo(px[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false, speed: spd);
                     beetleControl.YMoveTo(py[i], mode: 't', checkOnTarget: false, doubleCheck: false, stopInBetween: false, speed: spd);
                     while (Math.Abs(parameters.position[0] - px[i]) > 4 * beetleControl.encoderResolution && !parameters.errorFlag)
@@ -133,17 +135,20 @@ namespace Beetle
                     }
 
                     if (parameters.errorFlag)
-                        return false;
-
+                        beetleControl.DisengageMotors();
+                        
                     Thread.Sleep(100);
                     // Update counts and position for next movement
                     beetleControl.RealCountsFetch(6);
                     parameters.position[0] = pX0 + (beetleControl.countsReal[0] - countX0) * beetleControl.encoderResolution;
                     parameters.position[1] = pY0 + (beetleControl.countsReal[1] - countY0) * beetleControl.encoderResolution;
-                    Console.WriteLine($"Square {i} is done");
+
+                    if (parameters.errorFlag)
+                        return false;
                 }
+                Console.WriteLine($"****Square {ii} is done****");
             }
-            
+
             return false;
         }
 
@@ -342,7 +347,7 @@ namespace Beetle
                     StatusCheck(PowerMeter.Read());
                     return true;
                 }
-                // else go the other direction
+                // else return to origin and go the other direction
                 else
                 {
                     beetleControl.DisengageMotors(); // Disengage first to avoid unexpected issues
@@ -359,6 +364,7 @@ namespace Beetle
                 }
             }
             // if both direction failed to find max, return false and return to original pos
+            StatusCheck(loss.Max());
             return false;
         }
 

@@ -18,9 +18,12 @@ namespace Beetle
             piezoControl = pc;
         }
 
-        // Those are all the Odrive board we used in control box
+        // Those are all the Odrive boards we used in control box
         // Need to extend if we ever build more control box
+        // The array index is the control box number, for instance T1[2] means control box 2's T1 board serial number is "207639684D4D".
+        // Searching for the control box number is through identify Odrive board's serial number and find out this serial number's index in this array.
         // Arduino Piezo control board's serial number is defined by ourself and its written inside the Arduino board
+        // Whenever a control board is changed, the new board's serial number needs to be in the right index. 
         private static readonly string[] T1 = { "208739844D4D", "207339A04D4D", "207639684D4D", "20803880304E", "2067387E304E", "205D388E304E", "2063388F304E" };
         private static readonly string[] T2 = { "208339834D4D", "2060388E304E", "2061397D4D4D", "2062388F304E", "204F388E304E", "20853881304E", "207B3880304E" };
         private static readonly string[] T3 = { "205C39844D4D", "20813882304E", "207B396A4D4D", "207C397D4D4D", "2065387E304E", "2086388F304E", "2087388E304E" };

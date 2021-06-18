@@ -82,14 +82,6 @@ namespace Beetle
             }
             else
             {
-                //if ((loss0 < (4 * parameters.lossCurrentMax) && loss0 < -10) || loss0 < -60)
-                //{
-                //    parameters.errors = "\nUnexpected High Loss";
-                //    Console.WriteLine("Unexpected High Loss");
-                //    Parameters.Log("Unexpected High Loss");
-                //    parameters.errorFlag = true;
-                //}
-
                 lossFailToImprove += 1;
                 if (lossFailToImprove >= 12 && parameters.piezoRunning)
                 {

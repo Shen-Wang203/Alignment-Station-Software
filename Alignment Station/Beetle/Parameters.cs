@@ -15,7 +15,7 @@ namespace Beetle
         public string arduinoComPortName = ""; // for piezo control
         public byte beetleFixtureNumber = 0;
         public string beetleControlBoxNum = "*";
-        // Pivot point coordinates is relative to the center (x,y,z,1) of moving plate joint surface, z need to minus 8 to become pivotpoint to top moving part top surface distance
+        // Pivot point coordinates (x,y,z,0) is relative to the center of moving plate joint (not top) surface, z need to minus 8 to become pivotpoint to top moving part top surface distance
         public double[] pivotPoint = { 0, 0, 42, 0 };
         public double[] position = { 0, 0, 140, 2.4, -1.0, 0 }; // Position in mm { x, y, z, Rx, Ry, Rz}
         public double[] initialPosition = { 0, 0, 138, 0, 0, 0 }; // This is the starting(Or Initial) position
@@ -31,14 +31,15 @@ namespace Beetle
         public double lossCriteria = -0.1f;
         public double lossCurrentMax = -50.0f;
         public bool doublecheckFlag = false;
-        public bool stopInBetweenFlag = false;
+        public bool stopInBetweenFlag = false; // means between each movement, motors will be disengaged first to stop in place for a while for loss fetching, then go to the next position.
+                                               // Because when disengaged, no current inside the motor so the motor position is stable. 
         public bool smallestResolution = false;
         public bool highestAccuracy = true;
 
         // Product Parameters
         public string productName = "MM 1xN";
-        // Product type and its back length when starts from contact, this back length should be longer than this product's focal length.
-        // Gap or focal length can be get through productName: Parameters.product[Parameters.productName]
+        // Product type and its back length when starts from contact, this back length should be longer than this product's lens focal length.
+        // Gap or focal length can be get through productName: Parameters.productGap[Parameters.productName]
         public Dictionary<string, float> productGap =
             new Dictionary<string, float>()
             {

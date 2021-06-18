@@ -571,42 +571,10 @@ namespace Beetle
         private void tabControl1_KeyUp(object sender, KeyEventArgs e)
         {
             //Console.WriteLine(e.KeyCode);
-            if (e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.Space)
             {
                 dofIndicator += 1;
                 dofIndicator = dofIndicator <= 5 ? (dofIndicator >= 0 ? dofIndicator : 5) : 0;
-                labelX.ForeColor = Color.Black;
-                labelY.ForeColor = Color.Black;
-                labelZ.ForeColor = Color.Black;
-                labelRx.ForeColor = Color.Black;
-                labelRy.ForeColor = Color.Black;
-                labelRz.ForeColor = Color.Black;
-                switch (dofIndicator)
-                {
-                    case 0:
-                        labelX.ForeColor = Color.Red;
-                        break;
-                    case 1:
-                        labelY.ForeColor = Color.Red;
-                        break;
-                    case 2:
-                        labelZ.ForeColor = Color.Red;
-                        break;
-                    case 3:
-                        labelRx.ForeColor = Color.Red;
-                        break;
-                    case 4:
-                        labelRy.ForeColor = Color.Red;
-                        break;
-                    case 5:
-                        labelRz.ForeColor = Color.Red;
-                        break;
-                }
-            }
-            else if (e.KeyCode == Keys.Left)
-            {
-                dofIndicator -= 1;
-                dofIndicator = dofIndicator <= 5 ? (dofIndicator >= 0? dofIndicator : 5) : 0;
                 labelX.ForeColor = Color.Black;
                 labelY.ForeColor = Color.Black;
                 labelZ.ForeColor = Color.Black;

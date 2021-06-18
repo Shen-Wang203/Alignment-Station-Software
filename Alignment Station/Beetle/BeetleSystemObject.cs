@@ -5,8 +5,8 @@
         public Parameters parameters = new Parameters();
         public BeetleMathModel mathModel;
         public BeetleControl beetleControl;
-        public BeetleAlignment ba;
-        public BeetleCuring bc;
+        public OnebyNAlignment ba;
+        public OnebyNCuring bc;
         public PiezoControl piezoControl;
         private BeetleDetection beetleDetection;
         public WOAAlignment woa;
@@ -28,8 +28,8 @@
 
         public void AlignCuringInit()
         {
-            ba = new BeetleAlignment(parameters, beetleControl, piezoControl);
-            bc = new BeetleCuring(parameters, beetleControl, piezoControl);
+            ba = new OnebyNAlignment(parameters, beetleControl, piezoControl);
+            bc = new OnebyNCuring(parameters, beetleControl, piezoControl);
         }
 
         public void WOAInit() => woa = new WOAAlignment(parameters, beetleControl, piezoControl);

@@ -21,7 +21,7 @@ namespace Beetle
         private sbyte xDirectionOld = 0;
         private sbyte yDirectionOld = 0;
         private sbyte zDirectionOld = 0;
-        private bool normalSpeedFlag = false;
+        private bool normalSpeedFlag = true;
         
         public sbyte[] onTargetFlag = new sbyte[6] { 0, 0, 0, 0, 0, 0 }; // it will control which motor to move, 1 means on target, 0 means not yet
         public byte globalErrorCount = 0;
@@ -287,46 +287,21 @@ namespace Beetle
             }
         }
 
-        public void SlowTrajSpeed()
-        {
-            //string xstr1 = "w axis0.trap_traj.config.accel_limit 1000";
-            //string xstr2 = "w axis0.trap_traj.config.decel_limit 1000";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 400";
-            //string ystr1 = "w axis1.trap_traj.config.accel_limit 1000";
-            //string ystr2 = "w axis1.trap_traj.config.decel_limit 1000";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 400";
-            //T123SendOnly(xstr1, ystr1);
-            //T123SendOnly(xstr2, ystr2);
-            T123SendOnly(xstr3, ystr3);
-            normalSpeedFlag = false;
-        }
-
-        public void SlowTrajSpeed2()
-        {
-            //string xstr1 = "w axis0.trap_traj.config.accel_limit 80";
-            //string xstr2 = "w axis0.trap_traj.config.decel_limit 80";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 80";
-            //string ystr1 = "w axis1.trap_traj.config.accel_limit 80";
-            //string ystr2 = "w axis1.trap_traj.config.decel_limit 80";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 80";
-            //T123SendOnly(xstr1, ystr1);
-            //T123SendOnly(xstr2, ystr2);
-            T123SendOnly(xstr3, ystr3);
-            normalSpeedFlag = false;
-        }
-
         public void NormalTrajSpeed()
         {
-            string xstr1 = "w axis0.trap_traj.config.accel_limit 100000";
-            string xstr2 = "w axis0.trap_traj.config.decel_limit 100000";
-            string xstr3 = "w axis0.trap_traj.config.vel_limit 100000";
-            string ystr1 = "w axis1.trap_traj.config.accel_limit 100000";
-            string ystr2 = "w axis1.trap_traj.config.decel_limit 100000";
-            string ystr3 = "w axis1.trap_traj.config.vel_limit 100000";
-            T123SendOnly(xstr1, ystr1);
-            T123SendOnly(xstr2, ystr2);
-            T123SendOnly(xstr3, ystr3);
-            normalSpeedFlag = true;
+            if (!normalSpeedFlag)
+            {
+                //string xstr1 = "w axis0.trap_traj.config.accel_limit 100000";
+                //string xstr2 = "w axis0.trap_traj.config.decel_limit 100000";
+                string xstr3 = "w axis0.trap_traj.config.vel_limit 100000";
+                //string ystr1 = "w axis1.trap_traj.config.accel_limit 100000";
+                //string ystr2 = "w axis1.trap_traj.config.decel_limit 100000";
+                string ystr3 = "w axis1.trap_traj.config.vel_limit 100000";
+                //T123SendOnly(xstr1, ystr1);
+                //T123SendOnly(xstr2, ystr2);
+                T123SendOnly(xstr3, ystr3);
+                normalSpeedFlag = true;
+            }
         }
 
         // axial: 0-5
@@ -380,8 +355,8 @@ namespace Beetle
 
         // XAbs is the platform x absolute position in mm
         // will update Parameters.position if checkOnTarget is true
-        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial. 
-        // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
+        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial.  So if checkOnTarget
+        // is false on a certain move, you have to update countsReal and Parameters.Position after this move
         public void XMoveTo(double XAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 400)
         {
             sbyte xDirec;
@@ -411,8 +386,8 @@ namespace Beetle
 
         // YAbs is the platform y absolute position in mm
         // will update Parameters.position if checkOnTarget is true
-        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial
-        // So if checkOnTarget is false on a certain move, you have to update countsReal and Parameters.Position after this move
+        // Caution: Before running this function, countsReal and Parameters.Position need to be updated at current position for all 6 axial, so if checkOnTarget
+        // is false on a certain move, you have to update countsReal and Parameters.Position after this move
         public void YMoveTo(double YAbs, bool stopInBetween = true, bool ignoreError = false, bool applyBacklash = false, bool doubleCheck = false, char mode = 'p', bool checkOnTarget = true, int speed = 400)
         {
             sbyte yDirec;
@@ -1105,7 +1080,7 @@ namespace Beetle
                     return true;
                 return false;
             }
-            else // for version where 0 counts is at the end
+            else // for version where 0 counts is at the end. Update: this version has been cancelled
             {
                 if (counts[0] < (limit[0] + 3000) || counts[0] > (limit[0] + rangePerAxis * countsPerMM))
                     parameters.errors = "T1x Out of Range\n";

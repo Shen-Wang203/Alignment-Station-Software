@@ -25,7 +25,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Beetle</ProductName>
     <PublisherName>Shen Wang</PublisherName>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>0.4.31.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -127,9 +127,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Alignment.settings</DependentUpon>
     </Compile>
-    <Compile Include="Alignment_Curing\BeetleAlignment.cs" />
+    <Compile Include="Alignment_Curing\OnebyNAlignment.cs" />
     <Compile Include="BeetleControls\BeetleControl.cs" />
-    <Compile Include="Alignment_Curing\BeetleCuring.cs" />
+    <Compile Include="Alignment_Curing\OnebyNCuring.cs" />
     <Compile Include="BeetleControls\BeetleMathModel.cs" />
     <Compile Include="Alignment_Curing\BeetleSearch.cs" />
     <Compile Include="BeetleControls\BeetleDetection.cs" />

@@ -9,36 +9,46 @@ namespace Console_test
 {
     class Program
     {
+        private static SerialPort T1Port;
 
         static void Main(string[] args)
         {
-            bool xEpoxySolid = false;
-            bool usePiezo = false;
-            double x = 645;
-            if (!xEpoxySolid && ((usePiezo && !PiezoSteppingSearch()) || (!usePiezo && !AxisSteppingSearch())))
+            T1Port = new SerialPort("COM23", 115200, Parity.None, 8, StopBits.One);
+            T1Port.ReadTimeout = 200;
+            T1Port.WriteTimeout = 200;
+            T1Port.Open();
+
+            string strx = "d";
+            //string strx = "r axis0.encoder.shadow_count";
+            Console.WriteLine(T1Talk(strx));
+            T1Port.Close();
+        }
+
+        
+
+        private static string T1Talk(string str)
+        {
+            string message = "";
+            try
             {
-                ushort dacValue;
-                dacValue = (ushort)x;
-                Console.WriteLine((dacValue & 0x0f00) >> 8);
+                T1Port.WriteLine(str);
             }
-
-            int directionTrend;
-            int piezoAxis = 0;
-            directionTrend = piezoAxis == 0 ? 1 : piezoAxis == 1 ? 2 : 3;
-            Console.WriteLine(directionTrend);
+            catch (Exception e)
+            {
+                return "Fail";
+            }
+            try
+            {
+                message = T1Port.ReadLine();
+            }
+            catch (Exception e)
+            {
+                return "fail";
+            }
+            return message;
         }
 
-        private static bool PiezoSteppingSearch()
-        {
-            Console.WriteLine("piezo");
-            return false;
-        }
 
-        private static bool AxisSteppingSearch()
-        {
-            Console.WriteLine("step");
-            return false;
-        }
 
 
     } 
