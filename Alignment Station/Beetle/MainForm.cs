@@ -541,6 +541,8 @@ namespace Beetle
                 return;
             }
 
+            startTime = DateTime.Now;
+
             bt.beetleControl.tempP = new double[6] { (double)numericUpDownX.Value, (double)numericUpDownY.Value, (double)numericUpDownZ.Value,
                     (double)numericUpDownRx.Value, (double)numericUpDownRy.Value, (double)numericUpDownRz.Value };
             if (mode == 't')
@@ -689,6 +691,8 @@ namespace Beetle
                 MessageBox.Show("Another Process is Runing");
                 return;
             }
+
+            startTime = DateTime.Now;
 
             if (bt.ba == null)
                 bt.AlignCuringInit();
